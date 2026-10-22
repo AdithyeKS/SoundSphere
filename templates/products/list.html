@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Audio Catalog | SoundSphere{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2.5rem; padding-bottom: 5rem;">
+    <!-- Catalog Header -->
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
+        <div>
+            <h1 style="font-size: 2rem;">
+                {% if selected_category %}{{ selected_category.name }}{% elif selected_brand %}{{ selected_brand.name }} Audio{% elif query %}Search: "{{ query }}"{% else %}All Products{% endif %}
+            </h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">Showing {{ total_count }} high-fidelity acoustic items</p>
+        </div>
+
+        <!-- Sorting Dropdown -->
+        <form method="GET" id="sortForm">
+            {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category.slug }}">{% endif %}
+            {% if selected_brand %}<input type="hidden" name="brand" value="{{ selected_brand.slug }}">{% endif %}
+            {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+            
+            <select name="sort" onchange="document.getElementById('sortForm').submit()" style="padding: 0.6rem 1.2rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-full); outline: none; cursor: pointer;">
+                <option value="featured" {% if sort == 'featured' %}selected{% endif %}>Sort by: Featured</option>
+                <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest Arrivals</option>
+            </select>
+        </form>
+    </div>
+
+    <!-- Layout Grid -->
+    <div style="display: grid; grid-template-columns: 260px 1fr; gap: 2rem;">
+        <!-- Filter Sidebar -->
+        <aside class="glass-panel" style="padding: 1.5rem; height: fit-content;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+                <h3 style="font-size: 1.1rem;"><i class="bi bi-funnel"></i> Filters</h3>
+                <a href="{% url 'products:list' %}" style="font-size: 0.8rem; color: var(--primary-cyan);">Reset All</a>
+            </div>
+
+            <!-- Categories -->
+            <div style="margin-bottom: 1.75rem;">
+                <h4 style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Categories</h4>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem;">
+                    <li>
+                        <a href="{% url 'products:list' %}" style="color: {% if not selected_category %}var(--primary-cyan){% else %}var(--text-main){% endif %}; font-weight: {% if not selected_category %}700{% else %}400{% endif %}; font-size: 0.9rem;">
+                            All Categories
+                        </a>
+                    </li>
+                    {% for cat in categories %}
+                        <li>
+                            <a href="{% url 'products:list' %}?category={{ cat.slug }}" style="color: {% if selected_category.slug == cat.slug %}var(--primary-cyan){% else %}var(--text-main){% endif %}; font-weight: {% if selected_category.slug == cat.slug %}700{% else %}400{% endif %}; font-size: 0.9rem; display: flex; justify-content: space-between;">
+                                <span>{{ cat.name }}</span>
+                                <span style="color: var(--text-dim); font-size: 0.8rem;">({{ cat.products.count }})</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Brands -->
+            <div style="margin-bottom: 1.75rem;">
+                <h4 style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Brands</h4>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem;">
+                    {% for b in brands %}
+                        <li>
+                            <a href="{% url 'products:list' %}?brand={{ b.slug }}" style="color: {% if selected_brand.slug == b.slug %}var(--primary-cyan){% else %}var(--text-main){% endif %}; font-weight: {% if selected_brand.slug == b.slug %}700{% else %}400{% endif %}; font-size: 0.9rem;">
+                                {{ b.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Customer Rating Filter -->
+            <div style="margin-bottom: 1.75rem;">
+                <h4 style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Rating</h4>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.4rem;">
+                    <li><a href="{% url 'products:list' %}?min_rating=4{% if selected_category %}&category={{ selected_category.slug }}{% endif %}" style="color: {% if min_rating == '4' %}var(--primary-cyan){% else %}var(--text-main){% endif %}; font-size: 0.85rem;"><i class="bi bi-star-fill" style="color: var(--star-gold);"></i> 4 Stars & Above</a></li>
+                    <li><a href="{% url 'products:list' %}?min_rating=3{% if selected_category %}&category={{ selected_category.slug }}{% endif %}" style="color: {% if min_rating == '3' %}var(--primary-cyan){% else %}var(--text-main){% endif %}; font-size: 0.85rem;"><i class="bi bi-star-fill" style="color: var(--star-gold);"></i> 3 Stars & Above</a></li>
+                    <li><a href="{% url 'products:list' %}?min_rating=2{% if selected_category %}&category={{ selected_category.slug }}{% endif %}" style="color: {% if min_rating == '2' %}var(--primary-cyan){% else %}var(--text-main){% endif %}; font-size: 0.85rem;"><i class="bi bi-star-fill" style="color: var(--star-gold);"></i> 2 Stars & Above</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Product Grid -->
+        <div>
+            {% if products %}
+                <div class="product-grid">
+                    {% for product in products %}
+                        <div class="product-card glass-card">
+                            {% if product.is_on_sale %}
+                                <span class="product-badge">-{{ product.discount_percentage }}%</span>
+                            {% endif %}
+
+                            <button class="wishlist-toggle ajax-wishlist-toggle {% if product.id in wishlist_product_ids %}active{% endif %}" data-product-id="{{ product.id }}">
+                                <i class="bi {% if product.id in wishlist_product_ids %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                            </button>
+
+                            <a href="{% url 'products:detail' product.slug %}" class="product-img-wrapper">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-img">
+                                {% else %}
+                                    <i class="bi bi-headphones" style="font-size: 5rem; color: var(--primary-indigo);"></i>
+                                {% endif %}
+                            </a>
+
+                            <div class="product-info">
+                                <span class="product-category">{{ product.category.name }}</span>
+                                <h3 class="product-title">
+                                    <a href="{% url 'products:detail' product.slug %}">{{ product.name }}</a>
+                                </h3>
+
+                                <div style="display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.75rem;">
+                                    {% if product.average_rating > 0 %}
+                                        <i class="bi bi-star-fill" style="color: var(--star-gold); font-size: 0.9rem;"></i>
+                                        <span style="font-weight: 700; font-size: 0.9rem;">{{ product.average_rating }}</span>
+                                        <span style="color: var(--text-dim); font-size: 0.8rem;">({{ product.review_count }})</span>
+                                    {% else %}
+                                        <span style="color: var(--text-dim); font-size: 0.8rem;"><i class="bi bi-star" style="color: var(--text-dim);"></i> No reviews yet</span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="product-price-row">
+                                    <div>
+                                        <span class="price-tag">₹{{ product.current_price }}</span>
+                                        {% if product.is_on_sale %}
+                                            <span class="old-price">₹{{ product.price }}</span>
+                                        {% endif %}
+                                    </div>
+                                    {% if user.is_staff %}
+                                        <a href="{% url 'products:detail' product.slug %}" class="icon-btn" title="View Product Preview" style="text-decoration: none;">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    {% else %}
+                                        <button class="icon-btn ajax-add-to-cart" data-product-id="{{ product.id }}" title="Add to Cart">
+                                            <i class="bi bi-cart-plus"></i>
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pagination Bar -->
+                {% if page_obj.has_other_pages %}
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 2.5rem;">
+                        {% if page_obj.has_previous %}
+                            <a href="?page={{ page_obj.previous_page_number }}{% if selected_category %}&category={{ selected_category.slug }}{% endif %}{% if selected_brand %}&brand={{ selected_brand.slug }}{% endif %}{% if query %}&q={{ query }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" class="btn btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">
+                                <i class="bi bi-chevron-left"></i> Prev
+                            </a>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <span class="btn btn-primary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; font-weight: bold;">{{ num }}</span>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <a href="?page={{ num }}{% if selected_category %}&category={{ selected_category.slug }}{% endif %}{% if selected_brand %}&brand={{ selected_brand.slug }}{% endif %}{% if query %}&q={{ query }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" class="btn btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}{% if selected_category %}&category={{ selected_category.slug }}{% endif %}{% if selected_brand %}&brand={{ selected_brand.slug }}{% endif %}{% if query %}&q={{ query }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" class="btn btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">
+                                Next <i class="bi bi-chevron-right"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+            {% else %}
+                <div class="glass-panel" style="text-align: center; padding: 4rem 2rem;">
+                    <i class="bi bi-search-heart" style="font-size: 4rem; color: var(--primary-cyan);"></i>
+                    <h3 style="margin-top: 1rem;">No Audio Products Found</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Try adjusting your filters or search terms.</p>
+                    <a href="{% url 'products:list' %}" class="btn btn-primary">Clear Filters</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

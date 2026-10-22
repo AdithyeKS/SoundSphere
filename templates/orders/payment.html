@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Payment Simulation | SoundSphere{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
+    <!-- Step Wizard Bar -->
+    <div style="display: flex; align-items: center; justify-content: center; gap: 2rem; margin-bottom: 3rem;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--success-green); font-weight: 700;">
+            <div style="width: 32px; height: 32px; border-radius: var(--radius-full); background: var(--success-green); color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800;"><i class="bi bi-check-lg"></i></div>
+            <span>Shipping Address</span>
+        </div>
+        <div style="width: 60px; height: 2px; background: var(--success-green);"></div>
+        <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--primary-cyan); font-weight: 700;">
+            <div style="width: 32px; height: 32px; border-radius: var(--radius-full); background: var(--gradient-audio); color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800;">2</div>
+            <span>Payment Simulation</span>
+        </div>
+        <div style="width: 60px; height: 2px; background: var(--border-color);"></div>
+        <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-dim);">
+            <div style="width: 32px; height: 32px; border-radius: var(--radius-full); background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;">3</div>
+            <span>Order Confirmation</span>
+        </div>
+    </div>
+
+    <div style="max-width: 650px; margin: 0 auto;">
+        <form method="POST" action="{% url 'orders:process_payment' %}" class="glass-panel" style="padding: 2.5rem;">
+            {% csrf_token %}
+            <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; text-align: center;">Select Payment Method</h2>
+            <p style="color: var(--text-muted); text-align: center; margin-bottom: 2rem;">Total Amount to Pay: <strong style="color: var(--primary-cyan); font-size: 1.2rem;">₹{{ total_amount }}</strong></p>
+
+            <!-- Payment Options Radio Cards -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                <label class="glass-card" style="padding: 1.25rem; cursor: pointer; display: flex; align-items: center; gap: 0.75rem;">
+                    <input type="radio" name="payment_method" value="card" checked onclick="togglePaymentFields('card')">
+                    <div>
+                        <i class="bi bi-credit-card-fill" style="font-size: 1.4rem; color: var(--primary-cyan);"></i>
+                        <div style="font-weight: 700; font-size: 0.95rem; color: #fff;">Credit / Debit Card</div>
+                    </div>
+                </label>
+
+                <label class="glass-card" style="padding: 1.25rem; cursor: pointer; display: flex; align-items: center; gap: 0.75rem;">
+                    <input type="radio" name="payment_method" value="upi" onclick="togglePaymentFields('upi')">
+                    <div>
+                        <i class="bi bi-qr-code-scan" style="font-size: 1.4rem; color: var(--primary-indigo);"></i>
+                        <div style="font-weight: 700; font-size: 0.95rem; color: #fff;">UPI / Instant QR</div>
+                    </div>
+                </label>
+
+                <label class="glass-card" style="padding: 1.25rem; cursor: pointer; display: flex; align-items: center; gap: 0.75rem;">
+                    <input type="radio" name="payment_method" value="netbanking" onclick="togglePaymentFields('netbanking')">
+                    <div>
+                        <i class="bi bi-bank" style="font-size: 1.4rem; color: var(--accent-purple);"></i>
+                        <div style="font-weight: 700; font-size: 0.95rem; color: #fff;">Net Banking</div>
+                    </div>
+                </label>
+
+                <label class="glass-card" style="padding: 1.25rem; cursor: pointer; display: flex; align-items: center; gap: 0.75rem;">
+                    <input type="radio" name="payment_method" value="cod" onclick="togglePaymentFields('cod')">
+                    <div>
+                        <i class="bi bi-truck" style="font-size: 1.4rem; color: var(--success-green);"></i>
+                        <div style="font-weight: 700; font-size: 0.95rem; color: #fff;">Cash on Delivery</div>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Dynamic Form Fields -->
+            <div id="cardFields" style="margin-bottom: 2rem;">
+                <div style="margin-bottom: 1rem;">
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Card Number</label>
+                    <input type="text" placeholder="4532 •••• •••• 8892" value="4532 8901 2345 8892" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <label style="font-size: 0.85rem; color: var(--text-muted);">Expiry Date</label>
+                        <input type="text" placeholder="MM/YY" value="08/28" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.85rem; color: var(--text-muted);">CVV</label>
+                        <input type="password" placeholder="•••" value="789" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                    </div>
+                </div>
+            </div>
+
+            <div id="upiFields" style="margin-bottom: 2rem; display: none; text-align: center;">
+                <i class="bi bi-qr-code" style="font-size: 6rem; color: var(--primary-cyan);"></i>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Scan with Google Pay, PhonePe, or Paytm UPI app to complete payment.</p>
+            </div>
+
+            <div id="netbankingFields" style="margin-bottom: 2rem; display: none;">
+                <label style="font-size: 0.85rem; color: var(--text-muted);">Select Your Bank</label>
+                <select style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                    <option>Chase Bank</option>
+                    <option>Bank of America</option>
+                    <option>Wells Fargo</option>
+                    <option>HDFC Bank</option>
+                    <option>ICICI Bank</option>
+                </select>
+            </div>
+
+            <div id="codFields" style="margin-bottom: 2rem; display: none;">
+                <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success-green); padding: 1rem; border-radius: var(--radius-sm); color: var(--success-green); font-size: 0.9rem; text-align: center;">
+                    <i class="bi bi-info-circle-fill"></i> Pay cash when your headphones arrive at your shipping address.
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+                Authorize & Complete Order <i class="bi bi-lock-fill"></i>
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+function togglePaymentFields(type) {
+    document.getElementById('cardFields').style.display = type === 'card' ? 'block' : 'none';
+    document.getElementById('upiFields').style.display = type === 'upi' ? 'block' : 'none';
+    document.getElementById('netbankingFields').style.display = type === 'netbanking' ? 'block' : 'none';
+    document.getElementById('codFields').style.display = type === 'cod' ? 'block' : 'none';
+}
+</script>
+{% endblock %}

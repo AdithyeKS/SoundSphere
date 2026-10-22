@@ -1,0 +1,606 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Seller Moderation & Approvals | SoundSphere Admin{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2.5rem; padding-bottom: 5rem;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.75rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <div class="brand-tag-badge" style="margin-bottom: 0.4rem;">
+                <i class="bi bi-shop"></i> Seller Store Moderation
+            </div>
+            <h1 style="font-size: 2.3rem; margin: 0 0 0.4rem 0;">Seller Store <span class="gradient-text">Approvals & Moderation</span></h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
+                Review registered brands, inspect rejection histories, manage re-applications, and grant store permissions.
+            </p>
+        </div>
+    </div>
+
+    {% include 'admin_panel/subnav.html' %}
+
+    <!-- Filter / Moderation Status Tabs -->
+    <div style="display: flex; gap: 0.75rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; flex-wrap: wrap;">
+        <button type="button" class="tab-btn {% if active_tab == 'pending' or not active_tab %}active{% endif %}" onclick="switchModerationTab('pending', this)" style="background: none; border: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 700; padding: 0.6rem 1.25rem; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: var(--transition);">
+            <i class="bi bi-hourglass-split" style="color: var(--star-gold);"></i> Pending Review
+            <span class="badge" style="background: rgba(251, 191, 36, 0.15); color: var(--star-gold); border: 1px solid rgba(251, 191, 36, 0.4); font-size: 0.78rem; padding: 0.2rem 0.6rem; border-radius: 12px;">
+                {{ pending_count }}
+            </span>
+        </button>
+
+        <button type="button" class="tab-btn {% if active_tab == 'approved' %}active{% endif %}" onclick="switchModerationTab('approved', this)" style="background: none; border: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 700; padding: 0.6rem 1.25rem; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: var(--transition);">
+            <i class="bi bi-check-circle-fill" style="color: var(--success-green);"></i> Approved Stores
+            <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: var(--success-green); border: 1px solid rgba(16, 185, 129, 0.4); font-size: 0.78rem; padding: 0.2rem 0.6rem; border-radius: 12px;">
+                {{ approved_count }}
+            </span>
+        </button>
+
+        <button type="button" class="tab-btn {% if active_tab == 'rejected' %}active{% endif %}" onclick="switchModerationTab('rejected', this)" style="background: none; border: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 700; padding: 0.6rem 1.25rem; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: var(--transition);">
+            <i class="bi bi-x-circle-fill" style="color: var(--danger-red);"></i> Rejected Applications
+            <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: var(--danger-red); border: 1px solid rgba(239, 68, 68, 0.4); font-size: 0.78rem; padding: 0.2rem 0.6rem; border-radius: 12px;">
+                {{ rejected_count }}
+            </span>
+        </button>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 1. PENDING SELLER APPLICATIONS SECTION         -->
+    <!-- ============================================== -->
+    <div id="section-pending" class="moderation-section glass-panel" style="padding: 1.75rem; margin-bottom: 2.5rem; {% if active_tab and active_tab != 'pending' %}display: none;{% endif %}">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+            <h3 style="font-size: 1.25rem; margin: 0; display: flex; align-items: center; gap: 0.55rem;">
+                <i class="bi bi-person-badge-fill" style="color: var(--accent-gold);"></i> Pending Seller Applications
+            </h3>
+            {% if pending_sellers %}
+                <span class="badge" style="font-size: 0.82rem; border-radius: 12px; padding: 0.35rem 0.85rem; background: rgba(251, 191, 36, 0.15); color: var(--star-gold); border: 1px solid rgba(251, 191, 36, 0.4);">
+                    <i class="bi bi-hourglass-split"></i> {{ pending_count }} Awaiting Moderation
+                </span>
+            {% endif %}
+        </div>
+
+        {% if pending_sellers %}
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem;">
+                            <th style="padding: 0.85rem 0.75rem;">Brand Name & Logo</th>
+                            <th style="padding: 0.85rem 0.75rem;">Owner Contact</th>
+                            <th style="padding: 0.85rem 0.75rem;">Application Status</th>
+                            <th style="padding: 0.85rem 0.75rem;">Business ID / Tax ID</th>
+                            <th style="padding: 0.85rem 0.75rem;">Location</th>
+                            <th style="padding: 0.85rem 0.75rem; text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for seller in pending_sellers %}
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 1rem 0.75rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                        {% if seller.logo %}
+                                            <img src="{{ seller.logo.url }}" alt="Logo" onclick="openLogoModal('{{ seller.logo.url }}', '{{ seller.store_name|escapejs }}')" style="width: 44px; height: 44px; border-radius: 10px; object-fit: cover; border: 1px solid var(--border-glow); cursor: pointer; transition: transform 0.2s ease;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" title="Click to enlarge logo">
+                                        {% else %}
+                                            <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(0,242,254,0.1); border: 1px solid var(--border-glow); display: flex; align-items: center; justify-content: center; color: var(--primary-cyan); font-weight: 700;">
+                                                <i class="bi bi-shop" style="font-size: 1.2rem;"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            <div style="font-size: 1rem; font-weight: 700; color: #fff;">{{ seller.store_name }}</div>
+                                            {% if seller.tagline %}
+                                                <div style="font-size: 0.78rem; color: var(--primary-cyan); font-style: italic;">"{{ seller.tagline }}"</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="padding: 1rem 0.75rem;">
+                                    <div style="color: #fff; font-weight: 600;">{{ seller.user.get_full_name|default:seller.user.username }}</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">{{ seller.user.email }}</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);"><i class="bi bi-telephone"></i> {{ seller.phone|default:'N/A' }}</div>
+                                </td>
+                                <td style="padding: 1rem 0.75rem;">
+                                    {% if seller.reapplication_count > 0 %}
+                                        <span class="badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); font-size: 0.78rem; padding: 0.25rem 0.65rem; border-radius: 12px; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                            <i class="bi bi-arrow-repeat"></i> Reapplied (Attempt #{{ seller.reapplication_count|add:1 }})
+                                        </span>
+                                        {% if seller.reapplication_notes %}
+                                            <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ seller.reapplication_notes }}">
+                                                Note: "{{ seller.reapplication_notes }}"
+                                            </div>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="badge" style="background: rgba(251, 191, 36, 0.15); color: var(--star-gold); border: 1px solid rgba(251, 191, 36, 0.4); font-size: 0.78rem; padding: 0.25rem 0.65rem; border-radius: 12px;">
+                                            Initial Application (Attempt #1)
+                                        </span>
+                                    {% endif %}
+                                    <div>
+                                        <a href="javascript:void(0)" onclick="openDetailsModal('{{ seller.store_name|escapejs }}', '{{ seller.tagline|default:''|escapejs }}', '{{ seller.store_description|escapejs }}', '{{ seller.user.get_full_name|default:seller.user.username|escapejs }}', '{{ seller.user.email|escapejs }}', '{{ seller.phone|default:'N/A'|escapejs }}', '{{ seller.tax_id|default:'N/A'|escapejs }}', '{{ seller.location|default:'N/A'|escapejs }}', '{% if seller.logo %}{{ seller.logo.url }}{% endif %}', '{{ seller.reapplication_count|add:1 }}', '{{ seller.reapplication_notes|default:''|escapejs }}', '{{ seller.rejection_reason|default:''|escapejs }}')" style="color: var(--primary-cyan); font-size: 0.78rem; display: inline-block; margin-top: 0.35rem; font-weight: 600; text-decoration: underline;">
+                                            <i class="bi bi-eye"></i> View Full Application Details &rarr;
+                                        </a>
+                                    </div>
+                                </td>
+                                <td style="padding: 1rem 0.75rem; color: var(--accent-gold); font-weight: 600;">
+                                    {{ seller.tax_id|default:'N/A' }}
+                                </td>
+                                <td style="padding: 1rem 0.75rem; color: var(--text-muted); font-size: 0.85rem;">
+                                    <i class="bi bi-geo-alt"></i> {{ seller.location|default:'N/A' }}{% if seller.state %}, {{ seller.state }}{% endif %}
+                                </td>
+                                <td style="padding: 1rem 0.75rem; text-align: right;">
+                                    <div style="display: flex; flex-direction: column; gap: 0.4rem; align-items: flex-end;">
+                                        <button type="button" class="btn btn-primary btn-sm" style="background: #10b981; border-color: #10b981; padding: 0.35rem 0.85rem; font-size: 0.82rem; width: 110px; justify-content: center;" onclick="openApproveSellerModal('{{ seller.id }}', '{{ seller.store_name|escapejs }}', '{{ seller.user.get_full_name|default:seller.user.username|escapejs }}', '{% if seller.logo %}{{ seller.logo.url }}{% endif %}')">
+                                            <i class="bi bi-check-lg"></i> Approve
+                                        </button>
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="openRejectSellerModal('{{ seller.id }}', '{{ seller.store_name|escapejs }}', '{% if seller.logo %}{{ seller.logo.url }}{% endif %}')" style="background: rgba(239, 68, 68, 0.2); color: var(--danger-red); border-color: rgba(239, 68, 68, 0.4); padding: 0.35rem 0.85rem; font-size: 0.82rem; width: 110px; justify-content: center;">
+                                            <i class="bi bi-x-lg"></i> Reject
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p style="color: var(--text-muted); margin: 0; padding: 1.5rem 0; text-align: center;">
+                <i class="bi bi-check2-circle" style="color: var(--success-green); font-size: 1.5rem; display: block; margin-bottom: 0.4rem;"></i>
+                No pending seller applications at this time. All caught up!
+            </p>
+        {% endif %}
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 2. APPROVED ACTIVE STORES SECTION             -->
+    <!-- ============================================== -->
+    <div id="section-approved" class="moderation-section glass-panel" style="padding: 1.75rem; margin-bottom: 2.5rem; {% if active_tab != 'approved' %}display: none;{% endif %}">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+            <h3 style="font-size: 1.25rem; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="bi bi-shop" style="color: var(--success-green);"></i> Approved Active Stores
+            </h3>
+            <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: var(--success-green); border: 1px solid rgba(16, 185, 129, 0.4); font-size: 0.82rem; padding: 0.35rem 0.85rem; border-radius: 12px;">
+                {{ approved_count }} Active Brands
+            </span>
+        </div>
+
+        {% if approved_sellers %}
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem;">
+                            <th style="padding: 0.85rem 0.75rem;">Brand Name & Logo</th>
+                            <th style="padding: 0.85rem 0.75rem;">Owner Contact</th>
+                            <th style="padding: 0.85rem 0.75rem;">Location</th>
+                            <th style="padding: 0.85rem 0.75rem;">Business ID / Tax ID</th>
+                            <th style="padding: 0.85rem 0.75rem;">Total Attempts</th>
+                            <th style="padding: 0.85rem 0.75rem;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for seller in approved_sellers %}
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 0.85rem 0.75rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                        {% if seller.logo %}
+                                            <img src="{{ seller.logo.url }}" alt="Logo" onclick="openLogoModal('{{ seller.logo.url }}', '{{ seller.store_name|escapejs }}')" style="width: 36px; height: 36px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-glow); cursor: pointer;" title="Click to enlarge">
+                                        {% else %}
+                                            <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(0,242,254,0.1); border: 1px solid var(--border-glow); display: flex; align-items: center; justify-content: center; color: var(--primary-cyan); font-weight: 700;">
+                                                <i class="bi bi-shop"></i>
+                                            </div>
+                                        {% endif %}
+                                        <span style="font-weight: 700; color: #fff;">{{ seller.store_name }}</span>
+                                    </div>
+                                </td>
+                                <td style="padding: 0.85rem 0.75rem; color: var(--primary-cyan);">
+                                    <div>{{ seller.user.get_full_name|default:seller.user.username }}</div>
+                                    <div style="font-size: 0.78rem; color: var(--text-muted);">{{ seller.user.email }}</div>
+                                </td>
+                                <td style="padding: 0.85rem 0.75rem; color: var(--text-muted);">
+                                    <i class="bi bi-geo-alt"></i> {{ seller.location|default:'N/A' }}{% if seller.state %}, {{ seller.state }}{% endif %}
+                                </td>
+                                <td style="padding: 0.85rem 0.75rem; color: var(--accent-gold); font-weight: 600;">
+                                    {{ seller.tax_id|default:'N/A' }}
+                                </td>
+                                <td style="padding: 0.85rem 0.75rem; color: var(--text-muted); font-size: 0.82rem;">
+                                    Attempt #{{ seller.reapplication_count|add:1 }}
+                                </td>
+                                <td style="padding: 0.85rem 0.75rem;">
+                                    <span style="color: var(--success-green); font-weight: 700; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                        <i class="bi bi-check-circle-fill"></i> Active & Approved
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p style="color: var(--text-muted); margin: 0; padding: 1.5rem 0; text-align: center;">No active sellers approved yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 3. REJECTED SELLER APPLICATIONS SECTION       -->
+    <!-- ============================================== -->
+    <div id="section-rejected" class="moderation-section glass-panel" style="padding: 1.75rem; margin-bottom: 2.5rem; {% if active_tab != 'rejected' %}display: none;{% endif %}">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+            <div>
+                <h3 style="font-size: 1.25rem; margin: 0 0 0.25rem 0; display: flex; align-items: center; gap: 0.55rem; color: #fff;">
+                    <i class="bi bi-x-circle-fill" style="color: var(--danger-red);"></i> Rejected Seller Applications
+                </h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+                    Applications that did not satisfy verification criteria. Sellers can address feedback and reapply.
+                </p>
+            </div>
+            <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: var(--danger-red); border: 1px solid rgba(239, 68, 68, 0.4); font-size: 0.82rem; padding: 0.35rem 0.85rem; border-radius: 12px;">
+                {{ rejected_count }} Rejected Records
+            </span>
+        </div>
+
+        {% if rejected_sellers %}
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem;">
+                            <th style="padding: 0.85rem 0.75rem;">Brand Name & Logo</th>
+                            <th style="padding: 0.85rem 0.75rem;">Owner Contact</th>
+                            <th style="padding: 0.85rem 0.75rem;">Rejection Reason & Feedback</th>
+                            <th style="padding: 0.85rem 0.75rem;">Attempts</th>
+                            <th style="padding: 0.85rem 0.75rem;">Business ID / Tax ID</th>
+                            <th style="padding: 0.85rem 0.75rem; text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for seller in rejected_sellers %}
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 1rem 0.75rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                        {% if seller.logo %}
+                                            <img src="{{ seller.logo.url }}" alt="Logo" onclick="openLogoModal('{{ seller.logo.url }}', '{{ seller.store_name|escapejs }}')" style="width: 44px; height: 44px; border-radius: 10px; object-fit: cover; border: 1px solid rgba(239,68,68,0.4); cursor: pointer;" title="Click to enlarge">
+                                        {% else %}
+                                            <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); display: flex; align-items: center; justify-content: center; color: var(--danger-red); font-weight: 700;">
+                                                <i class="bi bi-shop" style="font-size: 1.2rem;"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            <div style="font-size: 1rem; font-weight: 700; color: #fff;">{{ seller.store_name }}</div>
+                                            {% if seller.has_reapplied %}
+                                                <span class="badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 10px;">
+                                                    <i class="bi bi-arrow-repeat"></i> Reapplied (Ready for Review)
+                                                </span>
+                                            {% else %}
+                                                <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: var(--danger-red); border: 1px solid rgba(239, 68, 68, 0.3); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 10px;">
+                                                    Rejected
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="padding: 1rem 0.75rem;">
+                                    <div style="color: #fff; font-weight: 600;">{{ seller.user.get_full_name|default:seller.user.username }}</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">{{ seller.user.email }}</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);"><i class="bi bi-telephone"></i> {{ seller.phone|default:'N/A' }}</div>
+                                </td>
+                                <td style="padding: 1rem 0.75rem; max-width: 260px;">
+                                    <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 8px; padding: 0.6rem 0.85rem; font-size: 0.82rem; color: #fca5a5; line-height: 1.4;">
+                                        <i class="bi bi-exclamation-circle-fill" style="margin-right: 0.3rem;"></i>
+                                        {{ seller.rejection_reason|default:"Verification information was incomplete." }}
+                                    </div>
+                                </td>
+                                <td style="padding: 1rem 0.75rem;">
+                                    <span class="badge" style="background: rgba(255, 255, 255, 0.05); color: var(--text-muted); border: 1px solid var(--border-color); font-size: 0.78rem; padding: 0.25rem 0.65rem; border-radius: 12px;">
+                                        Attempt #{{ seller.reapplication_count|add:1 }}
+                                    </span>
+                                </td>
+                                <td style="padding: 1rem 0.75rem; color: var(--accent-gold); font-weight: 600;">
+                                    {{ seller.tax_id|default:'N/A' }}
+                                </td>
+                                <td style="padding: 1rem 0.75rem; text-align: right;">
+                                    <div style="display: flex; flex-direction: column; gap: 0.4rem; align-items: flex-end;">
+                                        {% if seller.has_reapplied %}
+                                            <button type="button" class="btn btn-primary btn-sm" style="background: #10b981; border-color: #10b981; padding: 0.35rem 0.85rem; font-size: 0.82rem; width: 135px; justify-content: center;" onclick="openApproveSellerModal('{{ seller.id }}', '{{ seller.store_name|escapejs }}', '{{ seller.user.get_full_name|default:seller.user.username|escapejs }}', '{% if seller.logo %}{{ seller.logo.url }}{% endif %}')" title="Seller has reapplied - click to approve and unlock store">
+                                                <i class="bi bi-check-lg"></i> Re-approve
+                                            </button>
+                                        {% else %}
+                                            <span style="font-size: 0.75rem; color: var(--text-dim); display: inline-flex; align-items: center; justify-content: center; gap: 0.3rem; padding: 0.35rem 0.65rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 8px; width: 135px;">
+                                                <i class="bi bi-clock"></i> Awaiting Reapply
+                                            </span>
+                                        {% endif %}
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="openDetailsModal('{{ seller.store_name|escapejs }}', '{{ seller.tagline|default:''|escapejs }}', '{{ seller.store_description|escapejs }}', '{{ seller.user.get_full_name|default:seller.user.username|escapejs }}', '{{ seller.user.email|escapejs }}', '{{ seller.phone|default:'N/A'|escapejs }}', '{{ seller.tax_id|default:'N/A'|escapejs }}', '{{ seller.location|default:'N/A'|escapejs }}', '{% if seller.logo %}{{ seller.logo.url }}{% endif %}', '{{ seller.reapplication_count|add:1 }}', '{{ seller.reapplication_notes|default:''|escapejs }}', '{{ seller.rejection_reason|default:''|escapejs }}')" style="padding: 0.35rem 0.85rem; font-size: 0.82rem; width: 135px; justify-content: center;">
+                                            <i class="bi bi-eye"></i> View Details
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p style="color: var(--text-muted); margin: 0; padding: 1.5rem 0; text-align: center;">No rejected seller applications on record.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 4. MODALS (ENLARGED LOGO, DETAILS, ACTIONS)    -->
+<!-- ============================================== -->
+
+<!-- Logo Enlargement Modal -->
+<div id="sellerLogoModal" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:9999; align-items:center; justify-content:center;">
+    <div style="position:relative; background:#0d121d; border:1px solid var(--border-glow); border-radius:20px; padding:2rem; max-width:480px; width:90%; text-align:center; box-shadow:0 20px 60px rgba(0,242,254,0.25);">
+        <button onclick="closeLogoModal()" style="position:absolute; top:1rem; right:1.2rem; background:none; border:none; color:var(--text-muted); font-size:1.6rem; cursor:pointer;">&times;</button>
+        <h4 id="logoModalBrandTitle" style="font-size:1.25rem; margin-bottom:1.25rem; color:#fff; font-weight:700;"></h4>
+        <img id="logoModalImg" src="" alt="Brand Logo Zoom" style="max-width:100%; max-height:360px; border-radius:14px; border:1px solid var(--border-color); object-fit:contain; background:#090d16; padding:0.5rem;">
+    </div>
+</div>
+
+<!-- Full Application Details Modal -->
+<div id="sellerDetailsModal" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:9999; align-items:center; justify-content:center;">
+    <div style="position:relative; background:#0d121d; border:1px solid var(--border-glow); border-radius:20px; padding:2rem 2.25rem; max-width:680px; width:90%; color:#fff; box-shadow:0 20px 60px rgba(0,0,0,0.85); max-height:85vh; overflow-y:auto;">
+        <button onclick="closeDetailsModal()" style="position:absolute; top:1rem; right:1.2rem; background:none; border:none; color:var(--text-muted); font-size:1.6rem; cursor:pointer;">&times;</button>
+        
+        <div style="display:flex; align-items:center; gap:1.1rem; margin-bottom:1.25rem; border-bottom:1px solid var(--border-color); padding-bottom:1.1rem;">
+            <div id="modalLogoContainer"></div>
+            <div>
+                <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+                    <h3 id="modalBrandName" style="font-size:1.35rem; margin:0; color:#fff; font-weight:700;"></h3>
+                    <span id="modalAttemptBadge" class="badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); font-size: 0.78rem; padding: 0.2rem 0.6rem; border-radius: 12px;"></span>
+                </div>
+                <div id="modalTagline" style="color:var(--primary-cyan); font-size:0.88rem; font-style:italic; margin-top:0.2rem;"></div>
+            </div>
+        </div>
+
+        <!-- Reapplication Notes / Prior Feedback Box -->
+        <div id="modalNotesSection" style="display: none; margin-bottom: 1.25rem;">
+            <div id="modalNotesBox" style="background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 12px; padding: 0.9rem 1.1rem; margin-bottom: 0.75rem;">
+                <div style="font-size: 0.75rem; text-transform: uppercase; color: #c084fc; font-weight: 700; margin-bottom: 0.25rem;">
+                    <i class="bi bi-chat-quote-fill"></i> Seller's Reapplication Note:
+                </div>
+                <div id="modalNotesText" style="font-size: 0.9rem; color: #fff; line-height: 1.4;"></div>
+            </div>
+            <div id="modalPrevRejectionBox" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 12px; padding: 0.9rem 1.1rem;">
+                <div style="font-size: 0.75rem; text-transform: uppercase; color: #f87171; font-weight: 700; margin-bottom: 0.25rem;">
+                    <i class="bi bi-x-circle-fill"></i> Prior Rejection Feedback:
+                </div>
+                <div id="modalPrevRejectionText" style="font-size: 0.9rem; color: #fca5a5; line-height: 1.4;"></div>
+            </div>
+        </div>
+
+        <div style="margin-bottom:1.25rem;">
+            <h5 style="color:var(--primary-cyan); font-size:0.82rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.45rem;">
+                <i class="bi bi-card-text"></i> Full Brand Description
+            </h5>
+            <p id="modalDescription" style="color:var(--text-muted); font-size:0.92rem; line-height:1.6; background:rgba(255,255,255,0.03); padding:1.1rem; border-radius:12px; border:1px solid var(--border-color); white-space:pre-wrap; margin:0;"></p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.9rem 1.2rem; margin-bottom:1.5rem; background:rgba(255,255,255,0.02); padding:1.1rem; border-radius:12px; border:1px solid var(--border-color); font-size:0.88rem;">
+            <div>
+                <div style="font-size:0.75rem; color:var(--text-dim); text-transform:uppercase;">Applicant Name</div>
+                <div id="modalOwnerName" style="font-weight:600; color:#fff; margin-top:0.15rem;"></div>
+            </div>
+            <div>
+                <div style="font-size:0.75rem; color:var(--text-dim); text-transform:uppercase;">Email Address</div>
+                <div id="modalOwnerEmail" style="color:var(--primary-cyan); font-weight:600; margin-top:0.15rem;"></div>
+            </div>
+            <div>
+                <div style="font-size:0.75rem; color:var(--text-dim); text-transform:uppercase;">Contact Phone</div>
+                <div id="modalOwnerPhone" style="font-weight:600; color:#fff; margin-top:0.15rem;"></div>
+            </div>
+            <div>
+                <div style="font-size:0.75rem; color:var(--text-dim); text-transform:uppercase;">Business ID / Tax ID</div>
+                <div id="modalTaxId" style="color:var(--accent-gold); font-weight:600; margin-top:0.15rem;"></div>
+            </div>
+            <div style="grid-column: span 2;">
+                <div style="font-size:0.75rem; color:var(--text-dim); text-transform:uppercase;">Store Location</div>
+                <div id="modalLocation" style="font-weight:600; color:#fff; margin-top:0.15rem;"></div>
+            </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.75rem;">
+            <button onclick="closeDetailsModal()" class="btn btn-secondary btn-sm" style="padding:0.5rem 1.4rem;">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Approve Seller Modal -->
+<div id="approveSellerModal" style="position: fixed; inset: 0; z-index: 99999; background: rgba(5, 8, 15, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: none; align-items: center; justify-content: center; padding: 1.5rem;">
+    <div class="glass-panel" style="width: 100%; max-width: 500px; padding: 2.25rem; border: 1px solid var(--border-glow); border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); animation: modalFadeIn 0.3s ease;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(16, 185, 129, 0.15); border: 2px solid #10b981; color: #10b981; font-size: 2rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto;">
+                <i class="bi bi-shop"></i>
+            </div>
+            <h2 style="font-size: 1.6rem; color: #fff; margin-bottom: 0.35rem;">Approve Seller Store?</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Are you sure you want to approve this brand application? The seller will gain full access to list headsets in the catalog.</p>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; margin-bottom: 1.75rem; display: flex; align-items: center; gap: 1rem;">
+            <div id="approveSellerLogoContainer" style="width: 50px; height: 50px; border-radius: 10px; background: rgba(0,242,254,0.1); border: 1px solid var(--border-glow); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <i class="bi bi-shop" style="font-size: 1.3rem; color: var(--primary-cyan);"></i>
+            </div>
+            <div>
+                <div id="approveSellerStoreTitle" style="font-weight: 700; color: #fff; font-size: 1rem; margin-bottom: 0.15rem;"></div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">
+                    Applicant: <strong id="approveSellerOwnerName" style="color: var(--primary-cyan);"></strong>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem;">
+            <a id="approveSellerConfirmBtn" href="#" class="btn btn-primary" style="flex: 1; padding: 0.8rem; justify-content: center; background: #10b981; border-color: #10b981; font-weight: 700;">
+                <i class="bi bi-check-circle-fill"></i> Approve & Unlock Store
+            </a>
+            <button type="button" class="btn btn-secondary" onclick="closeApproveSellerModal()" style="padding: 0.8rem 1.25rem;">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Reject Seller Modal -->
+<div id="rejectSellerModal" style="position: fixed; inset: 0; z-index: 99999; background: rgba(5, 8, 15, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: none; align-items: center; justify-content: center; padding: 1.5rem;">
+    <div class="glass-panel" style="width: 100%; max-width: 500px; padding: 2.25rem; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); animation: modalFadeIn 0.3s ease;">
+        <div style="text-align: center; margin-bottom: 1.25rem;">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(239, 68, 68, 0.15); border: 2px solid var(--danger-red); color: var(--danger-red); font-size: 2rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto;">
+                <i class="bi bi-x-circle-fill"></i>
+            </div>
+            <h2 style="font-size: 1.6rem; color: #fff; margin-bottom: 0.35rem;">Reject Seller Application</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Specify a clear reason so the seller knows what criteria to rectify when reapplying.</p>
+        </div>
+
+        <form id="rejectSellerForm" method="POST" action="">
+            {% csrf_token %}
+            <div style="margin-bottom: 1.5rem;">
+                <label style="font-size: 0.85rem; color: #fff; font-weight: 600; display: block; margin-bottom: 0.4rem;">Store / Brand Name</label>
+                <div id="rejectSellerStoreTitle" style="font-size: 1rem; font-weight: 700; color: var(--primary-cyan); margin-bottom: 1rem;"></div>
+
+                <label style="font-size: 0.85rem; color: #fff; font-weight: 600; display: block; margin-bottom: 0.4rem;">Rejection Reason <span style="color: var(--danger-red);">*</span></label>
+                <textarea name="rejection_reason" rows="3" required placeholder="e.g. GSTIN verification failed, brand logo quality insufficient, or contact phone invalid..." style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.9rem; outline: none;"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem;">
+                <button type="submit" class="btn btn-danger" style="flex: 1; padding: 0.8rem; justify-content: center; font-weight: 700;">
+                    <i class="bi bi-x-circle-fill"></i> Confirm Rejection
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="closeRejectSellerModal()" style="padding: 0.8rem 1.25rem;">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.tab-btn.active {
+    background: rgba(0, 242, 254, 0.12) !important;
+    color: var(--primary-cyan) !important;
+    border: 1px solid var(--border-glow) !important;
+}
+</style>
+
+<script>
+function switchModerationTab(tabName, btnElement) {
+    document.querySelectorAll('.moderation-section').forEach(sec => sec.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+    const activeSec = document.getElementById('section-' + tabName);
+    if (activeSec) {
+        activeSec.style.display = 'block';
+    }
+    if (btnElement) {
+        btnElement.classList.add('active');
+    }
+}
+
+function openLogoModal(imgUrl, brandName) {
+    document.getElementById('logoModalBrandTitle').textContent = brandName + " Brand Logo";
+    document.getElementById('logoModalImg').src = imgUrl;
+    const modal = document.getElementById('sellerLogoModal');
+    modal.style.display = 'flex';
+}
+
+function closeLogoModal() {
+    document.getElementById('sellerLogoModal').style.display = 'none';
+}
+
+function openDetailsModal(brandName, tagline, description, ownerName, ownerEmail, ownerPhone, taxId, location, logoUrl, attemptNumber, reapplicationNotes, prevRejectionReason) {
+    document.getElementById('modalBrandName').textContent = brandName;
+    document.getElementById('modalTagline').textContent = tagline ? '"' + tagline + '"' : '';
+    document.getElementById('modalDescription').textContent = description || 'No description provided.';
+    document.getElementById('modalOwnerName').textContent = ownerName;
+    document.getElementById('modalOwnerEmail').textContent = ownerEmail;
+    document.getElementById('modalOwnerPhone').textContent = ownerPhone;
+    document.getElementById('modalTaxId').textContent = taxId;
+    document.getElementById('modalLocation').textContent = location;
+
+    const attemptBadge = document.getElementById('modalAttemptBadge');
+    if (attemptNumber) {
+        attemptBadge.textContent = "Attempt #" + attemptNumber;
+        attemptBadge.style.display = 'inline-block';
+    } else {
+        attemptBadge.style.display = 'none';
+    }
+
+    const notesSection = document.getElementById('modalNotesSection');
+    const notesBox = document.getElementById('modalNotesBox');
+    const notesText = document.getElementById('modalNotesText');
+    const prevRejectionBox = document.getElementById('modalPrevRejectionBox');
+    const prevRejectionText = document.getElementById('modalPrevRejectionText');
+
+    let hasNotes = false;
+    if (reapplicationNotes && reapplicationNotes.trim() !== '') {
+        notesText.textContent = reapplicationNotes;
+        notesBox.style.display = 'block';
+        hasNotes = true;
+    } else {
+        notesBox.style.display = 'none';
+    }
+
+    if (prevRejectionReason && prevRejectionReason.trim() !== '') {
+        prevRejectionText.textContent = prevRejectionReason;
+        prevRejectionBox.style.display = 'block';
+        hasNotes = true;
+    } else {
+        prevRejectionBox.style.display = 'none';
+    }
+
+    notesSection.style.display = hasNotes ? 'block' : 'none';
+
+    const logoContainer = document.getElementById('modalLogoContainer');
+    if (logoUrl) {
+        logoContainer.innerHTML = `<img src="${logoUrl}" style="width: 50px; height: 50px; border-radius: 12px; object-fit: cover; border: 1px solid var(--border-glow);">`;
+    } else {
+        logoContainer.innerHTML = `<div style="width: 50px; height: 50px; border-radius: 12px; background: rgba(0,242,254,0.1); border: 1px solid var(--border-glow); display: flex; align-items: center; justify-content: center; color: var(--primary-cyan); font-weight: 700; font-size: 1.3rem;"><i class="bi bi-shop"></i></div>`;
+    }
+
+    document.getElementById('sellerDetailsModal').style.display = 'flex';
+}
+
+function closeDetailsModal() {
+    document.getElementById('sellerDetailsModal').style.display = 'none';
+}
+
+function openApproveSellerModal(id, storeName, ownerName, logoUrl) {
+    document.getElementById('approveSellerStoreTitle').innerText = storeName;
+    document.getElementById('approveSellerOwnerName').innerText = ownerName;
+    
+    const container = document.getElementById('approveSellerLogoContainer');
+    if (logoUrl) {
+        container.innerHTML = `<img src="${logoUrl}" style="max-width: 100%; max-height: 100%; border-radius: 8px; object-fit: cover;">`;
+    } else {
+        container.innerHTML = `<i class="bi bi-shop" style="font-size: 1.3rem; color: var(--primary-cyan);"></i>`;
+    }
+
+    document.getElementById('approveSellerConfirmBtn').href = `/admin-panel/sellers/approve/${id}/`;
+    document.getElementById('approveSellerModal').style.display = 'flex';
+}
+
+function closeApproveSellerModal() {
+    document.getElementById('approveSellerModal').style.display = 'none';
+}
+
+function openRejectSellerModal(id, storeName, logoUrl) {
+    document.getElementById('rejectSellerStoreTitle').innerText = storeName;
+    document.getElementById('rejectSellerForm').action = `/admin-panel/sellers/reject/${id}/`;
+    document.getElementById('rejectSellerModal').style.display = 'flex';
+}
+
+function closeRejectSellerModal() {
+    document.getElementById('rejectSellerModal').style.display = 'none';
+}
+
+// Close modals when clicking backdrop
+window.addEventListener('click', function(e) {
+    const logoModal = document.getElementById('sellerLogoModal');
+    const detailsModal = document.getElementById('sellerDetailsModal');
+    const appSellerModal = document.getElementById('approveSellerModal');
+    const rejSellerModal = document.getElementById('rejectSellerModal');
+
+    if (e.target === logoModal) closeLogoModal();
+    if (e.target === detailsModal) closeDetailsModal();
+    if (e.target === appSellerModal) closeApproveSellerModal();
+    if (e.target === rejSellerModal) closeRejectSellerModal();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sales Orders | SoundSphere Seller Portal{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
+        <div>
+            <div class="brand-tag-badge" style="margin-bottom: 0.4rem;">
+                <i class="bi bi-box-seam"></i> Brand Merchant Fulfillment
+            </div>
+            <h1 style="font-size: 2.2rem;">My Store <span class="gradient-text">Sales Orders</span></h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">Track customer orders placed for your brand's headsets and update delivery fulfillment status.</p>
+        </div>
+        <a href="{% url 'sellers:dashboard' %}" class="btn btn-secondary btn-sm">
+            <i class="bi bi-speedometer2"></i> Back to Seller Portal
+        </a>
+    </div>
+
+    <div class="glass-panel" style="padding: 1.5rem;">
+        {% if orders_list %}
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem;">
+                        <th style="padding: 0.85rem 0.5rem;">Order #</th>
+                        <th style="padding: 0.85rem 0.5rem;">Customer & Shipping Address</th>
+                        <th style="padding: 0.85rem 0.5rem;">Ordered Headsets</th>
+                        <th style="padding: 0.85rem 0.5rem;">Payment</th>
+                        <th style="padding: 0.85rem 0.5rem;">Current Status</th>
+                        <th style="padding: 0.85rem 0.5rem; text-align: right;">Update Delivery Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order_entry in orders_list %}
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 1rem 0.5rem; font-weight: 700; color: var(--primary-cyan); vertical-align: top;">
+                                #{{ order_entry.order.order_number }}
+                                <div style="font-size: 0.78rem; color: var(--text-dim); margin-top: 0.2rem;">
+                                    {{ order_entry.order.created_at|date:"M d, Y H:i" }}
+                                </div>
+                            </td>
+                            <td style="padding: 1rem 0.5rem; color: #fff; vertical-align: top;">
+                                <strong style="color: #fff;">{{ order_entry.order.full_name }}</strong><br>
+                                <span style="font-size: 0.82rem; color: var(--text-muted);"><i class="bi bi-telephone"></i> {{ order_entry.order.phone }}</span><br>
+                                <span style="font-size: 0.82rem; color: var(--text-dim);">
+                                    <i class="bi bi-geo-alt"></i> {{ order_entry.order.street_address }}{% if order_entry.order.apartment_address %}, {{ order_entry.order.apartment_address }}{% endif %}, {{ order_entry.order.city }}, {{ order_entry.order.state }} - {{ order_entry.order.postal_code }}
+                                </span>
+                            </td>
+                            <td style="padding: 1rem 0.5rem; vertical-align: top;">
+                                {% for item in order_entry.items %}
+                                    <div style="margin-bottom: 0.4rem; color: #fff; font-size: 0.88rem;">
+                                        <strong>{{ item.quantity }}x</strong> {{ item.product_name }}
+                                        <span style="color: var(--success-green); font-weight: 700;">(₹{{ item.total_price }})</span>
+                                    </div>
+                                {% endfor %}
+                            </td>
+                            <td style="padding: 1rem 0.5rem; vertical-align: top;">
+                                {% if order_entry.order.payment_status == 'Paid' %}
+                                    <span style="padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">
+                                        Paid
+                                    </span>
+                                {% else %}
+                                    <span style="padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3);">
+                                        {{ order_entry.order.payment_status }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td style="padding: 1rem 0.5rem; vertical-align: top;">
+                                <span style="padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700; background: rgba(0, 240, 255, 0.12); color: var(--primary-cyan); border: 1px solid rgba(0, 240, 255, 0.3);">
+                                    {{ order_entry.order.status }}
+                                </span>
+                            </td>
+                            <td style="padding: 1rem 0.5rem; text-align: right; vertical-align: top;">
+                                <form method="POST" action="{% url 'sellers:update_order_status' order_entry.order.order_number %}" style="display: flex; gap: 0.4rem; justify-content: flex-end;">
+                                    {% csrf_token %}
+                                    <select name="status" style="padding: 0.35rem 0.6rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.82rem;">
+                                        <option value="Pending" {% if order_entry.order.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                        <option value="Confirmed" {% if order_entry.order.status == 'Confirmed' %}selected{% endif %}>Confirmed</option>
+                                        <option value="Packed" {% if order_entry.order.status == 'Packed' %}selected{% endif %}>Packed</option>
+                                        <option value="Shipped" {% if order_entry.order.status == 'Shipped' %}selected{% endif %}>Shipped</option>
+                                        <option value="Out for Delivery" {% if order_entry.order.status == 'Out for Delivery' %}selected{% endif %}>Out for Delivery</option>
+                                        <option value="Delivered" {% if order_entry.order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                        <option value="Cancelled" {% if order_entry.order.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                                        <option value="Returned" {% if order_entry.order.status == 'Returned' %}selected{% endif %}>Returned</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary btn-sm" style="padding: 0.35rem 0.7rem; font-size: 0.8rem;">
+                                        Update Status
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div style="text-align: center; padding: 3rem 0; color: var(--text-muted);">
+                <i class="bi bi-box-seam" style="font-size: 3rem; color: var(--text-dim); display: block; margin-bottom: 0.5rem;"></i>
+                <h4>No Sales Orders Recorded Yet</h4>
+                <p>Orders containing headsets from your brand will appear here automatically.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

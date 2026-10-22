@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Wishlist | SoundSphere{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
+    <h1 style="font-size: 2.2rem; margin-bottom: 2rem;">Saved <span class="gradient-text">Wishlist</span></h1>
+
+    {% if items %}
+        <div class="product-grid">
+            {% for item in items %}
+                <div class="product-card glass-card">
+                    <form method="POST" action="{% url 'wishlist:toggle' item.product.id %}" style="position: absolute; top: 1rem; right: 1rem; z-index: 10;">
+                        {% csrf_token %}
+                        <button type="submit" class="wishlist-toggle active" title="Remove from Wishlist">
+                            <i class="bi bi-heart-fill"></i>
+                        </button>
+                    </form>
+
+                    <a href="{% url 'products:detail' item.product.slug %}" class="product-img-wrapper">
+                        {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="product-img">
+                        {% else %}
+                            <i class="bi bi-headphones" style="font-size: 5rem; color: var(--primary-indigo);"></i>
+                        {% endif %}
+                    </a>
+
+                    <div class="product-info">
+                        <span class="product-category">{{ item.product.category.name }}</span>
+                        <h3 class="product-title">
+                            <a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a>
+                        </h3>
+
+                        <div class="product-price-row" style="margin-top: 1rem;">
+                            <span class="price-tag">₹{{ item.product.current_price }}</span>
+                            <a href="{% url 'wishlist:move_to_cart' item.product.id %}" class="btn btn-primary btn-sm">
+                                Move to Cart <i class="bi bi-bag-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="glass-panel" style="text-align: center; padding: 5rem 2rem;">
+            <i class="bi bi-heartbreak" style="font-size: 4.5rem; color: var(--danger-red);"></i>
+            <h2 style="margin-top: 1rem;">Your Wishlist is Empty</h2>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Save your favorite headphones and audio gear to review or buy later.</p>
+            <a href="{% url 'products:list' %}" class="btn btn-primary">Explore Products</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

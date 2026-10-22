@@ -1,0 +1,930 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}SoundSphere | Feel The Pure Acoustic Precision{% endblock %}
+
+{% block content %}
+<style>
+/* Smooth Scroll Progress Bar */
+#scrollProgress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background: var(--gradient-audio);
+    z-index: 9999;
+    width: 0%;
+    transition: width 0.05s linear;
+    box-shadow: 0 0 10px var(--primary-cyan);
+    pointer-events: none;
+    will-change: width;
+}
+
+/* Floating Back to Top Button */
+.back-to-top-btn {
+    position: fixed;
+    bottom: 2.5rem;
+    right: 2.5rem;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(18, 24, 38, 0.9);
+    border: 1px solid var(--border-glow);
+    color: var(--primary-cyan);
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s ease, box-shadow 0.2s ease;
+    z-index: 900;
+    will-change: opacity, transform;
+}
+
+.back-to-top-btn.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.back-to-top-btn:hover {
+    background: var(--gradient-audio);
+    color: #000;
+    transform: translateY(-4px) scale(1.1);
+    box-shadow: 0 0 25px rgba(0, 242, 254, 0.6);
+}
+
+/* 3D Animated Background Ambient Orbs */
+.ambient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.35;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    animation: orbPulse 8s ease-in-out infinite alternate;
+}
+
+.orb-1 {
+    top: -100px;
+    right: 5%;
+    width: 550px;
+    height: 550px;
+    background: radial-gradient(circle, rgba(0, 242, 254, 0.4) 0%, rgba(127, 0, 255, 0.2) 60%, rgba(0,0,0,0) 80%);
+}
+
+.orb-2 {
+    top: 450px;
+    left: -100px;
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, rgba(127, 0, 255, 0.35) 0%, rgba(0, 242, 254, 0.15) 60%, rgba(0,0,0,0) 80%);
+    animation-delay: 3s;
+}
+
+@keyframes orbPulse {
+    0% { transform: scale(0.9) translate3d(0, 0, 0); opacity: 0.25; }
+    100% { transform: scale(1.15) translate3d(0, -30px, 0); opacity: 0.45; }
+}
+
+/* Hero Section with 3D Viewport */
+.hero-section-3d {
+    position: relative;
+    padding: 4rem 0 6rem 0;
+    overflow: hidden;
+}
+
+.hero-grid-3d {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    align-items: center;
+    gap: 3.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+/* 3D Viewport Box */
+.headset-3d-viewport {
+    position: relative;
+    width: 100%;
+    height: 520px;
+    perspective: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.headset-3d-card {
+    position: relative;
+    width: 100%;
+    max-width: 460px;
+    height: 450px;
+    background: rgba(18, 24, 38, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    border-radius: 32px;
+    padding: 2.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 35px 70px rgba(0, 0, 0, 0.7), inset 0 0 25px rgba(0, 242, 254, 0.12);
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.headset-3d-card.is-interacting {
+    transition: none;
+}
+
+.headset-3d-img-container {
+    position: relative;
+    width: 300px;
+    height: 270px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform-style: preserve-3d;
+}
+
+.headset-3d-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 25px 35px rgba(0, 242, 254, 0.4));
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+    transform: translateZ(50px);
+    will-change: transform, opacity;
+}
+
+/* Floating 3D Spec Badges */
+.floating-spec-badge {
+    position: absolute;
+    padding: 0.55rem 1.1rem;
+    background: rgba(11, 15, 25, 0.88);
+    border: 1px solid rgba(0, 242, 254, 0.45);
+    backdrop-filter: blur(12px);
+    border-radius: 14px;
+    color: #fff;
+    font-size: 0.83rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    transform: translateZ(70px);
+    will-change: transform;
+    animation: floatSpec 3.5s ease-in-out infinite alternate;
+}
+
+.spec-badge-1 { top: 15px; left: -25px; animation-delay: 0s; }
+.spec-badge-2 { bottom: 70px; right: -30px; animation-delay: 1.2s; }
+.spec-badge-3 { bottom: 15px; left: 0px; animation-delay: 0.6s; }
+
+@keyframes floatSpec {
+    0% { transform: translateZ(70px) translate3d(0, 0, 0) rotate(0deg); }
+    100% { transform: translateZ(70px) translate3d(0, -12px, 0) rotate(1deg); }
+}
+
+/* Model Toggle Indicators */
+.model-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+    transform: translateZ(35px);
+}
+
+.model-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: background 0.2s ease, width 0.2s ease, box-shadow 0.2s ease;
+}
+
+.model-dot.active {
+    background: var(--primary-cyan);
+    box-shadow: 0 0 14px var(--primary-cyan);
+    width: 32px;
+    border-radius: 8px;
+}
+
+/* 3D Spotlight Tilt Cards */
+.spotlight-card {
+    position: relative;
+    will-change: transform;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
+    transform-style: preserve-3d;
+    overflow: hidden;
+}
+
+.spotlight-card.is-tilting {
+    transition: none;
+}
+
+.spotlight-card::before {
+    content: '';
+    position: absolute;
+    top: var(--mouse-y, 50%);
+    left: var(--mouse-x, 50%);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(0, 242, 254, 0.18) 0%, rgba(255, 255, 255, 0) 70%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    border-radius: 50%;
+}
+
+.spotlight-card:hover::before {
+    opacity: 1;
+}
+
+/* Scroll Reveal 3D Effects */
+.scroll-reveal-3d {
+    opacity: 0;
+    transform: perspective(1000px) rotateX(22deg) translateZ(-40px) translateY(60px);
+    transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal-3d.active {
+    opacity: 1;
+    transform: perspective(1000px) rotateX(0deg) translateZ(0px) translateY(0);
+}
+
+.scroll-reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.feedback-card {
+    padding: 1.85rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+/* 3D Animated Soundwave Canvas Background */
+.soundwave-3d-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.85;
+}
+</style>
+
+<div id="scrollProgress"></div>
+
+<button class="back-to-top-btn" id="backToTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Back to Top">
+    <i class="bi bi-arrow-up"></i>
+</button>
+
+<div class="ambient-orb orb-1"></div>
+<div class="ambient-orb orb-2"></div>
+
+<div class="acoustic-grid-bg">
+    <!-- Hero Section with Interactive 3D Showcase -->
+    <section class="hero-section-3d" style="position: relative; overflow: hidden;">
+        <!-- Interactive 3D Moving Soundwave Canvas Background (Strictly Hero-Scoped) -->
+        <canvas id="soundwaveCanvas" class="soundwave-3d-bg"></canvas>
+
+        <div class="container" style="position: relative; z-index: 2;">
+            <div class="hero-grid-3d">
+                <div class="scroll-reveal active">
+                    <div class="brand-tag-badge">
+                        <i class="bi bi-soundwave"></i> 3D Acoustic Wave Spectrum Active
+                    </div>
+
+
+                    <h1 class="hero-title-main">
+                        Hear Every <span class="gradient-text">Detail.</span><br>
+                        Feel Every <span class="gradient-text">Frequency.</span>
+                    </h1>
+
+                    <p class="hero-desc-main">
+                        Discover studio-mastered precision with hybrid active noise cancelling, custom 40mm beryllium drivers, and dynamic 3D spatial surround sound.
+                    </p>
+
+                    <div style="display:flex; gap: 1.25rem; flex-wrap: wrap; align-items:center;">
+                        <a href="{% url 'products:list' %}" class="btn btn-primary">
+                            <i class="bi bi-headphones"></i> Explore All Headsets
+                        </a>
+                    </div>
+
+                <!-- Specs Highlights Row -->
+                <div style="display:flex; gap: 2rem; border-top: 1px solid var(--border-color); padding-top: 1.75rem;">
+                    <div>
+                        <h4 style="font-size: 1.6rem; color: var(--primary-cyan); font-weight: 800;">-45dB</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Adaptive ANC</p>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 1.6rem; color: var(--primary-cyan); font-weight: 800;">50 Hrs</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Battery Life</p>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 1.6rem; color: var(--primary-cyan); font-weight: 800;">3D Spatial</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Surround Audio</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive 3D Scroll Headset Showcase -->
+            <div class="headset-3d-viewport">
+                <div class="headset-3d-card" id="headset3DCard">
+                    <!-- Floating Spec Badges -->
+                    <div class="floating-spec-badge spec-badge-1">
+                        <i class="bi bi-shield-check" style="color: var(--primary-cyan)"></i> Adaptive ANC -45dB
+                    </div>
+                    <div class="floating-spec-badge spec-badge-2">
+                        <i class="bi bi-battery-charging" style="color: #10b981"></i> 50h Battery
+                    </div>
+                    <div class="floating-spec-badge spec-badge-3">
+                        <i class="bi bi-disc-fill" style="color: #7f00ff"></i> 40mm Beryllium
+                    </div>
+
+                    <!-- Headset Render Image -->
+                    <div class="headset-3d-img-container">
+                        <img src="{% static 'images/headphone_3d_1.png' %}" alt="SoundSphere 3D Headset" class="headset-3d-img" id="headset3DImg" fetchpriority="high" decoding="async">
+                    </div>
+
+                    <h3 style="margin-top: 1rem; font-size: 1.35rem;" id="headsetTitle">SoundSphere Apex 3D Pro</h3>
+                    <p style="color: var(--primary-cyan); font-weight: 600; font-size: 0.88rem;" id="headsetSub">Active Noise Cancelling Flagship</p>
+
+                    <!-- Interactive Model Dots -->
+                    <div class="model-switcher">
+                        <div class="model-dot active" onclick="switch3DModel(0)" title="Model 1: Apex ANC"></div>
+                        <div class="model-dot" onclick="switch3DModel(1)" title="Model 2: Studio Monitor"></div>
+                        <div class="model-dot" onclick="switch3DModel(2)" title="Model 3: Gaming Surround 7.1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Headphone Categories with 3D Scroll Reveal -->
+<section style="padding: 4rem 0;">
+    <div class="container">
+        <div class="scroll-reveal" style="text-align: center; margin-bottom: 3.5rem;">
+            <h2 style="font-size: 2.4rem;">Browse By <span class="gradient-text">Category</span></h2>
+            <p style="color: var(--text-muted);">Explore headphones engineered for studio monitoring, gaming victory, or wireless freedom.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.75rem;">
+            {% for cat in headphone_categories %}
+                <a href="{% url 'products:list' %}?category={{ cat.slug }}" class="glass-card category-card spotlight-card scroll-reveal-3d">
+                    <div class="category-icon">
+                        {% if 'gaming' in cat.slug %}
+                            <i class="bi bi-controller"></i>
+                        {% elif 'earbuds' in cat.slug %}
+                            <i class="bi bi-earbuds"></i>
+                        {% elif 'studio' in cat.slug %}
+                            <i class="bi bi-sliders"></i>
+                        {% elif 'noise' in cat.slug %}
+                            <i class="bi bi-shield-lock-fill"></i>
+                        {% else %}
+                            <i class="bi bi-headphones"></i>
+                        {% endif %}
+                    </div>
+                    <h4 style="font-size: 1.15rem; color: #fff;">{{ cat.name }}</h4>
+                    <span style="font-size: 0.85rem; color: var(--text-muted);">{{ cat.product_count|default:"0" }} Products</span>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Grid with 3D Spotlight Tilt -->
+<section style="padding: 4.5rem 0; background: rgba(18, 24, 38, 0.45);">
+    <div class="container">
+        <div class="scroll-reveal" style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; flex-wrap:wrap; gap:1rem;">
+            <div>
+                <h2 style="font-size: 2.4rem;">Featured <span class="gradient-text">Headphones & Gear</span></h2>
+                <p style="color: var(--text-muted);">Top-rated acoustic gear selected by audio engineers.</p>
+            </div>
+            <a href="{% url 'products:list' %}" class="btn btn-secondary btn-sm">
+                Explore Full Catalog <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="product-grid">
+            {% for product in featured_products %}
+                <div class="product-card glass-card spotlight-card scroll-reveal-3d">
+                    {% if product.is_on_sale %}
+                        <span class="product-badge">-{{ product.discount_percentage }}%</span>
+                    {% endif %}
+
+                    <!-- Wishlist toggle -->
+                    <button class="wishlist-toggle ajax-wishlist-toggle {% if product.id in wishlist_product_ids %}active{% endif %}" data-product-id="{{ product.id }}">
+                        <i class="bi {% if product.id in wishlist_product_ids %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                    </button>
+
+                    <!-- Product Image -->
+                    <a href="{% url 'products:detail' product.slug %}" class="product-img-wrapper">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-img" loading="lazy" decoding="async">
+                        {% else %}
+                            <i class="bi bi-headphones" style="font-size: 5rem; color: var(--primary-indigo);"></i>
+                        {% endif %}
+                    </a>
+
+                    <!-- Product Meta -->
+                    <div class="product-info">
+                        <span class="product-category">{{ product.category.name }}</span>
+                        <h3 class="product-title">
+                            <a href="{% url 'products:detail' product.slug %}">{{ product.name }}</a>
+                        </h3>
+
+                        <!-- Rating Stars -->
+                        <div style="display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.75rem;">
+                            <i class="bi bi-star-fill" style="color: var(--star-gold); font-size: 0.9rem;"></i>
+                            <span style="font-weight: 700; font-size: 0.9rem;">{{ product.average_rating }}</span>
+                            <span style="color: var(--text-dim); font-size: 0.8rem;">({{ product.review_count }})</span>
+                        </div>
+
+                        <!-- Price Row -->
+                        <div class="product-price-row">
+                            <div>
+                                <span class="price-tag">₹{{ product.current_price }}</span>
+                                {% if product.is_on_sale %}
+                                    <span class="old-price">₹{{ product.price }}</span>
+                                {% endif %}
+                            </div>
+                            {% if user.is_staff %}
+                                <a href="{% url 'products:detail' product.slug %}" class="icon-btn" title="View Product Preview" style="text-decoration: none;">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                            {% else %}
+                                <button class="icon-btn ajax-add-to-cart" data-product-id="{{ product.id }}" title="Add to Cart">
+                                    <i class="bi bi-cart-plus"></i>
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Customer Feedback Testimonials -->
+<section style="padding: 4.5rem 0; background: rgba(18, 24, 38, 0.5); border-top: 1px solid var(--border-color);">
+    <div class="container">
+        <div class="scroll-reveal" style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; flex-wrap:wrap; gap:1rem;">
+            <div>
+                <h2 style="font-size: 2.4rem;">What Audiophiles <span class="gradient-text">Say</span></h2>
+                <p style="color: var(--text-muted);">Recent feedback and reviews from our community of listeners and audio engineers.</p>
+            </div>
+            <a href="{% url 'accounts:feedback' %}" class="btn btn-primary btn-sm">
+                <i class="bi bi-chat-left-heart"></i> Send Your Feedback
+            </a>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.75rem;">
+            {% if recent_feedback %}
+                {% for fb in recent_feedback %}
+                    <div class="glass-card feedback-card spotlight-card scroll-reveal-3d">
+                        <div>
+                            <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom: 0.75rem; color: var(--star-gold);">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                            <h4 style="font-size: 1.1rem; color: #fff; margin-bottom: 0.5rem;">"{{ fb.subject }}"</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;">{{ fb.message }}</p>
+                        </div>
+                        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight: 700; font-size: 0.88rem; color: var(--primary-cyan);">{{ fb.name }}</span>
+                            <span style="font-size: 0.75rem; color: var(--text-dim);">{{ fb.created_at|date:"M d, Y" }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="glass-card feedback-card spotlight-card scroll-reveal-3d">
+                    <div>
+                        <div style="display:flex; gap:0.3rem; margin-bottom: 0.75rem; color: var(--star-gold);">
+                            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                        </div>
+                        <h4 style="font-size: 1.1rem; color: #fff; margin-bottom: 0.5rem;">"Exceptional Soundstage & Active Noise Cancelling"</h4>
+                        <p style="font-size: 0.9rem; color: var(--text-muted);">The sound quality and sub-bass precision on the SoundSphere Apex ANC headphones rivals ₹5,000 studio monitors. Fast delivery!</p>
+                    </div>
+                    <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); display:flex; justify-content:space-between;">
+                        <span style="font-weight: 700; font-size: 0.88rem; color: var(--primary-cyan);">Alex Rivers (Studio Producer)</span>
+                    </div>
+                </div>
+
+                <div class="glass-card feedback-card spotlight-card scroll-reveal-3d">
+                    <div>
+                        <div style="display:flex; gap:0.3rem; margin-bottom: 0.75rem; color: var(--star-gold);">
+                            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                        </div>
+                        <h4 style="font-size: 1.1rem; color: #fff; margin-bottom: 0.5rem;">"Seamless Multi-Role Store Platform"</h4>
+                        <p style="font-size: 0.9rem; color: var(--text-muted);">Listing headphones as an authorized seller was quick and easy. Customer management and order tracking work flawlessly.</p>
+                    </div>
+                    <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); display:flex; justify-content:space-between;">
+                        <span style="font-weight: 700; font-size: 0.88rem; color: var(--primary-cyan);">Apex Sound Studio</span>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Role Portal Access Banner -->
+<section style="padding: 4.5rem 0;">
+    <div class="container">
+        <div class="glass-panel scroll-reveal" style="padding: 3.5rem; text-align: center; background: radial-gradient(circle at center, rgba(0, 242, 254, 0.15) 0%, rgba(127, 0, 255, 0.1) 50%, rgba(18, 24, 38, 0.85) 100%); border-radius: 32px;">
+            <h2 style="font-size: 2.4rem; margin-bottom: 0.75rem;">Experience SoundSphere by <span class="gradient-text">Role</span></h2>
+            <p style="color: var(--text-muted); max-width: 620px; margin: 0 auto 2.25rem auto;">
+                Whether you're shopping for high-fidelity audio gear or listing products as an authorized seller.
+            </p>
+            <div style="display: flex; gap: 1.25rem; justify-content: center; flex-wrap: wrap;">
+                <a href="{% url 'products:list' %}" class="btn btn-primary">
+                    <i class="bi bi-bag"></i> Customer Shop
+                </a>
+                <a href="{% url 'accounts:register' %}?role=seller" class="btn btn-secondary">
+                    <i class="bi bi-shop"></i> Seller Workspace
+                </a>
+                {% if user.is_staff %}
+                    <a href="{% url 'admin_panel:dashboard' %}" class="btn btn-secondary">
+                        <i class="bi bi-shield-lock-fill"></i> Admin Console
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Brands Showcase -->
+<section style="padding: 3rem 0; border-top: 1px solid var(--border-color);">
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <span style="text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); font-size: 0.85rem; font-weight: 700;">Authorized Dealers & Partner Brands</span>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 3rem; opacity: 0.85;">
+            {% for brand in brands %}
+                <a href="{% url 'products:list' %}?brand={{ brand.slug }}" style="font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--text-muted); transition: var(--transition);" onmouseover="this.style.color='#00f2fe'" onmouseout="this.style.color='#94a3b8'">
+                    {{ brand.name }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<script>
+// Preload 3D Model Images into browser cache for instant 3D model switching
+const modelsData = [
+    {
+        img: "{% static 'images/headphone_3d_1.png' %}",
+        title: "SoundSphere Apex 3D Pro",
+        sub: "Active Noise Cancelling Flagship"
+    },
+    {
+        img: "{% static 'images/headphone_3d_2.png' %}",
+        title: "SoundSphere Studio Master Pro",
+        sub: "Hi-Res Audio Reference Monitors"
+    },
+    {
+        img: "{% static 'images/headphone_3d_3.png' %}",
+        title: "SoundSphere Surround 7.1 Gaming",
+        sub: "3D Spatial Gaming Headset"
+    }
+];
+
+// Asynchronously preload alternate model images
+window.addEventListener('load', () => {
+    modelsData.slice(1).forEach(m => {
+        const preloadImg = new Image();
+        preloadImg.src = m.img;
+    });
+}, { once: true });
+
+// DOM Elements
+const scrollProgress = document.getElementById('scrollProgress');
+const backToTopBtn = document.getElementById('backToTopBtn');
+const headset3DCard = document.getElementById('headset3DCard');
+const headset3DImg = document.getElementById('headset3DImg');
+const headsetTitle = document.getElementById('headsetTitle');
+const headsetSub = document.getElementById('headsetSub');
+const viewport = document.querySelector('.headset-3d-viewport');
+
+let isHoveringHero = false;
+
+// 1. Unified Passive Scroll Listener with requestAnimationFrame Throttling
+let scrollTicking = false;
+window.addEventListener('scroll', () => {
+    if (!scrollTicking) {
+        requestAnimationFrame(() => {
+            const winScroll = window.scrollY || document.documentElement.scrollTop;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+
+            if (scrollProgress && docHeight > 0) {
+                scrollProgress.style.width = (winScroll / docHeight) * 100 + '%';
+            }
+
+            if (backToTopBtn) {
+                if (winScroll > 320) {
+                    backToTopBtn.classList.add('visible');
+                } else {
+                    backToTopBtn.classList.remove('visible');
+                }
+            }
+
+            if (headset3DCard && winScroll < 800 && !isHoveringHero) {
+                const rotY = Math.sin(winScroll * 0.003) * 16;
+                const rotX = Math.cos(winScroll * 0.003) * 8;
+                headset3DCard.style.transform = `rotateY(${rotY}deg) rotateX(${rotX}deg)`;
+            }
+
+            scrollTicking = false;
+        });
+        scrollTicking = true;
+    }
+}, { passive: true });
+
+// 2. Interactive 3D Model Switcher
+let currentModelIndex = 0;
+
+function switch3DModel(index) {
+    if (index === currentModelIndex) return;
+    currentModelIndex = index;
+
+    const dots = document.querySelectorAll('.model-dot');
+    dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+    });
+
+    headset3DImg.style.transform = 'translateZ(0px) rotateY(90deg) scale(0.65)';
+    headset3DImg.style.opacity = '0';
+
+    setTimeout(() => {
+        headset3DImg.src = modelsData[index].img;
+        headsetTitle.textContent = modelsData[index].title;
+        headsetSub.textContent = modelsData[index].sub;
+
+        headset3DImg.style.transform = 'translateZ(50px) rotateY(0deg) scale(1)';
+        headset3DImg.style.opacity = '1';
+    }, 240);
+}
+
+// Auto-Rotate 3D Models
+setInterval(() => {
+    if (!isHoveringHero && document.visibilityState === 'visible') {
+        const nextIndex = (currentModelIndex + 1) % modelsData.length;
+        switch3DModel(nextIndex);
+    }
+}, 5000);
+
+// 3. Viewport Mouse Move 3D Tilt (Zero-Reflow Cached Bounds)
+if (viewport && headset3DCard) {
+    let vpRect = null;
+    let heroRafId = null;
+    let targetX = 0, targetY = 0;
+
+    viewport.addEventListener('mouseenter', () => {
+        isHoveringHero = true;
+        headset3DCard.classList.add('is-interacting');
+        vpRect = viewport.getBoundingClientRect();
+    }, { passive: true });
+
+    viewport.addEventListener('mousemove', (e) => {
+        if (!vpRect) vpRect = viewport.getBoundingClientRect();
+        targetX = e.clientX - vpRect.left - vpRect.width / 2;
+        targetY = e.clientY - vpRect.top - vpRect.height / 2;
+
+        if (!heroRafId) {
+            heroRafId = requestAnimationFrame(() => {
+                const rotY = (targetX / (vpRect.width / 2)) * 20;
+                const rotX = -(targetY / (vpRect.height / 2)) * 20;
+                headset3DCard.style.transform = `rotateY(${rotY}deg) rotateX(${rotX}deg)`;
+                heroRafId = null;
+            });
+        }
+    }, { passive: true });
+
+    viewport.addEventListener('mouseleave', () => {
+        isHoveringHero = false;
+        if (heroRafId) {
+            cancelAnimationFrame(heroRafId);
+            heroRafId = null;
+        }
+        headset3DCard.classList.remove('is-interacting');
+        headset3DCard.style.transform = 'rotateY(0deg) rotateX(0deg)';
+        vpRect = null;
+    }, { passive: true });
+}
+
+// 4. Spotlight Tilt Cards (Optimized with Cached Rects & rAF)
+document.querySelectorAll('.spotlight-card').forEach(card => {
+    let cardRect = null;
+    let cardRafId = null;
+
+    card.addEventListener('mouseenter', () => {
+        card.classList.add('is-tilting');
+        cardRect = card.getBoundingClientRect();
+    }, { passive: true });
+
+    card.addEventListener('mousemove', (e) => {
+        if (!cardRect) cardRect = card.getBoundingClientRect();
+        const x = e.clientX - cardRect.left;
+        const y = e.clientY - cardRect.top;
+
+        if (!cardRafId) {
+            cardRafId = requestAnimationFrame(() => {
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+
+                const centerX = x - cardRect.width / 2;
+                const centerY = y - cardRect.height / 2;
+                const rotY = (centerX / (cardRect.width / 2)) * 8;
+                const rotX = -(centerY / (cardRect.height / 2)) * 8;
+
+                card.style.transform = `perspective(1000px) rotateY(${rotY}deg) rotateX(${rotX}deg) scale3d(1.02, 1.02, 1.02) translateY(-4px)`;
+                cardRafId = null;
+            });
+        }
+    }, { passive: true });
+
+    card.addEventListener('mouseleave', () => {
+        if (cardRafId) {
+            cancelAnimationFrame(cardRafId);
+            cardRafId = null;
+        }
+        card.classList.remove('is-tilting');
+        card.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1) translateY(0)';
+        cardRect = null;
+    }, { passive: true });
+});
+
+// 5. IntersectionObserver for 3D Scroll Animations
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            revealObserver.unobserve(entry.target); // Unobserve once activated to free memory
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.scroll-reveal, .scroll-reveal-3d').forEach(el => {
+    revealObserver.observe(el);
+});
+
+// 6. High-Performance Acoustic Particle Constellation Engine
+const soundwaveCanvas = document.getElementById('soundwaveCanvas');
+if (soundwaveCanvas) {
+    const ctx = soundwaveCanvas.getContext('2d', { alpha: true });
+    const heroParent = soundwaveCanvas.parentElement;
+    let width = 0;
+    let height = 0;
+    let canvasRect = null;
+
+    function resizeCanvas() {
+        width = soundwaveCanvas.width = heroParent.offsetWidth || window.innerWidth;
+        height = soundwaveCanvas.height = heroParent.offsetHeight || 560;
+        canvasRect = soundwaveCanvas.getBoundingClientRect();
+    }
+    resizeCanvas();
+
+    window.addEventListener('resize', () => {
+        requestAnimationFrame(resizeCanvas);
+    }, { passive: true });
+
+    let targetMouseX = width / 2;
+    let targetMouseY = height / 2;
+
+    heroParent.addEventListener('mousemove', (e) => {
+        if (!canvasRect) canvasRect = soundwaveCanvas.getBoundingClientRect();
+        targetMouseX = e.clientX - canvasRect.left;
+        targetMouseY = e.clientY - canvasRect.top;
+    }, { passive: true });
+
+    // Streamlined particle count (40 particles = 780 checks vs 2775 checks, 3.5x faster)
+    const particleCount = 40;
+    const particles = [];
+    const colorPalette = ['#00f2fe', '#4facfe', '#7f00ff', '#ffffff', '#ff007f'];
+
+    for (let i = 0; i < particleCount; i++) {
+        particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            radius: Math.random() * 2.2 + 1.0,
+            baseSpeedY: Math.random() * -0.6 - 0.2,
+            baseSpeedX: Math.random() * 0.4 - 0.2,
+            vx: 0,
+            vy: 0,
+            alpha: Math.random() * 0.6 + 0.3,
+            pulseSpeed: Math.random() * 0.03 + 0.015,
+            pulsePhase: Math.random() * Math.PI * 2,
+            color: colorPalette[Math.floor(Math.random() * colorPalette.length)]
+        });
+    }
+
+    let isCanvasVisible = true;
+    let animFrameId = null;
+
+    // Pause rendering entirely when hero is scrolled out of view!
+    const canvasObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            isCanvasVisible = entry.isIntersecting;
+            if (isCanvasVisible && !animFrameId) {
+                animFrameId = requestAnimationFrame(renderAcousticParticles);
+            }
+        });
+    }, { threshold: 0.05 });
+    canvasObserver.observe(soundwaveCanvas);
+
+    function renderAcousticParticles() {
+        if (!isCanvasVisible) {
+            animFrameId = null;
+            return;
+        }
+
+        ctx.clearRect(0, 0, width, height);
+
+        // Batch ALL constellation lines into a SINGLE stroke call (Massive FPS Boost)
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(0, 242, 254, 0.12)';
+        ctx.lineWidth = 0.8;
+
+        for (let i = 0; i < particles.length; i++) {
+            const pi = particles[i];
+            for (let j = i + 1; j < particles.length; j++) {
+                const pj = particles[j];
+                const dx = pi.x - pj.x;
+                const dy = pi.y - pj.y;
+                if (dx * dx + dy * dy < 12100) { // 110px threshold
+                    ctx.moveTo(pi.x, pi.y);
+                    ctx.lineTo(pj.x, pj.y);
+                }
+            }
+        }
+        ctx.stroke();
+
+        // Update & Render Particles
+        for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+            p.y += p.baseSpeedY + p.vy;
+            p.x += p.baseSpeedX + p.vx;
+            p.vx *= 0.92;
+            p.vy *= 0.92;
+            p.pulsePhase += p.pulseSpeed;
+
+            if (p.y < -10) { p.y = height + 10; p.x = Math.random() * width; p.vy = 0; }
+            if (p.x < -10) { p.x = width + 10; p.vx = 0; }
+            if (p.x > width + 10) { p.x = -10; p.vx = 0; }
+
+            const dx = p.x - targetMouseX;
+            const dy = p.y - targetMouseY;
+            const distSq = dx * dx + dy * dy;
+
+            if (distSq < 19600) { // 140px threshold
+                const distToMouse = Math.sqrt(distSq);
+                const angle = Math.atan2(dy, dx);
+                const pushForce = (140 - distToMouse) * 0.012;
+                p.vx += Math.cos(angle) * pushForce;
+                p.vy += Math.sin(angle) * pushForce;
+            }
+
+            const currentAlpha = Math.max(0.15, Math.min(1, p.alpha + Math.sin(p.pulsePhase) * 0.2));
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = currentAlpha;
+            ctx.fill();
+        }
+        ctx.globalAlpha = 1.0;
+
+        animFrameId = requestAnimationFrame(renderAcousticParticles);
+    }
+
+    animFrameId = requestAnimationFrame(renderAcousticParticles);
+}
+</script>
+{% endblock %}
+

@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ action }} Product | SoundSphere Seller Portal{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2.5rem; padding-bottom: 5rem; max-width: 860px;">
+    <!-- Page Breadcrumb & Header -->
+    <div style="margin-bottom: 1.75rem;">
+        <a href="{% url 'sellers:products' %}" style="color: var(--primary-cyan); font-size: 0.85rem; font-weight: 600; text-decoration: none;">
+            &larr; Back to Products Catalog
+        </a>
+        <h1 style="font-size: 2.2rem; margin-top: 0.4rem;">{{ action }} <span class="gradient-text">Product Listing</span></h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">Enter complete technical details, pricing, media, and acoustic specifications for your audio equipment.</p>
+    </div>
+
+    <div class="glass-panel" style="padding: 2.5rem; position: relative;">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Section 1: Basic Information -->
+            <div style="margin-bottom: 2rem;">
+                <h3 style="font-size: 1.15rem; color: var(--primary-cyan); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+                    <i class="bi bi-box-seam"></i> Basic Product Information
+                </h3>
+
+                <div style="margin-bottom: 1.25rem;">
+                    <label style="font-size: 0.88rem; color: #fff; font-weight: 600; margin-bottom: 0.4rem; display: block;">Product Title / Model Name <span style="color: #ef4444;">*</span></label>
+                    <input type="text" name="name" value="{{ product.name|default:'' }}" placeholder="e.g. boAt Rockerz 550 Over-Ear Wireless Headphones" required style="width: 100%; padding: 0.8rem 1rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.95rem;">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem;">
+                    <div>
+                        <label style="font-size: 0.88rem; color: #fff; font-weight: 600; margin-bottom: 0.4rem; display: block;">Category <span style="color: #ef4444;">*</span></label>
+                        <select name="category" style="width: 100%; padding: 0.8rem 1rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.9rem; margin-bottom: 0.5rem;">
+                            <option value="">-- Select Category --</option>
+                            {% for cat in categories %}
+                                <option value="{{ cat.id }}" {% if product.category.id == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="text" name="new_category" placeholder="Or type new Category (e.g. Headsets, Gaming Gear)" style="width: 100%; padding: 0.6rem 0.85rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.85rem;">
+                    </div>
+
+                    <div>
+                        <label style="font-size: 0.88rem; color: #fff; font-weight: 600; margin-bottom: 0.4rem; display: block;">Brand / Manufacturer</label>
+                        <select name="brand" style="width: 100%; padding: 0.8rem 1rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.9rem; margin-bottom: 0.5rem;">
+                            <option value="">-- Select Registered Brand --</option>
+                            {% for b in brands %}
+                                <option value="{{ b.id }}" {% if product.brand.id == b.id or user.seller_profile.store_name|lower == b.name|lower %}selected{% endif %}>{{ b.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="text" name="new_brand" placeholder="Or type new Brand name (e.g. boAt)" style="width: 100%; padding: 0.6rem 0.85rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.85rem;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Pricing & Inventory -->
+            <div style="margin-bottom: 2rem;">
+                <h3 style="font-size: 1.15rem; color: var(--primary-cyan); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+                    <i class="bi bi-tag-fill"></i> Pricing & Stock Inventory
+                </h3>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem;">
+                    <div>
+                        <label style="font-size: 0.88rem; color: #fff; font-weight: 600; margin-bottom: 0.4rem; display: block;">Regular Price (₹) <span style="color: #ef4444;">*</span></label>
+                        <input type="number" step="0.01" name="price" value="{{ product.price|default:'' }}" placeholder="e.g. 2999.00" required style="width: 100%; padding: 0.8rem 1rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.95rem;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.88rem; color: #fff; font-weight: 600; margin-bottom: 0.4rem; display: block;">Discount / Sale Price (₹)</label>
+                        <input type="number" step="0.01" name="discount_price" value="{{ product.discount_price|default:'' }}" placeholder="e.g. 1999.00 (Optional)" style="width: 100%; padding: 0.8rem 1rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.95rem;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.88rem; color: #fff; font-weight: 600; margin-bottom: 0.4rem; display: block;">Stock Units <span style="color: #ef4444;">*</span></label>
+                        <input type="number" name="stock" value="{{ product.stock|default:10 }}" required min="1" style="width: 100%; padding: 0.8rem 1rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.95rem;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Product Description & Media -->
+            <div style="margin-bottom: 2rem;">
+                <h3 style="font-size: 1.15rem; color: var(--primary-cyan); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+                    <i class="bi bi-image-fill"></i> Product Media & Overview
+                </h3>
+
+                <div style="margin-bottom: 1.25rem;">
+                    <label style="font-size: 0.88rem; color: #fff; font-weight: 600; margin-bottom: 0.4rem; display: block;">Main Cover Photo Upload <span style="color: #ef4444;">*</span></label>
+                    <input type="file" name="image" accept="image/*" {% if not product.image %}required{% endif %} style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.9rem;">
+                    {% if product.image %}
+                        <div style="margin-top: 0.5rem; font-size: 0.82rem; color: var(--primary-cyan); display: flex; align-items: center; gap: 0.4rem;">
+                            <i class="bi bi-image"></i> Current Photo: <strong>{{ product.image.name }}</strong>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div style="margin-bottom: 1.25rem;">
+                    <label style="font-size: 0.88rem; color: #fff; font-weight: 600; margin-bottom: 0.4rem; display: block;">Comprehensive Description <span style="color: #ef4444;">*</span></label>
+                    <textarea name="description" rows="5" required placeholder="Describe key audio highlights, sound signature, ear cushion comfort, build quality..." style="width: 100%; padding: 0.85rem 1rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.92rem; line-height: 1.5;">{{ product.description|default:'' }}</textarea>
+                </div>
+            </div>
+
+            <!-- Section 4: Technical & Acoustic Specifications -->
+            <div style="margin-bottom: 2.5rem;">
+                <h3 style="font-size: 1.15rem; color: var(--primary-cyan); margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+                    <i class="bi bi-sliders"></i> Acoustic & Technical Specifications
+                </h3>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.25rem;">Seller input fields: Type exact technical specifications for this model.</p>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+                    <div>
+                        <label style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">Driver Size</label>
+                        <input type="text" name="driver_size" value="{{ product.driver_size|default:'' }}" placeholder="e.g. 50mm Neodymium Dynamic Driver" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.9rem;">
+                    </div>
+
+                    <div>
+                        <label style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">Battery Life</label>
+                        <input type="text" name="battery_life" value="{{ product.battery_life|default:'' }}" placeholder="e.g. 40 Hours Playback (Fast Charging)" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.9rem;">
+                    </div>
+
+                    <div>
+                        <label style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">Connectivity</label>
+                        <input type="text" name="connectivity" value="{{ product.connectivity|default:'' }}" placeholder="e.g. Bluetooth 5.3 + 3.5mm Aux" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.9rem;">
+                    </div>
+
+                    <div>
+                        <label style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">Noise Cancellation</label>
+                        <input type="text" name="noise_cancellation" value="{{ product.noise_cancellation|default:'' }}" placeholder="e.g. Hybrid Active Noise Cancellation (ANC)" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.9rem;">
+                    </div>
+
+                    <div>
+                        <label style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">Frequency Response</label>
+                        <input type="text" name="frequency_response" value="{{ product.frequency_response|default:'' }}" placeholder="e.g. 20 Hz - 20,000 Hz" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.9rem;">
+                    </div>
+
+                    <div>
+                        <label style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">Impedance</label>
+                        <input type="text" name="impedance" value="{{ product.impedance|default:'' }}" placeholder="e.g. 32 Ohms" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.9rem;">
+                    </div>
+
+                    <div>
+                        <label style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">Weight</label>
+                        <input type="text" name="weight" value="{{ product.weight|default:'' }}" placeholder="e.g. 245g Ergonomic Design" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.9rem;">
+                    </div>
+
+                    <div>
+                        <label style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">Warranty Period</label>
+                        <input type="text" name="warranty" value="{{ product.warranty|default:'' }}" placeholder="e.g. 1 Year Brand Warranty" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.9rem;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 1.25rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1; padding: 0.85rem 1.5rem; font-size: 1rem;">
+                    <i class="bi bi-check-circle-fill"></i> Save & Submit Product Listing
+                </button>
+                <a href="{% url 'sellers:products' %}" class="btn btn-secondary" style="padding: 0.85rem 1.5rem;">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

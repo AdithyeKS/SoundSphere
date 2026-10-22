@@ -1,0 +1,107 @@
+<style>
+/* Full-Width Evenly Distributed Admin Sub-Nav Bar */
+.admin-sticky-subnav {
+    position: sticky;
+    top: 73px;
+    z-index: 990;
+    background: rgba(13, 18, 30, 0.94);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    padding: 0.55rem;
+    border-radius: 18px;
+    margin-bottom: 2.25rem;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+}
+
+.admin-subnav-item {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    padding: 0.85rem 1.1rem;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    text-decoration: none;
+    text-align: center;
+}
+
+.admin-subnav-item i {
+    font-size: 1.15rem;
+}
+
+.admin-subnav-item:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+}
+
+.admin-subnav-item.active {
+    background: var(--gradient-audio);
+    color: #05080f;
+    font-weight: 800;
+    box-shadow: 0 0 25px rgba(0, 242, 254, 0.45);
+}
+
+.badge-count {
+    padding: 0.15rem 0.6rem;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    margin-left: 0.2rem;
+}
+
+@media (max-width: 992px) {
+    .admin-sticky-subnav {
+        flex-wrap: wrap;
+    }
+    .admin-subnav-item {
+        flex: 1 1 calc(33.333% - 0.6rem);
+        min-width: 150px;
+    }
+}
+
+@media (max-width: 600px) {
+    .admin-subnav-item {
+        flex: 1 1 100%;
+    }
+}
+</style>
+
+<div class="admin-sticky-subnav">
+    <a href="{% url 'admin_panel:dashboard' %}" class="admin-subnav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+        <i class="bi bi-speedometer2"></i> Dashboard
+    </a>
+
+    <a href="{% url 'admin_panel:products' %}" class="admin-subnav-item {% if request.resolver_match.url_name == 'products' or request.resolver_match.url_name == 'edit_product' %}active{% endif %}">
+        <i class="bi bi-headphones"></i> Headset Catalog
+    </a>
+
+    <a href="{% url 'admin_panel:seller_moderation' %}" class="admin-subnav-item {% if request.resolver_match.url_name == 'seller_moderation' %}active{% endif %}">
+        <i class="bi bi-shop"></i> Seller Applications
+        {% if pending_sellers_count %}
+            <span class="badge-count" style="background: var(--star-gold); color: #000;">{{ pending_sellers_count }}</span>
+        {% endif %}
+    </a>
+
+    <a href="{% url 'admin_panel:users' %}" class="admin-subnav-item {% if request.resolver_match.url_name == 'users' %}active{% endif %}">
+        <i class="bi bi-people-fill"></i> User Accounts
+    </a>
+
+    <a href="{% url 'admin_panel:orders' %}" class="admin-subnav-item {% if request.resolver_match.url_name == 'orders' %}active{% endif %}">
+        <i class="bi bi-receipt"></i> Orders
+    </a>
+
+    <a href="{% url 'admin_panel:feedback_moderation' %}" class="admin-subnav-item {% if request.resolver_match.url_name == 'feedback_moderation' %}active{% endif %}">
+        <i class="bi bi-chat-left-heart-fill"></i> Feedback
+    </a>
+</div>

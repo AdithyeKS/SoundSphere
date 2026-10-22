@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manage Headsets Catalog | SoundSphere Admin{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2.5rem; padding-bottom: 5rem;">
+    <div style="margin-bottom: 1.75rem;">
+        <div>
+            <div class="brand-tag-badge" style="margin-bottom: 0.4rem;">
+                <i class="bi bi-headphones"></i> Products Catalog & Inventory
+            </div>
+            <h1 style="font-size: 2.3rem;">Manage <span class="gradient-text">Products & Inventory</span></h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">View catalog products, check stock levels, and remove inappropriate seller listings with automated notifications.</p>
+        </div>
+    </div>
+
+    {% include 'admin_panel/subnav.html' %}
+
+    <div class="glass-panel" style="padding: 1.5rem;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem;">
+                    <th style="padding: 0.85rem 0.5rem;">Product Name</th>
+                    <th style="padding: 0.85rem 0.5rem;">Seller / Brand</th>
+                    <th style="padding: 0.85rem 0.5rem;">Category</th>
+                    <th style="padding: 0.85rem 0.5rem;">Price</th>
+                    <th style="padding: 0.85rem 0.5rem;">Stock</th>
+                    <th style="padding: 0.85rem 0.5rem;">Status</th>
+                    <th style="padding: 0.85rem 0.5rem; text-align: right;">Admin Controls</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                    <tr style="border-bottom: 1px solid var(--border-color);">
+                        <td style="padding: 0.9rem 0.5rem; font-weight: 700; color: #fff;">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 40px; height: 40px; object-fit: contain; border-radius: 8px; background: rgba(255,255,255,0.05); padding: 2px;">
+                                {% else %}
+                                    <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(0, 240, 255, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-cyan);">
+                                        <i class="bi bi-headphones"></i>
+                                    </div>
+                                {% endif %}
+                                <span>{{ product.name }}</span>
+                            </div>
+                        </td>
+                        <td style="padding: 0.9rem 0.5rem;">
+                            {% if product.seller %}
+                                <span style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4); padding: 0.2rem 0.6rem; border-radius: 8px; font-size: 0.78rem; font-weight: 600;">
+                                    <i class="bi bi-shop"></i> {{ product.seller.seller_profile.store_name|default:product.seller.username }}
+                                </span>
+                            {% else %}
+                                <span style="background: rgba(0, 240, 255, 0.1); color: var(--primary-cyan); border: 1px solid rgba(0, 240, 255, 0.3); padding: 0.2rem 0.6rem; border-radius: 8px; font-size: 0.78rem; font-weight: 600;">
+                                    <i class="bi bi-shield-check"></i> SoundSphere Direct
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 0.9rem 0.5rem;"><span style="color: var(--primary-cyan);">{{ product.category.name }}</span></td>
+                        <td style="padding: 0.9rem 0.5rem; font-weight: 700; color: #fff;">₹{{ product.current_price }}</td>
+                        <td style="padding: 0.9rem 0.5rem;">
+                            {% if product.stock <= 5 %}
+                                <span style="color: var(--danger-red); font-weight: 800;">{{ product.stock }} (LOW)</span>
+                            {% else %}
+                                <span style="color: var(--success-green); font-weight: 700;">{{ product.stock }}</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 0.9rem 0.5rem;">
+                            {% if product.is_active %}
+                                <span style="padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">
+                                    <i class="bi bi-check-circle-fill"></i> Live
+                                </span>
+                            {% else %}
+                                <span style="padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3);">
+                                    <i class="bi bi-slash-circle-fill"></i> Blocked
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 0.9rem 0.5rem; text-align: right;">
+                            <div style="display: flex; gap: 0.5rem; justify-content: flex-end; align-items: center;">
+                                {% if product.is_active %}
+                                    <a href="{% url 'admin_panel:toggle_product_block' product.id %}" class="btn btn-warning btn-sm" style="padding: 0.3rem 0.7rem; font-size: 0.8rem; background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.5);" onclick="return confirm('Block {{ product.name|escapejs }}? This will hide the product from customers.')">
+                                        <i class="bi bi-slash-circle"></i> Block
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'admin_panel:toggle_product_block' product.id %}" class="btn btn-success btn-sm" style="padding: 0.3rem 0.7rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.5);" onclick="return confirm('Unblock {{ product.name|escapejs }}? This will restore the product to live status.')">
+                                        <i class="bi bi-check-circle"></i> Unblock
+                                    </a>
+                                {% endif %}
+                                <a href="{% url 'admin_panel:delete_product' product.id %}" class="btn btn-danger btn-sm" style="padding: 0.3rem 0.7rem; font-size: 0.8rem;" onclick="return confirm('Are you sure you want to permanently remove {{ product.name|escapejs }}?')">
+                                    <i class="bi bi-trash"></i> Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                            <i class="bi bi-inbox" style="font-size: 2.5rem; color: var(--text-muted); display: block; margin-bottom: 0.5rem;"></i>
+                            No products found in the catalog.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

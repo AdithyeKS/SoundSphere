@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice #{{ order.order_number }} - SoundSphere</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 40px; color: #111; background: #fff; line-height: 1.5; }
+        .invoice-box { max-width: 800px; margin: auto; padding: 30px; border: 1px solid #eee; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #00f0ff; padding-bottom: 20px; margin-bottom: 20px; }
+        .logo { font-size: 26px; font-weight: 900; letter-spacing: 1px; color: #0a0a0c; }
+        .logo span { color: #00f0ff; }
+        .table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .table th, .table td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        .table th { background: #f8f9fa; font-size: 12px; text-transform: uppercase; color: #555; }
+        .totals { float: right; width: 300px; margin-top: 20px; }
+        .totals-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
+        .grand-total { border-top: 2px solid #111; font-weight: bold; font-size: 18px; padding-top: 10px; margin-top: 6px; }
+        .print-btn { background: #00f0ff; color: #000; border: none; padding: 10px 20px; font-weight: bold; border-radius: 20px; cursor: pointer; float: right; margin-bottom: 20px; }
+        @media print { .print-btn { display: none; } body { padding: 0; } .invoice-box { border: none; box-shadow: none; } }
+    </style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">🖨️ Print / Download PDF</button>
+
+<div class="invoice-box">
+    <div class="header">
+        <div class="logo">SOUND<span>SPHERE</span></div>
+        <div style="text-align: right;">
+            <h2 style="margin: 0; font-size: 20px; color: #333;">INVOICE</h2>
+            <div style="font-size: 13px; color: #777;">Order #: {{ order.order_number }}</div>
+            <div style="font-size: 13px; color: #777;">Date: {{ order.created_at|date:"F d, Y" }}</div>
+        </div>
+    </div>
+
+    <table style="width: 100%; margin-bottom: 20px; font-size: 13px;">
+        <tr>
+            <td style="width: 50%; vertical-align: top;">
+                <strong>Billed To:</strong><br>
+                {{ order.full_name }}<br>
+                {{ order.street_address }} {% if order.apartment_address %}, {{ order.apartment_address }}{% endif %}<br>
+                {{ order.city }}, {{ order.state }} {{ order.postal_code }}<br>
+                Email: {{ order.email }} | Phone: {{ order.phone }}
+            </td>
+            <td style="width: 50%; vertical-align: top; text-align: right;">
+                <strong>Merchant:</strong><br>
+                SoundSphere Audio Corp.<br>
+                100 Acoustic Plaza, Audio District<br>
+                support@soundsphere.com<br>
+                Payment Status: <strong>{{ order.payment_status }}</strong>
+            </td>
+        </tr>
+    </table>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Item Description</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th style="text-align: right;">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.items.all %}
+                <tr>
+                    <td>{{ item.product_name }}</td>
+                    <td>₹{{ item.price }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td style="text-align: right;">₹{{ item.total_price }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="totals">
+        <div class="totals-row">
+            <span>Subtotal:</span>
+            <span>₹{{ order.subtotal }}</span>
+        </div>
+        {% if order.discount > 0 %}
+            <div class="totals-row" style="color: #27ae60;">
+                <span>Discount:</span>
+                <span>-₹{{ order.discount }}</span>
+            </div>
+        {% endif %}
+        <div class="totals-row">
+            <span>Tax (8%):</span>
+            <span>₹{{ order.tax }}</span>
+        </div>
+        <div class="totals-row">
+            <span>Shipping:</span>
+            <span>₹{{ order.shipping }}</span>
+        </div>
+        <div class="totals-row grand-total">
+            <span>Grand Total:</span>
+            <span>₹{{ order.total_amount }}</span>
+        </div>
+    </div>
+
+    <div style="clear: both; padding-top: 40px; text-align: center; color: #888; font-size: 12px; border-top: 1px solid #eee; margin-top: 40px;">
+        Thank you for choosing SoundSphere – Premium Acoustic Technologies!
+    </div>
+</div>
+
+</body>
+</html>

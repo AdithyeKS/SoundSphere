@@ -1,0 +1,995 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register Account | SoundSphere{% endblock %}
+
+{% block content %}
+<style>
+.auth-wrapper {
+    padding: 3rem 0 5rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-split-card {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    width: 100%;
+    max-width: 1080px;
+    background: #0d121d;
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    position: relative;
+    z-index: 2;
+}
+
+/* Left Hero Section - Simple & Unique Audio Aesthetic */
+.auth-hero {
+    position: relative;
+    padding: 3.5rem 3rem;
+    background: #090d16;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    border-right: 1px solid var(--border-color);
+}
+
+.auth-hero-glow {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    background: var(--gradient-audio);
+    filter: blur(110px);
+    opacity: 0.2;
+    border-radius: 50%;
+    top: 20%;
+    left: 20%;
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 380px;
+}
+
+.hero-logo-wrapper {
+    width: 90px;
+    height: 90px;
+    border-radius: 24px;
+    background: rgba(0, 242, 254, 0.06);
+    border: 1px solid var(--border-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.75rem;
+    box-shadow: 0 12px 35px rgba(0, 242, 254, 0.15);
+    transition: var(--transition);
+}
+
+.hero-logo-wrapper:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 16px 45px rgba(0, 242, 254, 0.25);
+}
+
+.auth-hero-title {
+    font-size: 2.25rem;
+    line-height: 1.25;
+    font-weight: 800;
+    margin-bottom: 0.9rem;
+    color: #fff;
+}
+
+.auth-hero-desc {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.hero-features-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.hero-feature-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 1.1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.hero-feature-pill:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--border-glow);
+    color: #fff;
+    transform: translateX(4px);
+}
+
+.hero-feature-pill i {
+    color: var(--primary-cyan);
+    font-size: 1.1rem;
+}
+
+/* Right Form Section */
+.auth-form-container {
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--bg-surface-solid);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 1.75rem;
+}
+
+.auth-header-logo {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 0.75rem auto;
+    border-radius: 50%;
+    background: rgba(0, 242, 254, 0.1);
+    border: 1px solid var(--border-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.auth-header p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* Role Selector Tabs */
+.role-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px;
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 1.75rem;
+}
+
+.role-tab {
+    padding: 0.65rem;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.88rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.role-tab:hover {
+    color: #fff;
+}
+
+.role-tab.active {
+    background: var(--gradient-audio);
+    color: #000;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+}
+
+/* Input Fields with Icons */
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group-custom {
+    margin-bottom: 1.15rem;
+}
+
+.form-group-custom label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+}
+
+.input-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon-wrapper i {
+    position: absolute;
+    left: 1rem;
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    transition: var(--transition);
+}
+
+.custom-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 0.92rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+.custom-input.has-toggle {
+    padding-right: 2.85rem;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 0.85rem;
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-size: 1.15rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    transition: var(--transition);
+    z-index: 5;
+}
+
+.password-toggle-btn:hover {
+    color: var(--primary-cyan);
+}
+
+.password-toggle-btn i {
+    position: static !important;
+    left: auto !important;
+    font-size: 1.15rem;
+    color: inherit !important;
+}
+
+.custom-input:focus {
+    border-color: var(--primary-cyan);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 12px rgba(0, 242, 254, 0.2);
+}
+
+.custom-input:focus + i, .input-icon-wrapper:focus-within i {
+    color: var(--primary-cyan);
+}
+
+/* Seller Extra Box */
+.seller-fields-box {
+    display: none;
+    background: rgba(127, 0, 255, 0.08);
+    border: 1px dashed rgba(127, 0, 255, 0.3);
+    padding: 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 1.25rem;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.terms-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+
+.terms-row input[type="checkbox"] {
+    accent-color: var(--primary-cyan);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.submit-btn-gradient {
+    width: 100%;
+    padding: 0.85rem;
+    background: var(--gradient-audio);
+    border: none;
+    border-radius: 12px;
+    color: #000;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0, 242, 254, 0.3);
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.submit-btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 242, 254, 0.5);
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1.5rem 0;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.auth-divider::before, .auth-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.auth-divider span {
+    padding: 0 1rem;
+}
+
+.auth-footer-links {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.auth-footer-links a {
+    color: var(--primary-cyan);
+    font-weight: 700;
+}
+
+.auth-trust-badges {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.trust-badge-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+/* Terms & Conditions Modal Overlay */
+.terms-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(7, 9, 14, 0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    animation: modalFadeIn 0.3s ease;
+}
+
+.terms-modal-overlay.active {
+    display: flex;
+}
+
+.terms-modal-card {
+    background: rgba(18, 24, 38, 0.96);
+    border: 1px solid var(--border-glow);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 650px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+}
+
+.terms-modal-header {
+    padding: 1.25rem 1.75rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.terms-modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.8rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: var(--transition);
+}
+
+.terms-modal-close:hover {
+    color: var(--primary-cyan);
+}
+
+.terms-modal-body {
+    padding: 1.75rem;
+    overflow-y: auto;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+}
+
+.terms-modal-body h4 {
+    color: #fff;
+    font-size: 1rem;
+    margin: 1.25rem 0 0.4rem 0;
+    font-weight: 700;
+}
+
+.terms-modal-body p {
+    margin-bottom: 0.8rem;
+}
+
+.terms-badge {
+    display: inline-block;
+    padding: 0.3rem 0.75rem;
+    background: rgba(0, 242, 254, 0.12);
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    border-radius: var(--radius-full);
+    color: var(--primary-cyan);
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.terms-modal-footer {
+    padding: 1.25rem 1.75rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 900px) {
+    .auth-split-card {
+        grid-template-columns: 1fr;
+    }
+    .auth-hero {
+        display: none;
+    }
+}
+</style>
+
+<div class="container auth-wrapper">
+    <div class="auth-split-card">
+        <!-- Left Hero Section - Simple & Unique Audio Aesthetic -->
+        <div class="auth-hero">
+            <div class="auth-hero-glow"></div>
+            
+            <div class="hero-content">
+                <div class="hero-logo-wrapper">
+                    <i class="bi bi-disc-fill" style="font-size: 2.8rem; background: var(--gradient-audio); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                </div>
+                <h1 class="auth-hero-title">Elevate Your <span class="gradient-text">Acoustics</span></h1>
+                <p class="auth-hero-desc">Discover high-fidelity studio headsets and noise-cancelling audio technology.</p>
+
+                <div class="hero-features-grid">
+                    <div class="hero-feature-pill">
+                        <i class="bi bi-headphones"></i> Studio-Grade Audio Catalog
+                    </div>
+                    <div class="hero-feature-pill">
+                        <i class="bi bi-patch-check"></i> Verified Brand Dealers
+                    </div>
+                    <div class="hero-feature-pill">
+                        <i class="bi bi-truck"></i> Fast & Secure Doorstep Shipping
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Form Section -->
+        <div class="auth-form-container">
+            <div class="auth-header">
+                <div class="auth-header-logo">
+                    <i class="bi bi-disc-fill" style="font-size: 1.8rem; color: var(--primary-cyan);"></i>
+                </div>
+                <h2>Create Your Account ✨</h2>
+                <p>Select your account type to get started</p>
+            </div>
+
+            <!-- Role Selector Tabs -->
+            <form method="POST" id="registerForm" autocomplete="off" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="role" id="selectedRoleInput" value="{{ role|default:'customer' }}">
+
+                <div class="role-tabs">
+                    <button type="button" class="role-tab {% if role == 'customer' or not role %}active{% endif %}" onclick="selectRole('customer')">
+                        <i class="bi bi-person-circle"></i> Customer
+                    </button>
+                    <button type="button" class="role-tab {% if role == 'seller' %}active{% endif %}" onclick="selectRole('seller')">
+                        <i class="bi bi-shop"></i> Seller
+                    </button>
+                </div>
+
+                <!-- First & Last Name Grid -->
+                <div class="form-grid-2">
+                    <div class="form-group-custom">
+                        <label>First Name <span style="color:#ef4444">*</span></label>
+                        <div class="input-icon-wrapper">
+                            <input type="text" name="first_name" class="custom-input" placeholder="First Name" autocomplete="off" required value="{{ first_name|default:'' }}">
+                            <i class="bi bi-person"></i>
+                        </div>
+                    </div>
+                    <div class="form-group-custom">
+                        <label>Last Name <span style="color:#ef4444">*</span></label>
+                        <div class="input-icon-wrapper">
+                            <input type="text" name="last_name" class="custom-input" placeholder="Last Name" autocomplete="off" required value="{{ last_name|default:'' }}">
+                            <i class="bi bi-person"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Address -->
+                <div class="form-group-custom">
+                    <label>Email Address <span style="color:#ef4444">*</span></label>
+                    <div class="input-icon-wrapper">
+                        <input type="email" name="email" class="custom-input" placeholder="Enter Email Address" required autocomplete="off" value="{{ email|default:'' }}">
+                        <i class="bi bi-envelope"></i>
+                    </div>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="form-group-custom">
+                    <label>Phone Number <span style="color:#ef4444">*</span> <span style="color:var(--text-dim); font-size:0.75rem;">(10 Digits)</span></label>
+                    <div class="input-icon-wrapper">
+                        <input type="text" name="phone" id="phoneInput" class="custom-input" placeholder="Enter 10-digit Phone Number" required maxlength="15" autocomplete="off" value="{{ phone|default:'' }}" oninput="this.value = this.value.replace(/[^0-9+\s\-]/g, '')">
+                        <i class="bi bi-telephone"></i>
+                    </div>
+                </div>
+
+                <!-- Seller Fields Box -->
+                <div class="seller-fields-box" id="sellerFieldsBox" style="{% if role == 'seller' %}display:block;{% endif %} margin-bottom: 1.25rem;">
+                    <h4 style="font-size: 0.9rem; color: var(--primary-cyan); margin-bottom: 0.88rem; display:flex; align-items:center; gap:0.4rem; border-bottom: 1px dashed rgba(0,242,254,0.3); padding-bottom: 0.4rem;">
+                        <i class="bi bi-shop"></i> Seller Brand & Store Details
+                    </h4>
+
+                    <!-- Brand Name (Required) & Tagline (Optional) -->
+                    <div class="form-grid-2">
+                        <div class="form-group-custom" style="margin-bottom:0.75rem;">
+                            <label>Brand Name <span style="color:#ef4444">*</span></label>
+                            <div class="input-icon-wrapper">
+                                <input type="text" name="store_name" class="custom-input" placeholder="Enter Brand Name" autocomplete="off" value="{{ store_name|default:'' }}">
+                                <i class="bi bi-shop-window"></i>
+                            </div>
+                        </div>
+                        <div class="form-group-custom" style="margin-bottom:0.75rem;">
+                            <label>Tagline <span style="color:var(--text-dim); font-weight:400;">(Optional)</span></label>
+                            <div class="input-icon-wrapper">
+                                <input type="text" name="tagline" class="custom-input" placeholder="Enter Brand Tagline" autocomplete="off" value="{{ tagline|default:'' }}">
+                                <i class="bi bi-quote"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Brand Description (Required) -->
+                    <div class="form-group-custom" style="margin-bottom:0.8rem;">
+                        <label>Brand Description <span style="color:#ef4444">*</span></label>
+                        <div class="input-icon-wrapper">
+                            <textarea name="store_description" class="custom-input" rows="2" placeholder="Enter Brand Description..." style="padding-left: 2.75rem;">{{ store_description|default:'' }}</textarea>
+                            <i class="bi bi-card-text" style="top: 1rem;"></i>
+                        </div>
+                    </div>
+
+                    <!-- Business ID / Tax ID (Required) -->
+                    <div class="form-group-custom" style="margin-bottom:0.75rem;">
+                        <label>Business ID / Tax ID <span style="color:#ef4444">*</span></label>
+                        <div class="input-icon-wrapper">
+                            <input type="text" name="tax_id" class="custom-input" placeholder="Enter Business ID / Tax ID" autocomplete="off" value="{{ tax_id|default:'' }}">
+                            <i class="bi bi-file-text"></i>
+                        </div>
+                    </div>
+
+                    <!-- Location and State -->
+                    <div class="form-grid-2">
+                        <div class="form-group-custom" style="margin-bottom:0.75rem;">
+                            <label>Location / City <span style="color:#ef4444">*</span></label>
+                            <div class="input-icon-wrapper">
+                                <input type="text" name="location" class="custom-input" placeholder="Enter Store Location / City" autocomplete="off" value="{{ location|default:'' }}">
+                                <i class="bi bi-geo-alt"></i>
+                            </div>
+                        </div>
+                        <div class="form-group-custom" style="margin-bottom:0.75rem;">
+                            <label>State <span style="color:#ef4444">*</span></label>
+                            <div class="input-icon-wrapper">
+                                <input type="text" name="state" class="custom-input" placeholder="Enter State (e.g. Kerala, Karnataka)" autocomplete="off" value="{{ state|default:'' }}">
+                                <i class="bi bi-map"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Brand Logo (Optional Upload) -->
+                    <div class="form-group-custom" style="margin-bottom:0;">
+                        <label>Brand Logo / Image <span style="color:var(--text-dim); font-weight:400;">(Optional)</span></label>
+                        <div class="input-icon-wrapper">
+                            <input type="file" name="logo" class="custom-input" accept="image/*" style="padding-top: 0.55rem;">
+                            <i class="bi bi-image"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password & Confirm Password -->
+                <div class="form-grid-2">
+                    <div class="form-group-custom">
+                        <label>Password <span style="color:#ef4444">*</span></label>
+                        <div class="input-icon-wrapper">
+                            <input type="password" name="password1" id="passInput1" class="custom-input has-toggle" placeholder="Enter Password" required autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');">
+                            <i class="bi bi-lock"></i>
+                            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('passInput1', this)" tabindex="-1" title="Show or hide password" aria-label="Toggle password visibility">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group-custom">
+                        <label>Confirm Password <span style="color:#ef4444">*</span></label>
+                        <div class="input-icon-wrapper">
+                            <input type="password" name="password2" id="passInput2" class="custom-input has-toggle" placeholder="Confirm Password" required autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');">
+                            <i class="bi bi-lock-fill"></i>
+                            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('passInput2', this)" tabindex="-1" title="Show or hide confirm password" aria-label="Toggle confirm password visibility">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password Complexity Live Feedback -->
+                <div id="passwordChecklist" style="margin-bottom: 1.15rem; padding: 0.75rem 1rem; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 10px; font-size: 0.78rem;">
+                    <div style="font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem; font-size: 0.8rem;">Password Requirements:</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem 0.75rem;">
+                        <span id="reqLength" style="color: var(--danger-red); display: flex; align-items: center; gap: 0.3rem;"><i class="bi bi-x-circle"></i> Min 8 Characters</span>
+                        <span id="reqUpper" style="color: var(--danger-red); display: flex; align-items: center; gap: 0.3rem;"><i class="bi bi-x-circle"></i> 1 Uppercase (A-Z)</span>
+                        <span id="reqLower" style="color: var(--danger-red); display: flex; align-items: center; gap: 0.3rem;"><i class="bi bi-x-circle"></i> 1 Lowercase (a-z)</span>
+                        <span id="reqNumber" style="color: var(--danger-red); display: flex; align-items: center; gap: 0.3rem;"><i class="bi bi-x-circle"></i> 1 Number (0-9)</span>
+                        <span id="reqSpecial" style="color: var(--danger-red); display: flex; align-items: center; gap: 0.3rem;"><i class="bi bi-x-circle"></i> 1 Special Symbol (!@#$)</span>
+                        <span id="reqMatch" style="color: var(--danger-red); display: flex; align-items: center; gap: 0.3rem;"><i class="bi bi-x-circle"></i> Passwords Match</span>
+                    </div>
+                </div>
+
+                <!-- Terms Checkbox -->
+                <div class="terms-row">
+                    <input type="checkbox" id="termsCheck" required>
+                    <label for="termsCheck">I agree to the <a href="javascript:void(0)" onclick="openTermsModal()" style="color: var(--primary-cyan); font-weight:600; text-decoration: underline;">Terms & Conditions</a></label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn-gradient">
+                    Create Account &rarr;
+                </button>
+            </form>
+
+            <div class="auth-divider">
+                <span>OR</span>
+            </div>
+
+            <div class="auth-footer-links">
+                Already have an account? 
+                <a href="{% url 'accounts:login' %}" id="loginRedirectLink">Login here &rarr;</a>
+            </div>
+
+            <div class="auth-trust-badges">
+                <div class="trust-badge-item">
+                    <i class="bi bi-shield-check" style="color:var(--primary-cyan)"></i> Studio-Grade Audio Equipment
+                </div>
+                <div class="trust-badge-item">
+                    <i class="bi bi-shop" style="color:var(--primary-cyan)"></i> Verified Audio Sellers
+                </div>
+                <div class="trust-badge-item">
+                    <i class="bi bi-heart-fill" style="color:#ef4444"></i> Loved by Audiophiles
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms & Conditions Interactive Modal -->
+<div id="termsModal" class="terms-modal-overlay">
+    <div class="terms-modal-card">
+        <div class="terms-modal-header">
+            <div style="display:flex; align-items:center; gap:0.6rem;">
+                <i class="bi bi-shield-check-fill" style="color:var(--primary-cyan); font-size:1.5rem;"></i>
+                <h3 style="font-size: 1.25rem; margin:0; font-weight:700; color:#fff;">Terms of Service & User Agreement</h3>
+            </div>
+            <button type="button" class="terms-modal-close" onclick="closeTermsModal()" title="Close">&times;</button>
+        </div>
+
+        <div class="terms-modal-body">
+            <div class="terms-badge"><i class="bi bi-clock-history"></i> Last Updated: August 2026 • SoundSphere Legal Policy</div>
+
+            <h4>1. Acceptance of Terms</h4>
+            <p>By registering an account as a Customer or Authorized Seller on SoundSphere, you agree to comply with and be bound by these Terms of Service, Privacy Guidelines, and Marketplace Policies.</p>
+
+            <h4>2. Account Security & Verification</h4>
+            <p>You must provide accurate, complete registration details. You are responsible for protecting your account credentials. Staff administrator accounts are protected against unauthorized modification or deletion.</p>
+
+            <h4>3. Marketplace Purchases & Product Warranties</h4>
+            <p>All headsets, earbuds, and studio monitors sold on SoundSphere carry verified manufacturer or seller warranties. Payments are processed securely with real-time order tracking.</p>
+
+            <h4>4. Authorized Seller Guidelines</h4>
+            <p>Sellers registered on SoundSphere commit to listing genuine audio products with accurate specifications (ANC performance, battery life, frequency response). Listing counterfeit or deceptive items results in immediate account suspension.</p>
+
+            <h4>5. Customer Reviews & Community Feedback</h4>
+            <p>Customer reviews and feedback entries must reflect authentic sound experiences. Offensive or manipulative reviews are subject to administrator moderation.</p>
+
+            <h4>6. Data Privacy & Encryption</h4>
+            <p>SoundSphere employs end-to-end encrypted storage protocols to safeguard personal user data, address records, and transaction histories.</p>
+        </div>
+
+        <div class="terms-modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="closeTermsModal()">Close</button>
+            <button type="button" class="btn btn-primary btn-sm" onclick="acceptTermsAndClose()">
+                <i class="bi bi-check-circle-fill"></i> Accept Terms & Agree
+            </button>
+        </div>
+    </div>
+</div>
+
+<canvas id="soundwaveCanvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; opacity: 0.75;"></canvas>
+
+<script>
+function selectRole(role) {
+    document.getElementById('selectedRoleInput').value = role;
+    
+    // Update active tab buttons
+    const tabs = document.querySelectorAll('.role-tab');
+    tabs.forEach(tab => tab.classList.remove('active'));
+
+    const activeTab = Array.from(tabs).find(tab => tab.textContent.trim().toLowerCase().includes(role));
+    if (activeTab) {
+        activeTab.classList.add('active');
+    }
+
+    // Toggle seller specific box
+    const sellerBox = document.getElementById('sellerFieldsBox');
+    if (role === 'seller') {
+        sellerBox.style.display = 'block';
+    } else {
+        sellerBox.style.display = 'none';
+    }
+
+    // Update login redirect link with role param
+    const loginLink = document.getElementById('loginRedirectLink');
+    if (loginLink) {
+        loginLink.href = "{% url 'accounts:login' %}?role=" + role;
+    }
+}
+
+function openTermsModal() {
+    document.getElementById('termsModal').classList.add('active');
+}
+
+function closeTermsModal() {
+    document.getElementById('termsModal').classList.remove('active');
+}
+
+function acceptTermsAndClose() {
+    document.getElementById('termsCheck').checked = true;
+    closeTermsModal();
+}
+
+// Close modal when clicking outside of card
+window.addEventListener('click', function(e) {
+    const modal = document.getElementById('termsModal');
+    if (e.target === modal) {
+        closeTermsModal();
+    }
+});
+
+// Toggle Password Visibility (Eye Icon)
+function togglePasswordVisibility(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        if (icon) {
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+        }
+    } else {
+        input.type = 'password';
+        if (icon) {
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+        }
+    }
+}
+
+// Live Password Validation & Requirements Tracker
+const passInput1 = document.getElementById('passInput1');
+const passInput2 = document.getElementById('passInput2');
+
+function updateReqSpan(elementId, text, isValid) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    if (isValid) {
+        el.style.color = 'var(--success-green)';
+        el.innerHTML = '<i class="bi bi-check-circle-fill"></i> ' + text;
+    } else {
+        el.style.color = 'var(--danger-red)';
+        el.innerHTML = '<i class="bi bi-x-circle"></i> ' + text;
+    }
+}
+
+function validatePasswordStrength() {
+    if (!passInput1 || !passInput2) return;
+    const val1 = passInput1.value;
+    const val2 = passInput2.value;
+
+    updateReqSpan('reqLength', 'Min 8 Characters', val1.length >= 8);
+    updateReqSpan('reqUpper', '1 Uppercase (A-Z)', /[A-Z]/.test(val1));
+    updateReqSpan('reqLower', '1 Lowercase (a-z)', /[a-z]/.test(val1));
+    updateReqSpan('reqNumber', '1 Number (0-9)', /[0-9]/.test(val1));
+    updateReqSpan('reqSpecial', '1 Special Symbol (!@#$)', /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(val1));
+    updateReqSpan('reqMatch', 'Passwords Match', val1.length > 0 && val1 === val2);
+}
+
+if (passInput1 && passInput2) {
+    passInput1.addEventListener('input', validatePasswordStrength);
+    passInput2.addEventListener('input', validatePasswordStrength);
+}
+
+
+
+// Interactive Floating Acoustic Particle Constellation Engine
+const soundwaveCanvas = document.getElementById('soundwaveCanvas');
+if (soundwaveCanvas) {
+    const ctx = soundwaveCanvas.getContext('2d');
+    let width = soundwaveCanvas.width = window.innerWidth;
+    let height = soundwaveCanvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+        width = soundwaveCanvas.width = window.innerWidth;
+        height = soundwaveCanvas.height = window.innerHeight;
+    });
+
+    let targetMouseX = width / 2;
+    let targetMouseY = height / 2;
+    let mouseX = width / 2;
+    let mouseY = height / 2;
+
+    window.addEventListener('mousemove', (e) => {
+        targetMouseX = e.clientX;
+        targetMouseY = e.clientY;
+    });
+
+    const particleCount = 70;
+    const particles = [];
+    const colorPalette = ['#00f2fe', '#4facfe', '#7f00ff', '#ffffff', '#ff007f'];
+
+    for (let i = 0; i < particleCount; i++) {
+        particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            radius: Math.random() * 2.8 + 0.9,
+            speedY: Math.random() * -0.7 - 0.25,
+            speedX: Math.random() * 0.5 - 0.25,
+            alpha: Math.random() * 0.75 + 0.25,
+            pulseSpeed: Math.random() * 0.04 + 0.015,
+            pulsePhase: Math.random() * Math.PI * 2,
+            color: colorPalette[Math.floor(Math.random() * colorPalette.length)]
+        });
+    }
+
+    function renderAcousticParticles() {
+        ctx.clearRect(0, 0, width, height);
+
+        mouseX += (targetMouseX - mouseX) * 0.06;
+        mouseY += (targetMouseY - mouseY) * 0.06;
+
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < 120) {
+                    const lineAlpha = (1 - dist / 120) * 0.15;
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(0, 242, 254, ${lineAlpha})`;
+                    ctx.lineWidth = 0.8;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        particles.forEach(p => {
+            p.y += p.speedY;
+            p.x += p.speedX;
+            p.pulsePhase += p.pulseSpeed;
+
+            if (p.y < -10) {
+                p.y = height + 10;
+                p.x = Math.random() * width;
+            }
+            if (p.x < -10) p.x = width + 10;
+            if (p.x > width + 10) p.x = -10;
+
+            const dx = p.x - mouseX;
+            const dy = p.y - mouseY;
+            const distToMouse = Math.sqrt(dx * dx + dy * dy);
+            if (distToMouse < 140) {
+                const angle = Math.atan2(dy, dx);
+                const pushForce = (140 - distToMouse) * 0.04;
+                p.x += Math.cos(angle) * pushForce;
+                p.y += Math.sin(angle) * pushForce;
+            }
+
+            const currentAlpha = p.alpha + Math.sin(p.pulsePhase) * 0.2;
+            const clampedAlpha = Math.max(0.15, Math.min(1, currentAlpha));
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = clampedAlpha;
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = p.color;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.globalAlpha = 1.0;
+        });
+
+        requestAnimationFrame(renderAcousticParticles);
+    }
+
+    renderAcousticParticles();
+}
+</script>
+{% endblock %}
+

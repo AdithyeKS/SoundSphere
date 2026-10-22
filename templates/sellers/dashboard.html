@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Seller Portal Dashboard | SoundSphere{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
+        <div>
+            <h1 style="font-size: 2.2rem;">Seller Portal <span class="gradient-text">Dashboard</span></h1>
+            <p style="color: var(--text-muted);">Store: <strong style="color: #fff;">{{ store_name }}</strong></p>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem;">
+            {% if is_approved %}
+                <a href="{% url 'sellers:add_product' %}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus-lg"></i> List New Product
+                </a>
+            {% else %}
+                <button class="btn btn-secondary btn-sm" disabled style="opacity: 0.6; cursor: not-allowed;" title="Pending Admin Approval">
+                    <i class="bi bi-lock-fill"></i> Product Listing Locked
+                </button>
+            {% endif %}
+            <a href="{% url 'sellers:products' %}" class="btn btn-secondary btn-sm">
+                <i class="bi bi-box-seam"></i> My Catalog
+            </a>
+        </div>
+    </div>
+
+    {% if seller_profile.status == 'rejected' %}
+        <div class="glass-panel" style="padding: 1.75rem 2rem; margin-bottom: 2.25rem; border-left: 4px solid var(--danger-red); background: rgba(239, 68, 68, 0.08); border-radius: 16px;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;">
+                <div style="display: flex; align-items: flex-start; gap: 1.25rem; max-width: 750px;">
+                    <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); display: flex; align-items: center; justify-content: center; color: var(--danger-red); font-size: 1.5rem; flex-shrink: 0;">
+                        <i class="bi bi-x-circle-fill"></i>
+                    </div>
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.35rem; flex-wrap: wrap;">
+                            <h4 style="font-size: 1.2rem; color: #fff; margin: 0; font-weight: 700;">Seller Application Not Approved</h4>
+                            <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); font-size: 0.78rem; padding: 0.25rem 0.65rem; border-radius: 20px;">
+                                <i class="bi bi-arrow-repeat"></i> Application Attempt #{{ seller_profile.reapplication_count|add:1 }}
+                            </span>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 10px; padding: 0.9rem 1.1rem; margin: 0.75rem 0 1rem 0;">
+                            <div style="font-size: 0.78rem; text-transform: uppercase; color: #f87171; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 0.25rem;">
+                                <i class="bi bi-info-circle"></i> Admin Rejection Feedback
+                            </div>
+                            <p style="color: #fff; font-size: 0.92rem; margin: 0; line-height: 1.5;">
+                                {{ seller_profile.rejection_reason|default:"Verification information was incomplete or failed authentication criteria." }}
+                            </p>
+                        </div>
+
+                        <!-- Brand Reapplication Criteria Checklist -->
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">
+                                Brand Approval Criteria to Rectify:
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                                <div><i class="bi bi-check2-circle" style="color: var(--primary-cyan);"></i> Valid Brand Name & Description</div>
+                                <div><i class="bi bi-check2-circle" style="color: var(--primary-cyan);"></i> Active Business Tax ID / GSTIN</div>
+                                <div><i class="bi bi-check2-circle" style="color: var(--primary-cyan);"></i> Verified Store Location & State</div>
+                                <div><i class="bi bi-check2-circle" style="color: var(--primary-cyan);"></i> Clean High-Res Brand Logo</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end;">
+                    <a href="{% url 'sellers:reapply' %}" class="btn btn-primary" style="padding: 0.75rem 1.4rem; font-size: 0.92rem; font-weight: 700; box-shadow: 0 4px 20px rgba(0, 242, 254, 0.3);">
+                        <i class="bi bi-arrow-repeat"></i> Edit Brand & Reapply Now
+                    </a>
+                    <span style="font-size: 0.78rem; color: var(--text-dim);">No reapplication fee required</span>
+                </div>
+            </div>
+        </div>
+    {% elif not is_approved %}
+        <div class="glass-panel" style="padding: 1.5rem 2rem; margin-bottom: 2.25rem; border-left: 4px solid var(--accent-gold); background: rgba(245, 158, 11, 0.08); border-radius: 16px;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;">
+                <div style="display: flex; align-items: flex-start; gap: 1.25rem;">
+                    <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.4); display: flex; align-items: center; justify-content: center; color: var(--accent-gold); font-size: 1.5rem; flex-shrink: 0;">
+                        <i class="bi bi-hourglass-split"></i>
+                    </div>
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.35rem; flex-wrap: wrap;">
+                            {% if seller_profile.reapplication_count > 0 %}
+                                <h4 style="font-size: 1.15rem; color: #fff; margin: 0; font-weight: 700;">Seller Reapplication Under Review</h4>
+                                <span class="badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); font-size: 0.78rem; padding: 0.25rem 0.65rem; border-radius: 20px;">
+                                    <i class="bi bi-arrow-repeat"></i> Attempt #{{ seller_profile.reapplication_count|add:1 }}
+                                </span>
+                            {% else %}
+                                <h4 style="font-size: 1.15rem; color: #fff; margin: 0; font-weight: 700;">Seller Account Approval Pending (Stage 1 of 2)</h4>
+                                <span class="badge" style="background: rgba(251, 191, 36, 0.15); color: var(--star-gold); border: 1px solid rgba(251, 191, 36, 0.4); font-size: 0.78rem; padding: 0.25rem 0.65rem; border-radius: 20px;">
+                                    Initial Application (Attempt #1)
+                                </span>
+                            {% endif %}
+                        </div>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0 0 0.5rem 0; line-height: 1.5;">
+                            Your seller application (Store, GSTIN/Tax ID, Address, and Brand details) is currently under review by SoundSphere administrators. You will be unlocked to list headsets once approved.
+                        </p>
+                        {% if seller_profile.reapplication_notes %}
+                            <div style="font-size: 0.82rem; color: var(--text-dim);">
+                                <strong style="color: var(--primary-cyan);">Your note to admin:</strong> "{{ seller_profile.reapplication_notes }}"
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center;">
+                    <a href="{% url 'sellers:reapply' %}" class="btn btn-secondary btn-sm" style="padding: 0.6rem 1.1rem; font-size: 0.85rem;">
+                        <i class="bi bi-pencil-square"></i> Review / Update Info
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
+    <!-- Stats Cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+        <div class="glass-card" style="padding: 1.5rem;">
+            <div style="color: var(--text-muted); font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">Listed Products</div>
+            <div style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-top: 0.25rem;">{{ total_products }}</div>
+            <a href="{% url 'sellers:products' %}" style="font-size: 0.85rem; color: var(--primary-cyan); font-weight: 600;">Manage Listed Items →</a>
+        </div>
+
+        <div class="glass-card" style="padding: 1.5rem;">
+            <div style="color: var(--text-muted); font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">Gross Sales Revenue</div>
+            <div style="font-size: 2.2rem; font-weight: 800; color: var(--success-green); margin-top: 0.25rem;">₹{{ total_revenue }}</div>
+            <span style="font-size: 0.8rem; color: var(--text-dim);">Paid Sales</span>
+        </div>
+
+        <div class="glass-card" style="padding: 1.5rem;">
+            <div style="color: var(--text-muted); font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">Units Sold</div>
+            <div style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-top: 0.25rem;">{{ items_sold }}</div>
+            <a href="{% url 'sellers:orders' %}" style="font-size: 0.85rem; color: var(--primary-cyan); font-weight: 600;">View Orders →</a>
+        </div>
+
+        <div class="glass-card" style="padding: 1.5rem;">
+            <div style="color: var(--text-muted); font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">Low Stock Warning</div>
+            <div style="font-size: 2.2rem; font-weight: 800; color: var(--danger-red); margin-top: 0.25rem;">{{ low_stock.count }}</div>
+            <span style="font-size: 0.8rem; color: var(--text-dim);">Stock ≤ 5 units</span>
+        </div>
+    </div>
+
+    <!-- Recent Sales Table -->
+    <div class="glass-panel" style="padding: 1.75rem;">
+        <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">Recent Product Sales</h3>
+        {% if recent_items %}
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); text-transform: uppercase;">
+                        <th style="padding: 0.75rem 0;">Order #</th>
+                        <th style="padding: 0.75rem 0;">Product</th>
+                        <th style="padding: 0.75rem 0;">Qty</th>
+                        <th style="padding: 0.75rem 0;">Unit Price</th>
+                        <th style="padding: 0.75rem 0;">Total</th>
+                        <th style="padding: 0.75rem 0;">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in recent_items %}
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 0.85rem 0; font-weight: 700; color: var(--primary-cyan);">#{{ item.order.order_number }}</td>
+                            <td style="color: #fff; font-weight: 600;">{{ item.product_name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>₹{{ item.price }}</td>
+                            <td style="font-weight: 700; color: var(--success-green);">₹{{ item.total_price }}</td>
+                            <td style="color: var(--text-muted);">{{ item.order.created_at|date:"M d, Y" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p style="color: var(--text-muted);">No sales recorded yet for your store.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

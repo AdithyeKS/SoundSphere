@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Shipping Address | SoundSphere{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 3rem; padding-bottom: 5rem; max-width: 600px;">
+    <div class="glass-panel" style="padding: 2.5rem;">
+        <h1 style="font-size: 1.8rem; margin-bottom: 1.5rem;">Add Shipping Address</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Full Name</label>
+                    <input type="text" name="full_name" placeholder="Enter full name" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Phone Number</label>
+                    <input type="text" name="phone_number" placeholder="+1 (800) 555-0199" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label style="font-size: 0.85rem; color: var(--text-muted);">Street Address</label>
+                <input type="text" name="street_address" placeholder="100 Main Street" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label style="font-size: 0.85rem; color: var(--text-muted);">Apartment / Suite (Optional)</label>
+                <input type="text" name="apartment_address" placeholder="Suite 200" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">City</label>
+                    <input type="text" name="city" placeholder="San Francisco" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">State</label>
+                    <input type="text" name="state" placeholder="CA" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Postal Code</label>
+                    <input type="text" name="postal_code" placeholder="94103" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="font-size: 0.85rem; color: var(--text-muted);">Country</label>
+                <input type="text" name="country" value="United States" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: flex; align-items: center; gap: 0.5rem; color: #fff; cursor: pointer;">
+                    <input type="checkbox" name="is_default"> Set as Default Shipping Address
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Save Address</button>
+                <a href="{% url 'accounts:profile' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

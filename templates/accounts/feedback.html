@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Customer Feedback & Inquiry | SoundSphere{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 3.5rem; padding-bottom: 6rem; max-width: 600px;">
+    <div class="glass-panel" style="padding: 2.5rem;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <i class="bi bi-chat-heart-fill" style="font-size: 3rem; background: var(--gradient-audio); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+            <h1 style="font-size: 1.8rem; margin-top: 0.5rem;">Customer <span class="gradient-text">Feedback & Inquiries</span></h1>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">We love hearing your thoughts, questions, and audio experience reviews!</p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Your Name</label>
+                    <input type="text" name="name" value="{{ user.first_name|default:user.get_full_name|default:user.username }}" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Email Address</label>
+                    <input type="email" name="email" value="{{ user.email|default:'' }}" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Feedback Category</label>
+                    <select name="category" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                        <option value="general">General Inquiry</option>
+                        <option value="product">Product & Spec Question</option>
+                        <option value="order">Order & Delivery Issue</option>
+                        <option value="website">Website Feedback / Feature Suggestion</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Overall Experience Rating</label>
+                    <select name="rating" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                        <option value="5">★★★★★ 5 Stars (Excellent)</option>
+                        <option value="4">★★★★☆ 4 Stars (Good)</option>
+                        <option value="3">★★★☆☆ 3 Stars (Average)</option>
+                        <option value="2">★★☆☆☆ 2 Stars (Fair)</option>
+                        <option value="1">★☆☆☆☆ 1 Star (Needs Improvement)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label style="font-size: 0.85rem; color: var(--text-muted);">Subject</label>
+                <input type="text" name="subject" placeholder="e.g. Question about Apex ANC battery life" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="font-size: 0.85rem; color: var(--text-muted);">Message / Detailed Feedback</label>
+                <textarea name="message" rows="4" placeholder="Type your message here..." required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem;">
+                Submit Feedback <i class="bi bi-send-fill"></i>
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

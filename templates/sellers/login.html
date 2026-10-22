@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Seller Login | SoundSphere Portal{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 4rem; padding-bottom: 6rem; max-width: 480px;">
+    <div class="glass-panel" style="padding: 2.5rem;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <i class="bi bi-shop-window" style="font-size: 3rem; background: var(--gradient-audio); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+            <h1 style="font-size: 1.8rem; margin-top: 0.5rem;">Seller <span class="gradient-text">Login</span></h1>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Log in to manage your listed audio products and orders.</p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div style="margin-bottom: 1.25rem;">
+                <label style="font-size: 0.85rem; color: var(--text-muted);">Email Address</label>
+                <input type="email" name="username" value="{{ login_input|default:'' }}" placeholder="Enter Email Address" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="font-size: 0.85rem; color: var(--text-muted);">Password</label>
+                <input type="password" name="password" placeholder="Password" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem; margin-bottom: 1.5rem;">
+                Login to Seller Dashboard <i class="bi bi-box-arrow-in-right"></i>
+            </button>
+        </form>
+
+        <div style="text-align: center; font-size: 0.9rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.5rem;">
+            <div>
+                Want to sell on SoundSphere? 
+                <a href="{% url 'sellers:register' %}" style="color: var(--primary-cyan); font-weight: 700;">Become a Seller</a>
+            </div>
+            <div>
+                Are you a Customer? 
+                <a href="{% url 'accounts:login' %}?role=customer" style="color: var(--primary-cyan); font-weight: 700;">Customer Login &rarr;</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

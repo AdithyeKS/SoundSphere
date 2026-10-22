@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Customer Orders Management | SoundSphere Admin{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2.5rem; padding-bottom: 5rem;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.75rem;">
+        <div>
+            <div class="brand-tag-badge" style="margin-bottom: 0.4rem;">
+                <i class="bi bi-receipt"></i> Customer Orders Management
+            </div>
+            <h1 style="font-size: 2.3rem;">Manage Customer <span class="gradient-text">Orders</span></h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">View customer order details and update order fulfillment status.</p>
+        </div>
+    </div>
+
+    {% include 'admin_panel/subnav.html' %}
+
+    <div class="glass-panel" style="padding: 1.5rem;">
+        {% if orders %}
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); text-transform: uppercase;">
+                        <th style="padding: 0.75rem 0;">Order #</th>
+                        <th style="padding: 0.75rem 0;">Customer Name</th>
+                        <th style="padding: 0.75rem 0;">Date</th>
+                        <th style="padding: 0.75rem 0;">Total</th>
+                        <th style="padding: 0.75rem 0;">Payment</th>
+                        <th style="padding: 0.75rem 0;">Fulfillment Status</th>
+                        <th style="padding: 0.75rem 0;">Fulfillment Managed By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 0.9rem 0; font-weight: 700; color: var(--primary-cyan);">#{{ order.order_number }}</td>
+                            <td style="color: #fff;">{{ order.full_name }}<br><span style="font-size: 0.8rem; color: var(--text-muted);">{{ order.email }}</span></td>
+                            <td style="color: var(--text-muted);">{{ order.created_at|date:"M d, Y" }}</td>
+                            <td style="font-weight: 800; color: #fff;">₹{{ order.total_amount }}</td>
+                            <td><span style="color: var(--success-green); font-weight: 700;">{{ order.payment_status }}</span></td>
+                            <td>
+                                <span style="padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; background: rgba(0, 240, 255, 0.12); color: var(--primary-cyan); border: 1px solid rgba(0, 240, 255, 0.3);">
+                                    {{ order.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <span style="font-size: 0.8rem; color: var(--star-gold); font-weight: 600;">
+                                    <i class="bi bi-shop"></i> Brand Seller
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p style="color: var(--text-muted);">No orders found.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register as Seller | SoundSphere Portal{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 3.5rem; padding-bottom: 6rem; max-width: 580px;">
+    <div class="glass-panel" style="padding: 2.5rem;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <i class="bi bi-shop-window" style="font-size: 3rem; background: var(--gradient-audio); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+            <h1 style="font-size: 1.8rem; margin-top: 0.5rem;">Seller Registration <span class="gradient-text">Portal</span></h1>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Register your audio store to list headsets on SoundSphere.</p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Username</label>
+                    <input type="text" name="username" placeholder="Enter Username" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Email Address</label>
+                    <input type="email" name="email" placeholder="Enter Email Address" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label style="font-size: 0.85rem; color: var(--text-muted);">Store / Brand Name</label>
+                <input type="text" name="store_name" placeholder="Enter Store Name" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Business Phone</label>
+                    <input type="text" name="phone" placeholder="Enter Phone Number" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">GSTIN / Tax ID</label>
+                    <input type="text" name="tax_id" placeholder="Enter Tax ID / GSTIN" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label style="font-size: 0.85rem; color: var(--text-muted);">Password</label>
+                <input type="password" name="password" placeholder="Enter Password" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="font-size: 0.85rem; color: var(--text-muted);">Store Description</label>
+                <textarea name="store_description" rows="3" placeholder="Enter Store Description" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem; margin-bottom: 1.5rem;">
+                Create Seller Account <i class="bi bi-arrow-right"></i>
+            </button>
+        </form>
+
+        <div style="text-align: center; font-size: 0.9rem; color: var(--text-muted);">
+            Already registered as a Seller? 
+            <a href="{% url 'sellers:login' %}" style="color: var(--primary-cyan); font-weight: 700;">Seller Sign In</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

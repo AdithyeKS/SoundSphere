@@ -1,0 +1,292 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Command Center | SoundSphere Control Panel{% endblock %}
+
+{% block content %}
+<style>
+/* Admin Panel Specific Clean Alignment & Subnav Styles */
+.admin-subnav-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(18, 24, 38, 0.85);
+    border: 1px solid var(--border-color);
+    padding: 0.45rem;
+    border-radius: 16px;
+    margin-bottom: 2.25rem;
+    overflow-x: auto;
+}
+
+.admin-subnav-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.admin-subnav-item:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.admin-subnav-item.active {
+    background: var(--gradient-audio);
+    color: #000;
+    font-weight: 700;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+}
+
+.admin-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.admin-stat-card {
+    background: rgba(18, 24, 38, 0.65);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--border-color);
+    border-radius: 18px;
+    padding: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 150px;
+    transition: var(--transition);
+}
+
+.admin-stat-card:hover {
+    border-color: var(--border-glow);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-glow);
+}
+
+.admin-split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+@media (max-width: 1100px) {
+    .admin-stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .admin-split-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+    .admin-stat-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<div class="container" style="padding-top: 2.5rem; padding-bottom: 5rem;">
+    <!-- Admin Header Console Title -->
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.75rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <div class="brand-tag-badge" style="margin-bottom: 0.4rem;">
+                <i class="bi bi-shield-lock-fill"></i> SoundSphere System Command Center
+            </div>
+            <h1 style="font-size: 2.3rem;">Admin Control <span class="gradient-text">Panel</span></h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">Manage platform users, seller applications, headphone catalog, orders, and feedback moderation.</p>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <a href="{% url 'admin:index' %}" class="btn btn-secondary btn-sm" target="_blank">
+                <i class="bi bi-shield-lock"></i> Django Admin
+            </a>
+        </div>
+    </div>
+
+    {% include 'admin_panel/subnav.html' %}
+
+    <!-- Aligned 4-Column Stat Grid -->
+    <div class="admin-stat-grid">
+        <div class="admin-stat-card" style="border-top: 3px solid var(--primary-indigo);">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Total Users</span>
+                <i class="bi bi-people-fill" style="font-size: 1.4rem; color: var(--primary-indigo);"></i>
+            </div>
+            <div>
+                <div style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-top: 0.2rem;">{{ total_users }}</div>
+                <div style="font-size: 0.8rem; color: var(--text-dim);">Customers: {{ total_customers }} | Sellers: {{ total_sellers }}</div>
+            </div>
+            <a href="{% url 'admin_panel:users' %}" style="font-size: 0.82rem; color: var(--primary-indigo); font-weight: 700; margin-top: 0.5rem; display: inline-block;">Manage Accounts →</a>
+        </div>
+
+        <div class="admin-stat-card" style="border-top: 3px solid var(--star-gold);">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Seller Brands</span>
+                <i class="bi bi-shop" style="font-size: 1.4rem; color: var(--star-gold);"></i>
+            </div>
+            <div>
+                <div style="font-size: 2.2rem; font-weight: 800; color: var(--star-gold); margin-top: 0.2rem;">{{ total_sellers }}</div>
+                <div style="font-size: 0.8rem; color: var(--text-dim);">Pending Applications: {{ pending_sellers_count }}</div>
+            </div>
+            <a href="{% url 'admin_panel:seller_moderation' %}" style="font-size: 0.82rem; color: var(--star-gold); font-weight: 700; margin-top: 0.5rem; display: inline-block;">Review Applications →</a>
+        </div>
+
+        <div class="admin-stat-card" style="border-top: 3px solid var(--primary-cyan);">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Headset Catalog</span>
+                <i class="bi bi-headphones" style="font-size: 1.4rem; color: var(--primary-cyan);"></i>
+            </div>
+            <div>
+                <div style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-top: 0.2rem;">{{ total_products }}</div>
+                <div style="font-size: 0.8rem; color: var(--text-dim);">Active: {{ active_products }} | Blocked: {{ blocked_products }}</div>
+            </div>
+            <a href="{% url 'admin_panel:products' %}" style="font-size: 0.82rem; color: var(--primary-cyan); font-weight: 700; margin-top: 0.5rem; display: inline-block;">Manage Catalog →</a>
+        </div>
+
+        <div class="admin-stat-card" style="border-top: 3px solid #10b981;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Customer Feedback</span>
+                <i class="bi bi-chat-left-text-fill" style="font-size: 1.4rem; color: #10b981;"></i>
+            </div>
+            <div>
+                <div style="font-size: 2.2rem; font-weight: 800; color: #10b981; margin-top: 0.2rem;">{{ total_feedback_count }}</div>
+                <div style="font-size: 0.8rem; color: var(--text-dim);">Support Inquiries & Tickets</div>
+            </div>
+            <a href="{% url 'admin_panel:feedback_moderation' %}" style="font-size: 0.82rem; color: #10b981; font-weight: 700; margin-top: 0.5rem; display: inline-block;">View Feedback →</a>
+        </div>
+    </div>
+
+    <!-- Aligned 2-Column Split Tables -->
+    <div class="admin-split-grid">
+        <!-- Pending Moderation Requests Panel -->
+        <div class="glass-panel" style="padding: 1.75rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <h3 style="font-size: 1.15rem; color: #fff; font-weight: 700; margin: 0;">
+                        <i class="bi bi-hourglass-split" style="color: var(--star-gold); margin-right: 0.4rem;"></i> Pending Requests
+                    </h3>
+                    {% if total_pending_requests > 0 %}
+                        <span style="background: rgba(251, 191, 36, 0.15); color: var(--star-gold); border: 1px solid rgba(251, 191, 36, 0.35); font-size: 0.75rem; font-weight: 800; padding: 0.15rem 0.6rem; border-radius: 12px;">
+                            {{ total_pending_requests }} Pending
+                        </span>
+                    {% endif %}
+                </div>
+                <div style="display: flex; gap: 0.8rem; font-size: 0.82rem; font-weight: 700;">
+                    <a href="{% url 'admin_panel:seller_moderation' %}" style="color: var(--star-gold);">Seller Apps →</a>
+                    <a href="{% url 'admin_panel:moderation' %}" style="color: var(--primary-cyan);">Products Queue →</a>
+                </div>
+            </div>
+
+            {% if pending_sellers or pending_products %}
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); text-transform: uppercase; font-size: 0.78rem;">
+                            <th style="padding: 0.65rem 0;">Request Type</th>
+                            <th style="padding: 0.65rem 0;">Name / Applicant</th>
+                            <th style="padding: 0.65rem 0;">Status</th>
+                            <th style="padding: 0.65rem 0; text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for seller in pending_sellers %}
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 0.85rem 0;">
+                                    <span style="font-size: 0.75rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; background: rgba(251, 191, 36, 0.12); color: var(--star-gold); border: 1px solid rgba(251, 191, 36, 0.3);">
+                                        <i class="bi bi-shop"></i> Seller Store
+                                    </span>
+                                </td>
+                                <td style="padding: 0.85rem 0;">
+                                    <div style="font-weight: 700; color: #fff;">{{ seller.store_name }}</div>
+                                    <div style="font-size: 0.78rem; color: var(--text-muted);">by {{ seller.user.username }}</div>
+                                </td>
+                                <td style="padding: 0.85rem 0;">
+                                    <span style="color: var(--star-gold); font-size: 0.78rem; font-weight: 700;">
+                                        <i class="bi bi-clock-history"></i> Pending Approval
+                                    </span>
+                                </td>
+                                <td style="padding: 0.85rem 0; text-align: right;">
+                                    <a href="{% url 'admin_panel:seller_moderation' %}" class="btn btn-sm" style="background: rgba(251, 191, 36, 0.15); color: var(--star-gold); border: 1px solid rgba(251, 191, 36, 0.4); padding: 0.2rem 0.65rem; font-size: 0.78rem;">
+                                        Review App &rarr;
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        {% for product in pending_products %}
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 0.85rem 0;">
+                                    <span style="font-size: 0.75rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; background: rgba(0, 242, 254, 0.12); color: var(--primary-cyan); border: 1px solid rgba(0, 242, 254, 0.3);">
+                                        <i class="bi bi-headphones"></i> Product Listing
+                                    </span>
+                                </td>
+                                <td style="padding: 0.85rem 0;">
+                                    <div style="font-weight: 700; color: #fff;">{{ product.name|truncatechars:24 }}</div>
+                                    <div style="font-size: 0.78rem; color: var(--text-muted);">Seller: {{ product.seller.username }}</div>
+                                </td>
+                                <td style="padding: 0.85rem 0;">
+                                    <span style="color: var(--primary-cyan); font-size: 0.78rem; font-weight: 700;">
+                                        <i class="bi bi-clock-history"></i> Pending Queue
+                                    </span>
+                                </td>
+                                <td style="padding: 0.85rem 0; text-align: right;">
+                                    <a href="{% url 'admin_panel:moderation' %}" class="btn btn-sm" style="background: rgba(0, 242, 254, 0.15); color: var(--primary-cyan); border: 1px solid rgba(0, 242, 254, 0.4); padding: 0.2rem 0.65rem; font-size: 0.78rem;">
+                                        Moderate &rarr;
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div style="text-align: center; padding: 2rem 0; color: var(--text-muted);">
+                    <i class="bi bi-check-circle-fill" style="font-size: 2rem; color: var(--success-green); display: block; margin-bottom: 0.5rem;"></i>
+                    <p style="font-size: 0.9rem; margin: 0; color: #fff; font-weight: 600;">No Pending Moderation Requests</p>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">All seller registration applications and product listings have been reviewed.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Newly Registered Users Panel -->
+        <div class="glass-panel" style="padding: 1.75rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.25rem;">
+                <h3 style="font-size: 1.15rem; color: #fff; font-weight: 700;"><i class="bi bi-people" style="color: var(--primary-indigo); margin-right: 0.4rem;"></i> Registered User Accounts</h3>
+                <a href="{% url 'admin_panel:users' %}" style="font-size: 0.83rem; color: var(--primary-indigo); font-weight: 700;">Manage Users →</a>
+            </div>
+            {% if recent_users %}
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); text-transform: uppercase; font-size: 0.78rem;">
+                            <th style="padding: 0.65rem 0;">Username</th>
+                            <th style="padding: 0.65rem 0;">Email</th>
+                            <th style="padding: 0.65rem 0;">Role</th>
+                            <th style="padding: 0.65rem 0;">Joined</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in recent_users %}
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 0.85rem 0; font-weight: 700; color: #fff;">{{ u.username }}</td>
+                                <td style="padding: 0.85rem 0; color: var(--text-muted);">{{ u.email }}</td>
+                                <td style="padding: 0.85rem 0;">
+                                    {% if u.is_staff %}
+                                        <span style="color: var(--primary-cyan); font-weight:700;">Admin</span>
+                                    {% elif u.seller_profile %}
+                                        <span style="color: var(--star-gold); font-weight:700;">Seller</span>
+                                    {% else %}
+                                        <span style="color: var(--text-muted);">Customer</span>
+                                    {% endif %}
+                                </td>
+                                <td style="padding: 0.85rem 0; color: var(--text-dim); font-size: 0.8rem;">{{ u.date_joined|date:"M d, Y" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p style="color: var(--text-muted); font-size: 0.9rem; padding: 1.5rem 0; text-align: center;">No user accounts registered yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

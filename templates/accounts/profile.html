@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile | SoundSphere{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
+        <h1 style="font-size: 2.2rem;">Account <span class="gradient-text">Profile</span></h1>
+        <a href="{% url 'accounts:logout' %}" class="btn btn-danger btn-sm">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 320px 1fr; gap: 2rem;">
+        <!-- User Info Card -->
+        <div class="glass-panel" style="padding: 2rem; text-align: center; height: fit-content;">
+            <div style="width: 100px; height: 100px; border-radius: var(--radius-full); background: var(--gradient-audio); padding: 3px; margin: 0 auto 1rem auto;">
+                <div style="width: 100%; height: 100%; border-radius: var(--radius-full); background: var(--bg-surface-solid); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--primary-cyan);">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+            </div>
+            <h3 style="font-size: 1.4rem; color: #fff;">{{ user.get_full_name|default:user.username }}</h3>
+            <p style="color: var(--primary-cyan); font-size: 0.9rem; margin-bottom: 1rem;">@{{ user.username }}</p>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">{{ user.email }}</p>
+            
+            <a href="{% url 'accounts:edit_profile' %}" class="btn btn-secondary btn-sm" style="width: 100%;">
+                <i class="bi bi-pencil"></i> Edit Profile Details
+            </a>
+        </div>
+
+        <!-- Account Controls & Quick Links -->
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+            {% if user.is_staff %}
+                <!-- Admin Profile Panel / Quick Controls -->
+                <div class="glass-panel" style="padding: 2rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                        <h3 style="font-size: 1.3rem; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="bi bi-shield-lock-fill" style="color: var(--primary-cyan);"></i> Admin Control Panels
+                        </h3>
+                        <span style="background: rgba(0, 240, 255, 0.15); color: var(--primary-cyan); border: 1px solid var(--primary-cyan); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase;">
+                            System Administrator
+                        </span>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
+                        <a href="{% url 'admin_panel:dashboard' %}" class="glass-card" style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem; text-decoration: none;">
+                            <i class="bi bi-speedometer2" style="font-size: 2.2rem; color: var(--primary-cyan);"></i>
+                            <div>
+                                <h4 style="font-size: 1rem; color: #fff; margin-bottom: 0.2rem;">Admin Dashboard</h4>
+                                <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">Analytics & Store Overview</p>
+                            </div>
+                        </a>
+
+                        <a href="{% url 'admin_panel:orders' %}" class="glass-card" style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem; text-decoration: none;">
+                            <i class="bi bi-receipt" style="font-size: 2.2rem; color: var(--accent-gold);"></i>
+                            <div>
+                                <h4 style="font-size: 1rem; color: #fff; margin-bottom: 0.2rem;">Manage Orders</h4>
+                                <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">View & Update Customer Orders</p>
+                            </div>
+                        </a>
+
+                        <a href="{% url 'admin_panel:products' %}" class="glass-card" style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem; text-decoration: none;">
+                            <i class="bi bi-headphones" style="font-size: 2.2rem; color: var(--success-green);"></i>
+                            <div>
+                                <h4 style="font-size: 1rem; color: #fff; margin-bottom: 0.2rem;">Products Catalog</h4>
+                                <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">Catalog & Inventory Control</p>
+                            </div>
+                        </a>
+
+                        <a href="{% url 'admin_panel:seller_moderation' %}" class="glass-card" style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem; text-decoration: none;">
+                            <i class="bi bi-shop" style="font-size: 2.2rem; color: var(--star-gold);"></i>
+                            <div>
+                                <h4 style="font-size: 1rem; color: #fff; margin-bottom: 0.2rem;">Seller Moderation</h4>
+                                <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">Approve Registered Sellers</p>
+                            </div>
+                        </a>
+
+                        <a href="{% url 'admin_panel:users' %}" class="glass-card" style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem; text-decoration: none;">
+                            <i class="bi bi-people-fill" style="font-size: 2.2rem; color: #ec4899;"></i>
+                            <div>
+                                <h4 style="font-size: 1rem; color: #fff; margin-bottom: 0.2rem;">User Accounts</h4>
+                                <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">User Status & Deactivations</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            {% elif user.profile.is_seller and user.seller_profile %}
+                <!-- Seller Merchant Portal Card -->
+                <div class="glass-panel" style="padding: 2rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                        <h3 style="font-size: 1.3rem; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="bi bi-shop" style="color: var(--star-gold);"></i> Brand Merchant Profile
+                        </h3>
+                        <span style="background: rgba(245, 158, 11, 0.15); color: var(--star-gold); border: 1px solid var(--star-gold); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase;">
+                            {{ user.seller_profile.status|upper }} BRAND
+                        </span>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
+                        <a href="{% url 'sellers:dashboard' %}" class="glass-card" style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem; text-decoration: none;">
+                            <i class="bi bi-speedometer2" style="font-size: 2.2rem; color: var(--star-gold);"></i>
+                            <div>
+                                <h4 style="font-size: 1rem; color: #fff; margin-bottom: 0.2rem;">Seller Dashboard</h4>
+                                <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">Merchant Overview & Stats</p>
+                            </div>
+                        </a>
+
+                        <a href="{% url 'sellers:products' %}" class="glass-card" style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem; text-decoration: none;">
+                            <i class="bi bi-headphones" style="font-size: 2.2rem; color: var(--primary-cyan);"></i>
+                            <div>
+                                <h4 style="font-size: 1rem; color: #fff; margin-bottom: 0.2rem;">My Catalog</h4>
+                                <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">Manage Brand Headsets</p>
+                            </div>
+                        </a>
+
+                        <a href="{% url 'sellers:orders' %}" class="glass-card" style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem; text-decoration: none;">
+                            <i class="bi bi-box-seam" style="font-size: 2.2rem; color: #10b981;"></i>
+                            <div>
+                                <h4 style="font-size: 1rem; color: #fff; margin-bottom: 0.2rem;">Sales Orders</h4>
+                                <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">Update Delivery Fulfillment</p>
+                            </div>
+                        </a>
+
+                        <a href="{% url 'sellers:add_product' %}" class="glass-card" style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem; text-decoration: none;">
+                            <i class="bi bi-plus-lg" style="font-size: 2.2rem; color: var(--primary-indigo);"></i>
+                            <div>
+                                <h4 style="font-size: 1rem; color: #fff; margin-bottom: 0.2rem;">List New Headset</h4>
+                                <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">Publish New Headset Listing</p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Brand Details Overview -->
+                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem;">
+                        <h4 style="font-size: 1rem; color: var(--star-gold); margin-bottom: 0.75rem;"><i class="bi bi-info-circle"></i> Brand Details</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; font-size: 0.88rem;">
+                            <div><strong style="color: var(--text-muted);">Brand Name:</strong> <span style="color: #fff;">{{ user.seller_profile.store_name }}</span></div>
+                            <div><strong style="color: var(--text-muted);">Tagline:</strong> <span style="color: #fff;">{{ user.seller_profile.tagline|default:"N/A" }}</span></div>
+                            <div><strong style="color: var(--text-muted);">Tax ID / GSTIN:</strong> <span style="color: #fff;">{{ user.seller_profile.tax_id|default:"N/A" }}</span></div>
+                            <div><strong style="color: var(--text-muted);">City / Location:</strong> <span style="color: #fff;">{{ user.seller_profile.location|default:"N/A" }}</span></div>
+                            <div><strong style="color: var(--text-muted);">Contact Phone:</strong> <span style="color: #fff;">{{ user.seller_profile.phone }}</span></div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <!-- Customer Address Book -->
+                <div class="glass-panel" style="padding: 2rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                        <h3 style="font-size: 1.3rem;"><i class="bi bi-geo-alt"></i> Address Book</h3>
+                        <a href="{% url 'accounts:add_address' %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-lg"></i> Add Address
+                        </a>
+                    </div>
+
+                    {% if addresses %}
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem;">
+                            {% for addr in addresses %}
+                                <div class="glass-card" style="padding: 1.25rem; position: relative;">
+                                    {% if addr.is_default %}
+                                        <span style="background: var(--primary-cyan); color: #000; font-size: 0.7rem; font-weight: 800; padding: 0.15rem 0.5rem; border-radius: var(--radius-full); position: absolute; top: 1rem; right: 1rem;">DEFAULT</span>
+                                    {% endif %}
+                                    <h4 style="font-size: 1rem; color: #fff; margin-bottom: 0.4rem;">{{ addr.full_name }}</h4>
+                                    <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; margin-bottom: 1rem;">
+                                        {{ addr.street_address }}<br>
+                                        {{ addr.city }}, {{ addr.state }} {{ addr.postal_code }}<br>
+                                        Phone: {{ addr.phone_number }}
+                                    </p>
+                                    <a href="{% url 'accounts:delete_address' addr.id %}" style="color: var(--danger-red); font-size: 0.85rem; font-weight: 600;">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p style="color: var(--text-muted);">No shipping addresses saved yet.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Customer Quick Action Cards -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <a href="{% url 'orders:my_orders' %}" class="glass-card" style="padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                        <i class="bi bi-clock-history" style="font-size: 2.5rem; color: var(--primary-cyan);"></i>
+                        <div>
+                            <h4 style="font-size: 1.1rem;">My Orders</h4>
+                            <p style="color: var(--text-muted); font-size: 0.85rem;">View active & past orders</p>
+                        </div>
+                    </a>
+
+                    <a href="{% url 'wishlist:view' %}" class="glass-card" style="padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                        <i class="bi bi-heart-fill" style="font-size: 2.5rem; color: var(--danger-red);"></i>
+                        <div>
+                            <h4 style="font-size: 1.1rem;">My Wishlist</h4>
+                            <p style="color: var(--text-muted); font-size: 0.85rem;">View saved audio items</p>
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

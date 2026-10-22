@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ action }} Product | SoundSphere Admin{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2.5rem; padding-bottom: 5rem; max-width: 900px;">
+    <div style="margin-bottom: 1.75rem;">
+        <div class="brand-tag-badge" style="margin-bottom: 0.4rem;">
+            <i class="bi bi-headphones"></i> Product Catalog Management
+        </div>
+        <h1 style="font-size: 2.3rem;">{{ action }} Audio <span class="gradient-text">Product</span></h1>
+    </div>
+
+    {% include 'admin_panel/subnav.html' %}
+
+    <div class="glass-panel" style="padding: 2.5rem; margin-top: 1.5rem;">
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #fff;">{{ action }} Audio Product Details</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div style="margin-bottom: 1.25rem;">
+                <label style="font-size: 0.85rem; color: var(--text-muted);">Product Name</label>
+                <input type="text" name="name" value="{{ product.name|default:'' }}" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Category</label>
+                    <select name="category" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}" {% if product.category.id == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Brand</label>
+                    <select name="brand" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                        {% for b in brands %}
+                            <option value="{{ b.id }}" {% if product.brand.id == b.id %}selected{% endif %}>{{ b.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Regular Price (₹)</label>
+                    <input type="number" step="0.01" name="price" value="{{ product.price|default:'' }}" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Discount Price (₹)</label>
+                    <input type="number" step="0.01" name="discount_price" value="{{ product.discount_price|default:'' }}" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Inventory Stock</label>
+                    <input type="number" name="stock" value="{{ product.stock|default:10 }}" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.25rem;">
+                <label style="font-size: 0.85rem; color: var(--text-muted);">Product Photo Upload</label>
+                <input type="file" name="image" accept="image/*" style="width: 100%; padding: 0.65rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                {% if product.image %}
+                    <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--primary-cyan);">Current Photo: {{ product.image.name }}</div>
+                {% endif %}
+            </div>
+
+            <div style="margin-bottom: 1.25rem;">
+                <label style="font-size: 0.85rem; color: var(--text-muted);">Description</label>
+                <textarea name="description" rows="4" required style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">{{ product.description|default:'' }}</textarea>
+            </div>
+
+            <h3 style="font-size: 1.1rem; color: var(--primary-cyan); margin: 1.5rem 0 1rem 0;">Acoustic & Technical Specifications</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Driver Size</label>
+                    <input type="text" name="driver_size" value="{{ product.driver_size|default:'40mm Dynamic' }}" style="width: 100%; padding: 0.65rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Battery Life</label>
+                    <input type="text" name="battery_life" value="{{ product.battery_life|default:'30 Hours' }}" style="width: 100%; padding: 0.65rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Connectivity</label>
+                    <input type="text" name="connectivity" value="{{ product.connectivity|default:'Bluetooth 5.3 + 3.5mm' }}" style="width: 100%; padding: 0.65rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Noise Cancellation</label>
+                    <input type="text" name="noise_cancellation" value="{{ product.noise_cancellation|default:'Active Noise Cancelling (ANC)' }}" style="width: 100%; padding: 0.65rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <label style="display: flex; align-items: center; gap: 0.5rem; color: #fff; cursor: pointer;">
+                    <input type="checkbox" name="is_featured" {% if product.is_featured %}checked{% endif %}> Feature on Home Page Hero Showcase
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Save Product to Database</button>
+                <a href="{% url 'admin_panel:products' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

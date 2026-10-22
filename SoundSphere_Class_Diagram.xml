@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-09-16T01:20:00.000Z" agent="5.0" version="21.0.0" type="device">
+  <diagram id="SoundSphere_Color_Class_Diagram" name="SoundSphere Class Diagram">
+    <mxGraphModel dx="1400" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Header Title Banner -->
+        <mxCell id="title_header" value="SoundSphere – Online Headphones E-Commerce System" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontFamily=Helvetica;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="15" width="500" height="40" />
+        </mxCell>
+
+        <!-- 1. User Base Class (Purple) -->
+        <mxCell id="class_user" value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;User&lt;/b&gt;&lt;/div&gt;&lt;hr/&gt;+ userId: int&lt;br/&gt;+ name: String&lt;br/&gt;+ email: String&lt;br/&gt;+ password: String&lt;br/&gt;+ role: String&lt;br/&gt;+ isActive: boolean&lt;hr/&gt;+ login(): boolean&lt;br/&gt;+ logout(): void&lt;br/&gt;+ register(): boolean&lt;br/&gt;+ updateProfile(): void" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=8;spacingBottom=6;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="500" y="70" width="180" height="175" />
+        </mxCell>
+
+        <!-- 2. Customer Subclass (Green) -->
+        <mxCell id="class_customer" value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;Customer&lt;/b&gt;&lt;/div&gt;&lt;hr/&gt;+ customerId: int&lt;br/&gt;+ phone: String&lt;br/&gt;+ shippingAddress: String&lt;hr/&gt;+ searchProducts(): void&lt;br/&gt;+ addToCart(): void&lt;br/&gt;+ placeOrder(): void&lt;br/&gt;+ writeReview(): void&lt;br/&gt;+ viewOrders(): void" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=8;spacingBottom=6;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="290" y="295" width="180" height="160" />
+        </mxCell>
+
+        <!-- 3. Admin Subclass (Magenta/Pink) -->
+        <mxCell id="class_admin" value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;Admin&lt;/b&gt;&lt;/div&gt;&lt;hr/&gt;+ adminId: int&lt;br/&gt;+ permissions: String&lt;hr/&gt;+ manageUsers(): void&lt;br/&gt;+ approveSeller(): void&lt;br/&gt;+ manageProducts(): void&lt;br/&gt;+ viewReports(): void" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=8;spacingBottom=6;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="510" y="315" width="160" height="140" />
+        </mxCell>
+
+        <!-- 4. Seller Subclass (Yellow/Gold) -->
+        <mxCell id="class_seller" value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;Seller&lt;/b&gt;&lt;/div&gt;&lt;hr/&gt;+ sellerId: int&lt;br/&gt;+ storeName: String&lt;br/&gt;+ taxId: String&lt;br/&gt;+ isApproved: boolean&lt;hr/&gt;+ manageProfile(): void&lt;br/&gt;+ addProduct(): void&lt;br/&gt;+ updateProduct(): void&lt;br/&gt;+ manageStock(): void&lt;br/&gt;+ viewSales(): void&lt;br/&gt;+ viewNotifications(): void" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=8;spacingBottom=6;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="700" y="295" width="180" height="180" />
+        </mxCell>
+
+        <!-- 5. Product Class (Yellow/Gold) -->
+        <mxCell id="class_product" value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;Product&lt;/b&gt;&lt;/div&gt;&lt;hr/&gt;+ productId: int&lt;br/&gt;+ name: String&lt;br/&gt;+ description: String&lt;br/&gt;+ price: Decimal&lt;br/&gt;+ discountPrice: Decimal&lt;br/&gt;+ stock: int&lt;br/&gt;+ image: String&lt;br/&gt;+ isActive: boolean&lt;hr/&gt;+ getFinalPrice(): Decimal&lt;br/&gt;+ updateStock(): void&lt;br/&gt;+ isAvailable(): boolean" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=8;spacingBottom=6;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="490" y="525" width="200" height="210" />
+        </mxCell>
+
+        <!-- 6. Category Class (Blue) -->
+        <mxCell id="class_category" value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;Category&lt;/b&gt;&lt;/div&gt;&lt;hr/&gt;+ categoryId: int&lt;br/&gt;+ name: String&lt;br/&gt;+ description: String&lt;br/&gt;+ image: String&lt;hr/&gt;+ addCategory(): void&lt;br/&gt;+ updateCategory(): void" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=8;spacingBottom=6;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="210" y="565" width="165" height="135" />
+        </mxCell>
+
+        <!-- 7. Brand Class (Blue) -->
+        <mxCell id="class_brand" value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;Brand&lt;/b&gt;&lt;/div&gt;&lt;hr/&gt;+ brandId: int&lt;br/&gt;+ name: String&lt;br/&gt;+ logo: String&lt;hr/&gt;+ addBrand(): void&lt;br/&gt;+ updateBrand(): void" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=8;spacingBottom=6;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="780" y="565" width="160" height="130" />
+        </mxCell>
+
+        <!-- 8. Cart Class (Green) -->
+        <mxCell id="class_cart" value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;Cart&lt;/b&gt;&lt;/div&gt;&lt;hr/&gt;+ cartId: int&lt;br/&gt;+ createdAt: DateTime&lt;hr/&gt;+ addItem(): void&lt;br/&gt;+ removeItem(): void&lt;br/&gt;+ clearCart(): void&lt;br/&gt;+ getTotal(): Decimal" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=8;spacingBottom=6;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="40" y="790" width="160" height="135" />
+        </mxCell>
+
+        <!-- 9. CartItem Class (Pink) -->
+        <mxCell id="class_cartitem" value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;CartItem&lt;/b&gt;&lt;/div&gt;&lt;hr/&gt;+ cartItemId: int&lt;br/&gt;+ quantity: int&lt;hr/&gt;+ updateQuantity(): void" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=8;spacingBottom=6;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="220" y="820" width="150" height="100" />
+        </mxCell>
+
+        <!-- 10. Order Class (Purple) -->
+        <mxCell id="class_order" value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;Order&lt;/b&gt;&lt;/div&gt;&lt;hr/&gt;+ orderId: int&lt;br/&gt;+ orderDate: DateTime&lt;br/&gt;+ status: String&lt;br/&gt;+ totalAmount: Decimal&lt;hr/&gt;+ placeOrder(): void&lt;br/&gt;+ cancelOrder(): void&lt;br/&gt;+ updateStatus(): void" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=8;spacingBottom=6;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="390" y="800" width="170" height="145" />
+        </mxCell>
+
+        <!-- 11. OrderItem Class (Pink) -->
+        <mxCell id="class_orderitem" value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;OrderItem&lt;/b&gt;&lt;/div&gt;&lt;hr/&gt;+ orderItemId: int&lt;br/&gt;+ quantity: int&lt;br/&gt;+ price: Decimal&lt;hr/&gt;+ getSubtotal(): Decimal" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=8;spacingBottom=6;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="580" y="820" width="150" height="110" />
+        </mxCell>
+
+        <!-- 12. Payment Class (Green) -->
+        <mxCell id="class_payment" value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;Payment&lt;/b&gt;&lt;/div&gt;&lt;hr/&gt;+ paymentId: int&lt;br/&gt;+ method: String&lt;br/&gt;+ amount: Decimal&lt;br/&gt;+ status: String&lt;br/&gt;+ transactionId: String&lt;hr/&gt;+ processPayment(): boolean&lt;br/&gt;+ refundPayment(): void" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=8;spacingBottom=6;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="750" y="800" width="170" height="145" />
+        </mxCell>
+
+        <!-- 13. Review Class (Pink) -->
+        <mxCell id="class_review" value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;Review&lt;/b&gt;&lt;/div&gt;&lt;hr/&gt;+ reviewId: int&lt;br/&gt;+ rating: int&lt;br/&gt;+ comment: String&lt;br/&gt;+ createdAt: DateTime&lt;hr/&gt;+ validateRating(): boolean" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=8;spacingBottom=6;fontSize=11;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="940" y="800" width="165" height="135" />
+        </mxCell>
+
+        <!-- GENERALIZATION / INHERITANCE RELATIONSHIPS (Hollow Triangle to User) -->
+        <mxCell id="inherit_customer" style="endArrow=block;endFill=0;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;" edge="1" parent="1" source="class_customer" target="class_user"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="inherit_admin" style="endArrow=block;endFill=0;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;" edge="1" parent="1" source="class_admin" target="class_user"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="inherit_seller" style="endArrow=block;endFill=0;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;" edge="1" parent="1" source="class_seller" target="class_user"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ASSOCIATIONS WITH LABELS & MULTIPLICITIES -->
+
+        <!-- Category 1 -- * Product (has) -->
+        <mxCell id="edge_cat_prod" value="has" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;fontSize=10;" edge="1" parent="1" source="class_category" target="class_product"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_cp1" value="1" style="edgeLabel;html=1;align=left;verticalAlign=bottom;fontSize=11;" vertex="1" connectable="0" parent="edge_cat_prod"><mxGeometry x="-0.8" relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_cp2" value="*" style="edgeLabel;html=1;align=right;verticalAlign=bottom;fontSize=11;" vertex="1" connectable="0" parent="edge_cat_prod"><mxGeometry x="0.8" relative="1" as="geometry" /></mxCell>
+
+        <!-- Product * -- 1 Brand (belongs to) -->
+        <mxCell id="edge_prod_brand" value="belongs to" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;fontSize=10;" edge="1" parent="1" source="class_product" target="class_brand"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_pb1" value="*" style="edgeLabel;html=1;align=left;verticalAlign=bottom;fontSize=11;" vertex="1" connectable="0" parent="edge_prod_brand"><mxGeometry x="-0.8" relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_pb2" value="1" style="edgeLabel;html=1;align=right;verticalAlign=bottom;fontSize=11;" vertex="1" connectable="0" parent="edge_prod_brand"><mxGeometry x="0.8" relative="1" as="geometry" /></mxCell>
+
+        <!-- Customer 1 -- 1 Cart (has) -->
+        <mxCell id="edge_cust_cart" value="has" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;fontSize=10;" edge="1" parent="1" source="class_customer" target="class_cart"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_cc1" value="1" style="edgeLabel;html=1;align=left;verticalAlign=bottom;fontSize=11;" vertex="1" connectable="0" parent="edge_cust_cart"><mxGeometry x="-0.8" relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_cc2" value="1" style="edgeLabel;html=1;align=right;verticalAlign=bottom;fontSize=11;" vertex="1" connectable="0" parent="edge_cust_cart"><mxGeometry x="0.8" relative="1" as="geometry" /></mxCell>
+
+        <!-- Cart 1 -- * CartItem (contains) -->
+        <mxCell id="edge_cart_item" value="contains" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;fontSize=10;" edge="1" parent="1" source="class_cart" target="class_cartitem"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_ci1" value="1" style="edgeLabel;html=1;align=left;verticalAlign=bottom;fontSize=11;" vertex="1" connectable="0" parent="edge_cart_item"><mxGeometry x="-0.8" relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_ci2" value="*" style="edgeLabel;html=1;align=right;verticalAlign=bottom;fontSize=11;" vertex="1" connectable="0" parent="edge_cart_item"><mxGeometry x="0.8" relative="1" as="geometry" /></mxCell>
+
+        <!-- Customer 1 -- * Order (places) -->
+        <mxCell id="edge_cust_order" value="places" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;fontSize=10;" edge="1" parent="1" source="class_customer" target="class_order"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Order 1 -- 1 OrderItem (contains) -->
+        <mxCell id="edge_order_item" value="contains" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;fontSize=10;" edge="1" parent="1" source="class_order" target="class_orderitem"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_oi1" value="1" style="edgeLabel;html=1;align=left;verticalAlign=bottom;fontSize=11;" vertex="1" connectable="0" parent="edge_order_item"><mxGeometry x="-0.8" relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_oi2" value="1" style="edgeLabel;html=1;align=right;verticalAlign=bottom;fontSize=11;" vertex="1" connectable="0" parent="edge_order_item"><mxGeometry x="0.8" relative="1" as="geometry" /></mxCell>
+
+        <!-- OrderItem 1 -- 1 Payment (has) -->
+        <mxCell id="edge_item_pay" value="has" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;fontSize=10;" edge="1" parent="1" source="class_orderitem" target="class_payment"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_ip1" value="1" style="edgeLabel;html=1;align=left;verticalAlign=bottom;fontSize=11;" vertex="1" connectable="0" parent="edge_item_pay"><mxGeometry x="-0.8" relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_ip2" value="1" style="edgeLabel;html=1;align=right;verticalAlign=bottom;fontSize=11;" vertex="1" connectable="0" parent="edge_item_pay"><mxGeometry x="0.8" relative="1" as="geometry" /></mxCell>
+
+        <!-- Seller 1 -- * Review (writes) -->
+        <mxCell id="edge_seller_review" value="writes" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;fontSize=10;" edge="1" parent="1" source="class_seller" target="class_review"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_sr1" value="1" style="edgeLabel;html=1;align=left;verticalAlign=bottom;fontSize=11;" vertex="1" connectable="0" parent="edge_seller_review"><mxGeometry x="-0.8" relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_sr2" value="*" style="edgeLabel;html=1;align=right;verticalAlign=bottom;fontSize=11;" vertex="1" connectable="0" parent="edge_seller_review"><mxGeometry x="0.8" relative="1" as="geometry" /></mxCell>
+
+        <!-- Product * -- 1 Review (for) -->
+        <mxCell id="edge_prod_review" value="for" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.2;fontSize=10;" edge="1" parent="1" source="class_product" target="class_review"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

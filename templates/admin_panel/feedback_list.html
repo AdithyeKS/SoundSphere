@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Customer Feedback Moderation | SoundSphere Admin Control Panel{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2.5rem; padding-bottom: 5rem;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.75rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <div class="brand-tag-badge" style="margin-bottom: 0.4rem;">
+                <i class="bi bi-chat-left-heart-fill"></i> Customer Feedback Moderation
+            </div>
+            <h1 style="font-size: 2.3rem;">Customer Feedback <span class="gradient-text">Moderation</span></h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">Review and moderate customer ratings, feedback messages, and store testimonials.</p>
+        </div>
+    </div>
+
+    {% include 'admin_panel/subnav.html' %}
+
+    <!-- Feedback List Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+        {% if feedbacks %}
+            {% for fb in feedbacks %}
+                <div class="glass-card" style="padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+                            <span style="font-weight: 700; color: var(--primary-cyan); font-size: 0.95rem;">{{ fb.name }}</span>
+                            {% if fb.user and fb.user.seller_profile %}
+                                <span style="padding: 0.2rem 0.55rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4);">
+                                    <i class="bi bi-shop"></i> Seller Ticket
+                                </span>
+                            {% else %}
+                                <span style="padding: 0.2rem 0.55rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; background: rgba(0, 240, 255, 0.12); color: var(--primary-cyan); border: 1px solid rgba(0, 240, 255, 0.3);">
+                                    <i class="bi bi-person-fill"></i> Customer Inquiry
+                                </span>
+                            {% endif %}
+                        </div>
+                        <div style="display: flex; justify-content: space-between; color: var(--text-muted); font-size: 0.82rem; margin-bottom: 0.75rem;">
+                            <span><i class="bi bi-envelope"></i> {{ fb.email }}</span>
+                            <span style="font-size: 0.78rem; color: var(--text-dim);">{{ fb.created_at|date:"M d, Y" }}</span>
+                        </div>
+                        <h4 style="font-size: 1.1rem; color: #fff; margin-bottom: 0.5rem;">"{{ fb.subject }}"</h4>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">{{ fb.message }}</p>
+                    </div>
+
+                    <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end;">
+                        <a href="{% url 'admin_panel:delete_feedback' fb.id %}" class="btn btn-sm btn-danger" style="font-size: 0.8rem;" onclick="return confirm('Delete this feedback entry?')">
+                            <i class="bi bi-trash"></i> Delete Feedback
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="glass-panel" style="grid-column: 1 / -1; text-align: center; padding: 3rem 0;">
+                <i class="bi bi-chat-left-heart" style="font-size: 3rem; color: var(--text-dim);"></i>
+                <h4 style="margin-top: 1rem;">No Customer Feedback Yet</h4>
+                <p style="color: var(--text-muted);">Customer reviews and feedback will appear here once submitted.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

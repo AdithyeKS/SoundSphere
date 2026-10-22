@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} | SoundSphere{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
+    <!-- Breadcrumb -->
+    <div style="display: flex; gap: 0.5rem; color: var(--text-dim); font-size: 0.9rem; margin-bottom: 2rem;">
+        <a href="{% url 'products:home' %}">Home</a> / 
+        <a href="{% url 'products:list' %}?category={{ product.category.slug }}">{{ product.category.name }}</a> / 
+        <span style="color: var(--text-main);">{{ product.name }}</span>
+    </div>
+
+    <!-- Main Detail Grid -->
+    <div class="glass-panel" style="padding: 2.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 3rem;">
+        <!-- Left: Image Showcase -->
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border-radius: var(--radius-md); padding: 2rem; border: 1px solid var(--border-color);">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 85%; max-height: 380px; object-fit: contain;">
+            {% else %}
+                <i class="bi bi-headphones" style="font-size: 10rem; color: var(--primary-indigo);"></i>
+            {% endif %}
+        </div>
+
+        <!-- Right: Specifications & Purchasing -->
+        <div style="display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span class="product-category" style="font-size: 0.9rem;">{{ product.brand.name }} • {{ product.category.name }}</span>
+                {% if product.stock > 0 %}
+                    <span style="background: rgba(16, 185, 129, 0.15); color: var(--success-green); border: 1px solid var(--success-green); padding: 0.2rem 0.75rem; border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 700;">
+                        In Stock ({{ product.stock }})
+                    </span>
+                {% else %}
+                    <span style="background: rgba(239, 68, 68, 0.15); color: var(--danger-red); border: 1px solid var(--danger-red); padding: 0.2rem 0.75rem; border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 700;">
+                        Out of Stock
+                    </span>
+                {% endif %}
+            </div>
+
+            <h1 style="font-size: 2.2rem; margin: 0.5rem 0 1rem 0;">{{ product.name }}</h1>
+
+            <!-- Ratings -->
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                {% if product.average_rating > 0 %}
+                    <div style="color: var(--star-gold); font-size: 1.1rem;">
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <span style="font-weight: 700; font-size: 1.1rem;">{{ product.average_rating }}</span>
+                    <span style="color: var(--text-muted); font-size: 0.9rem;">({{ product.review_count }} Customer Reviews)</span>
+                {% else %}
+                    <span style="color: var(--text-muted); font-size: 0.95rem;"><i class="bi bi-star" style="color: var(--text-dim);"></i> No reviews yet</span>
+                {% endif %}
+            </div>
+
+
+            <!-- Price Card -->
+            <div style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.5rem;">
+                <span style="font-size: 2.5rem; font-weight: 800; color: #fff;">₹{{ product.current_price }}</span>
+                {% if product.is_on_sale %}
+                    <span class="old-price" style="font-size: 1.3rem;">₹{{ product.price }}</span>
+                    <span class="product-badge" style="position: static;">SAVE {{ product.discount_percentage }}%</span>
+                {% endif %}
+            </div>
+
+            <p style="color: var(--text-muted); line-height: 1.7; margin-bottom: 2rem;">
+                {{ product.description }}
+            </p>
+
+            <!-- Quantity & Action Buttons -->
+            <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: auto;">
+                {% if user.is_staff %}
+                    <!-- Admin Preview Mode Card -->
+                    <div class="glass-card" style="padding: 1.25rem; border: 1px solid rgba(0, 242, 254, 0.35); background: rgba(0, 242, 254, 0.05); border-radius: 14px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; flex-wrap: wrap; gap: 0.5rem;">
+                            <span style="display: inline-flex; align-items: center; gap: 0.4rem; color: var(--primary-cyan); font-weight: 800; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.04em;">
+                                <i class="bi bi-shield-lock-fill"></i> Storefront Viewer Mode
+                            </span>
+                            <span style="font-size: 0.78rem; color: var(--text-dim); background: rgba(255,255,255,0.06); padding: 0.2rem 0.6rem; border-radius: 6px;">
+                                Stock: {{ product.stock }} units
+                            </span>
+                        </div>
+                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.5;">
+                            You are previewing this product listing as an administrator. Purchasing, wishlist, and cart operations are disabled for staff accounts to prevent data contamination.
+                        </p>
+                        <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+                            <a href="{% url 'admin_panel:products' %}" class="btn btn-secondary btn-sm" style="flex: 1; font-size: 0.82rem; justify-content: center;">
+                                <i class="bi bi-headphones"></i> Admin Catalog
+                            </a>
+                            <a href="{% url 'admin_panel:dashboard' %}" class="btn btn-sm" style="flex: 1; font-size: 0.82rem; background: rgba(255,255,255,0.08); color: #fff; border: 1px solid var(--border-color); justify-content: center;">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: var(--radius-full); padding: 0.2rem 0.5rem;">
+                            <button type="button" onclick="const input = document.getElementById('productQuantity'); if(input.value > 1) input.value--" style="background: none; border: none; color: #fff; width: 32px; height: 32px; cursor: pointer; font-size: 1.2rem;">-</button>
+                            <input type="number" id="productQuantity" value="1" min="1" max="{{ product.stock }}" style="width: 40px; text-align: center; background: none; border: none; color: #fff; font-weight: 700; font-size: 1rem; outline: none;" readonly>
+                            <button type="button" onclick="const input = document.getElementById('productQuantity'); if(parseInt(input.value) < {{ product.stock }}) input.value++" style="background: none; border: none; color: #fff; width: 32px; height: 32px; cursor: pointer; font-size: 1.2rem;">+</button>
+                        </div>
+
+                        <button class="btn btn-primary ajax-add-to-cart" data-product-id="{{ product.id }}" style="flex: 1; padding: 0.85rem;" {% if product.stock == 0 %}disabled{% endif %}>
+                            <i class="bi bi-cart-plus-fill"></i> Add to Cart
+                        </button>
+
+                        <button class="icon-btn ajax-wishlist-toggle {% if product.id in wishlist_product_ids %}active{% endif %}" data-product-id="{{ product.id }}" style="width: 48px; height: 48px;" title="Wishlist">
+                            <i class="bi {% if product.id in wishlist_product_ids %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                        </button>
+                    </div>
+
+                    <!-- Instant Buy Now Form -->
+                    <form method="POST" action="{% url 'cart:buy_now' product.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-secondary" style="width: 100%; padding: 0.85rem; border-color: var(--primary-cyan); color: var(--primary-cyan);" {% if product.stock == 0 %}disabled{% endif %}>
+                            <i class="bi bi-lightning-charge-fill"></i> Buy Now (Instant Checkout)
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Specifications Matrix & Reviews Tabs -->
+    <div class="glass-panel" style="padding: 2rem;">
+        <div style="display: flex; gap: 2rem; border-bottom: 1px solid var(--border-color); margin-bottom: 2rem;">
+            <button class="tab-btn active" data-tab="specsTab" style="background: none; border: none; color: #fff; font-size: 1.1rem; font-family: 'Outfit', sans-serif; font-weight: 700; padding-bottom: 0.75rem; cursor: pointer; border-bottom: 2px solid var(--primary-cyan);">
+                <i class="bi bi-cpu"></i> Technical Specifications
+            </button>
+            <button class="tab-btn" data-tab="reviewsTab" style="background: none; border: none; color: var(--text-muted); font-size: 1.1rem; font-family: 'Outfit', sans-serif; font-weight: 700; padding-bottom: 0.75rem; cursor: pointer;">
+                <i class="bi bi-chat-square-text"></i> Customer Reviews ({{ reviews.count }})
+            </button>
+        </div>
+
+        <!-- Specs Tab -->
+        <div id="specsTab" class="tab-pane">
+            {% if product.driver_size or product.battery_life or product.connectivity or product.noise_cancellation or product.frequency_response or product.impedance or product.weight or product.warranty %}
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">
+                    {% if product.driver_size %}
+                        <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                            <span style="color: var(--primary-cyan); font-size: 0.82rem; font-weight: 700; text-transform: uppercase;">Acoustic Driver</span>
+                            <h4 style="margin-top: 0.25rem; font-size: 1.05rem;">{{ product.driver_size }}</h4>
+                        </div>
+                    {% endif %}
+                    {% if product.battery_life %}
+                        <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                            <span style="color: var(--primary-cyan); font-size: 0.82rem; font-weight: 700; text-transform: uppercase;">Battery Life</span>
+                            <h4 style="margin-top: 0.25rem; font-size: 1.05rem;">{{ product.battery_life }}</h4>
+                        </div>
+                    {% endif %}
+                    {% if product.connectivity %}
+                        <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                            <span style="color: var(--primary-cyan); font-size: 0.82rem; font-weight: 700; text-transform: uppercase;">Connectivity</span>
+                            <h4 style="margin-top: 0.25rem; font-size: 1.05rem;">{{ product.connectivity }}</h4>
+                        </div>
+                    {% endif %}
+                    {% if product.noise_cancellation %}
+                        <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                            <span style="color: var(--primary-cyan); font-size: 0.82rem; font-weight: 700; text-transform: uppercase;">Noise Cancellation</span>
+                            <h4 style="margin-top: 0.25rem; font-size: 1.05rem;">{{ product.noise_cancellation }}</h4>
+                        </div>
+                    {% endif %}
+                    {% if product.frequency_response %}
+                        <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                            <span style="color: var(--primary-cyan); font-size: 0.82rem; font-weight: 700; text-transform: uppercase;">Frequency Response</span>
+                            <h4 style="margin-top: 0.25rem; font-size: 1.05rem;">{{ product.frequency_response }}</h4>
+                        </div>
+                    {% endif %}
+                    {% if product.impedance %}
+                        <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                            <span style="color: var(--primary-cyan); font-size: 0.82rem; font-weight: 700; text-transform: uppercase;">Impedance</span>
+                            <h4 style="margin-top: 0.25rem; font-size: 1.05rem;">{{ product.impedance }}</h4>
+                        </div>
+                    {% endif %}
+                    {% if product.weight %}
+                        <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                            <span style="color: var(--primary-cyan); font-size: 0.82rem; font-weight: 700; text-transform: uppercase;">Weight</span>
+                            <h4 style="margin-top: 0.25rem; font-size: 1.05rem;">{{ product.weight }}</h4>
+                        </div>
+                    {% endif %}
+                    {% if product.warranty %}
+                        <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                            <span style="color: var(--primary-cyan); font-size: 0.82rem; font-weight: 700; text-transform: uppercase;">Warranty</span>
+                            <h4 style="margin-top: 0.25rem; font-size: 1.05rem;">{{ product.warranty }}</h4>
+                        </div>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p style="color: var(--text-muted);">Standard high-resolution audio specifications apply.</p>
+            {% endif %}
+        </div>
+
+        <!-- Reviews Tab -->
+        <div id="reviewsTab" class="tab-pane" style="display: none;">
+            {% if user.is_authenticated %}
+                <form method="POST" action="{% url 'products:add_review' product.slug %}" style="background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: var(--radius-sm); margin-bottom: 2rem;">
+                    {% csrf_token %}
+                    <h4 style="margin-bottom: 1rem;">Write a Review</h4>
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                        <select name="rating" style="padding: 0.6rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                            <option value="5">★★★★★ Excellent (5 Stars)</option>
+                            <option value="4">★★★★☆ Good (4 Stars)</option>
+                            <option value="3">★★★☆☆ Average (3 Stars)</option>
+                            <option value="2">★★☆☆☆ Fair (2 Stars)</option>
+                            <option value="1">★☆☆☆☆ Poor (1 Star)</option>
+                        </select>
+                        <input type="text" name="headline" placeholder="Review Headline" required style="flex: 1; padding: 0.6rem 1rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                    </div>
+                    <textarea name="comment" rows="3" placeholder="Share your sound experience..." required style="width: 100%; padding: 0.8rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); margin-bottom: 1rem;"></textarea>
+                    <button type="submit" class="btn btn-primary btn-sm">Submit Review</button>
+                </form>
+            {% else %}
+                <p style="color: var(--text-muted); margin-bottom: 2rem;">Please <a href="{% url 'accounts:login' %}?next={{ request.path }}" style="color: var(--primary-cyan); font-weight:700;">Login</a> or <a href="{% url 'accounts:register' %}?next={{ request.path }}" style="color: var(--primary-cyan); font-weight:700;">Register</a> to write a review.</p>
+            {% endif %}
+
+            <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                {% for r in reviews %}
+                    <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 1.25rem;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
+                            <span style="font-weight: 700; color: #fff;">{{ r.user.first_name|default:r.user.get_full_name|default:r.user.username }}</span>
+                            <span style="color: var(--text-dim); font-size: 0.85rem;">{{ r.created_at|date:"M d, Y" }}</span>
+                        </div>
+                        <div style="color: var(--star-gold); margin-bottom: 0.4rem;">★ {{ r.rating }} / 5</div>
+                        <h4 style="font-size: 1rem; margin-bottom: 0.4rem;">{{ r.headline }}</h4>
+                        <p style="color: var(--text-muted); font-size: 0.95rem;">{{ r.comment }}</p>
+                    </div>
+                {% empty %}
+                    <p style="color: var(--text-dim);">No customer reviews yet. Be the first to review!</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

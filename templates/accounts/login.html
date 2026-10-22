@@ -1,0 +1,597 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login | SoundSphere{% endblock %}
+
+{% block content %}
+<style>
+.auth-wrapper {
+    padding: 3rem 0 5rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-split-card {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    width: 100%;
+    max-width: 1020px;
+    background: #0d121d;
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    position: relative;
+    z-index: 2;
+}
+
+/* Left Hero Section - Simple & Unique Audio Aesthetic */
+.auth-hero {
+    position: relative;
+    padding: 3.5rem 3rem;
+    background: #090d16;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    border-right: 1px solid var(--border-color);
+}
+
+.auth-hero-glow {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    background: var(--gradient-audio);
+    filter: blur(110px);
+    opacity: 0.2;
+    border-radius: 50%;
+    top: 20%;
+    left: 20%;
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 380px;
+}
+
+.hero-logo-wrapper {
+    width: 90px;
+    height: 90px;
+    border-radius: 24px;
+    background: rgba(0, 242, 254, 0.06);
+    border: 1px solid var(--border-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.75rem;
+    box-shadow: 0 12px 35px rgba(0, 242, 254, 0.15);
+    transition: var(--transition);
+}
+
+.hero-logo-wrapper:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 16px 45px rgba(0, 242, 254, 0.25);
+}
+
+.auth-hero-title {
+    font-size: 2.25rem;
+    line-height: 1.25;
+    font-weight: 800;
+    margin-bottom: 0.9rem;
+    color: #fff;
+}
+
+.auth-hero-desc {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.hero-features-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.hero-feature-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 1.1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.hero-feature-pill:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--border-glow);
+    color: #fff;
+    transform: translateX(4px);
+}
+
+.hero-feature-pill i {
+    color: var(--primary-cyan);
+    font-size: 1.1rem;
+}
+
+/* Right Form Section */
+.auth-form-container {
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--bg-surface-solid);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 1.75rem;
+}
+
+.auth-header-logo {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 0.75rem auto;
+    border-radius: 50%;
+    background: rgba(0, 242, 254, 0.1);
+    border: 1px solid var(--border-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.auth-header p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* Role Selector Tabs */
+.role-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px;
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 1.75rem;
+}
+
+.role-tab {
+    padding: 0.65rem;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.88rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.role-tab:hover {
+    color: #fff;
+}
+
+.role-tab.active {
+    background: var(--gradient-audio);
+    color: #000;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+}
+
+/* Input Fields with Icons */
+.form-group-custom {
+    margin-bottom: 1.25rem;
+}
+
+.form-group-custom label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+}
+
+.form-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.4rem;
+}
+
+.forgot-password-link {
+    font-size: 0.78rem;
+    color: var(--primary-cyan);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.forgot-password-link:hover {
+    color: #fff;
+    text-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
+    text-decoration: underline;
+}
+
+.input-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon-wrapper i {
+    position: absolute;
+    left: 1rem;
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    transition: var(--transition);
+}
+
+.custom-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 0.92rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+.custom-input:focus {
+    border-color: var(--primary-cyan);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 12px rgba(0, 242, 254, 0.2);
+}
+
+.custom-input:focus + i, .input-icon-wrapper:focus-within i {
+    color: var(--primary-cyan);
+}
+
+.submit-btn-gradient {
+    width: 100%;
+    padding: 0.85rem;
+    background: var(--gradient-audio);
+    border: none;
+    border-radius: 12px;
+    color: #000;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0, 242, 254, 0.3);
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.submit-btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 242, 254, 0.5);
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1.5rem 0;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.auth-divider::before, .auth-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.auth-divider span {
+    padding: 0 1rem;
+}
+
+.auth-footer-links {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.auth-footer-links a {
+    color: var(--primary-cyan);
+    font-weight: 700;
+}
+
+.auth-trust-badges {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.trust-badge-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+@media (max-width: 900px) {
+    .auth-split-card {
+        grid-template-columns: 1fr;
+    }
+    .auth-hero {
+        display: none;
+    }
+}
+</style>
+
+<div class="container auth-wrapper">
+    <div class="auth-split-card">
+        <!-- Left Hero Section - Simple & Unique Audio Aesthetic -->
+        <div class="auth-hero">
+            <div class="auth-hero-glow"></div>
+            
+            <div class="hero-content">
+                <div class="hero-logo-wrapper">
+                    <i class="bi bi-disc-fill" style="font-size: 2.8rem; background: var(--gradient-audio); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                </div>
+                <h1 class="auth-hero-title">Welcome <span class="gradient-text">Back!</span></h1>
+                <p class="auth-hero-desc">Log in to manage your orders, audio wishlist, seller store, or administrative panel.</p>
+
+                <div class="hero-features-grid">
+                    <div class="hero-feature-pill">
+                        <i class="bi bi-bag-check"></i> Real-Time Order Tracking
+                    </div>
+                    <div class="hero-feature-pill">
+                        <i class="bi bi-heart"></i> Saved Headphone Wishlists
+                    </div>
+                    <div class="hero-feature-pill">
+                        <i class="bi bi-shield-check"></i> Role-Based Security Portals
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Form Section -->
+        <div class="auth-form-container">
+            <div class="auth-header">
+                <div class="auth-header-logo">
+                    <i class="bi bi-disc-fill" style="font-size: 1.8rem; color: var(--primary-cyan);"></i>
+                </div>
+                <h2>Login to Account</h2>
+                <p>Select your account type to login</p>
+            </div>
+
+            <form method="POST" id="loginForm" autocomplete="off">
+                {% csrf_token %}
+                <input type="hidden" name="role" id="selectedRoleInput" value="{{ role|default:'customer' }}">
+
+                <!-- Role Selector Tabs -->
+                <div class="role-tabs">
+                    <button type="button" class="role-tab {% if role == 'customer' or not role %}active{% endif %}" onclick="selectRole('customer')">
+                        <i class="bi bi-person-circle"></i> Customer
+                    </button>
+                    <button type="button" class="role-tab {% if role == 'seller' %}active{% endif %}" onclick="selectRole('seller')">
+                        <i class="bi bi-shop"></i> Seller
+                    </button>
+                </div>
+
+                <!-- Email Address Field -->
+                <div class="form-group-custom">
+                    <label>Email Address</label>
+                    <div class="input-icon-wrapper">
+                        <input type="email" name="username" class="custom-input" placeholder="Enter Email Address" value="{{ login_input|default:'' }}" required autocomplete="email">
+                        <i class="bi bi-envelope"></i>
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group-custom">
+                    <div class="form-label-row">
+                        <label style="margin-bottom: 0;">Password</label>
+                        <a href="{% url 'accounts:password_reset' %}" class="forgot-password-link">Forgot Password?</a>
+                    </div>
+                    <div class="input-icon-wrapper">
+                        <input type="password" name="password" class="custom-input" placeholder="Enter Password" required autocomplete="current-password" readonly onfocus="this.removeAttribute('readonly');">
+                        <i class="bi bi-lock"></i>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn-gradient">
+                    Login <i class="bi bi-box-arrow-in-right"></i>
+                </button>
+            </form>
+
+            <div class="auth-divider">
+                <span>OR</span>
+            </div>
+
+            <div class="auth-footer-links">
+                Don't have an account? 
+                <a href="{% url 'accounts:register' %}" id="registerRedirectLink">Create Account &rarr;</a>
+            </div>
+
+            <div class="auth-trust-badges">
+                <div class="trust-badge-item">
+                    <i class="bi bi-shield-check" style="color:var(--primary-cyan)"></i> Studio-Grade Audio Equipment
+                </div>
+                <div class="trust-badge-item">
+                    <i class="bi bi-shop" style="color:var(--primary-cyan)"></i> Verified Audio Sellers
+                </div>
+                <div class="trust-badge-item">
+                    <i class="bi bi-heart-fill" style="color:#ef4444"></i> Loved by Audiophiles
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<canvas id="soundwaveCanvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; opacity: 0.75;"></canvas>
+
+<script>
+function selectRole(role) {
+    document.getElementById('selectedRoleInput').value = role;
+    
+    // Update active tab buttons
+    const tabs = document.querySelectorAll('.role-tab');
+    tabs.forEach(tab => tab.classList.remove('active'));
+
+    const activeTab = Array.from(tabs).find(tab => tab.textContent.trim().toLowerCase().includes(role));
+    if (activeTab) {
+        activeTab.classList.add('active');
+    }
+
+    // Update register redirect link with role param
+    const registerLink = document.getElementById('registerRedirectLink');
+    if (registerLink) {
+        registerLink.href = "{% url 'accounts:register' %}?role=" + role;
+    }
+}
+
+// Clear auto-filled credentials on page load / refresh
+window.addEventListener('pageshow', function () {
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.reset();
+    }
+});
+
+// Interactive Floating Acoustic Particle Constellation Engine
+const soundwaveCanvas = document.getElementById('soundwaveCanvas');
+if (soundwaveCanvas) {
+    const ctx = soundwaveCanvas.getContext('2d');
+    let width = soundwaveCanvas.width = window.innerWidth;
+    let height = soundwaveCanvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+        width = soundwaveCanvas.width = window.innerWidth;
+        height = soundwaveCanvas.height = window.innerHeight;
+    });
+
+    let targetMouseX = width / 2;
+    let targetMouseY = height / 2;
+    let mouseX = width / 2;
+    let mouseY = height / 2;
+
+    window.addEventListener('mousemove', (e) => {
+        targetMouseX = e.clientX;
+        targetMouseY = e.clientY;
+    });
+
+    const particleCount = 70;
+    const particles = [];
+    const colorPalette = ['#00f2fe', '#4facfe', '#7f00ff', '#ffffff', '#ff007f'];
+
+    for (let i = 0; i < particleCount; i++) {
+        particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            radius: Math.random() * 2.8 + 0.9,
+            speedY: Math.random() * -0.7 - 0.25,
+            speedX: Math.random() * 0.5 - 0.25,
+            alpha: Math.random() * 0.75 + 0.25,
+            pulseSpeed: Math.random() * 0.04 + 0.015,
+            pulsePhase: Math.random() * Math.PI * 2,
+            color: colorPalette[Math.floor(Math.random() * colorPalette.length)]
+        });
+    }
+
+    function renderAcousticParticles() {
+        ctx.clearRect(0, 0, width, height);
+
+        mouseX += (targetMouseX - mouseX) * 0.06;
+        mouseY += (targetMouseY - mouseY) * 0.06;
+
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < 120) {
+                    const lineAlpha = (1 - dist / 120) * 0.15;
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(0, 242, 254, ${lineAlpha})`;
+                    ctx.lineWidth = 0.8;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        particles.forEach(p => {
+            p.y += p.speedY;
+            p.x += p.speedX;
+            p.pulsePhase += p.pulseSpeed;
+
+            if (p.y < -10) {
+                p.y = height + 10;
+                p.x = Math.random() * width;
+            }
+            if (p.x < -10) p.x = width + 10;
+            if (p.x > width + 10) p.x = -10;
+
+            const dx = p.x - mouseX;
+            const dy = p.y - mouseY;
+            const distToMouse = Math.sqrt(dx * dx + dy * dy);
+            if (distToMouse < 140) {
+                const angle = Math.atan2(dy, dx);
+                const pushForce = (140 - distToMouse) * 0.04;
+                p.x += Math.cos(angle) * pushForce;
+                p.y += Math.sin(angle) * pushForce;
+            }
+
+            const currentAlpha = p.alpha + Math.sin(p.pulsePhase) * 0.2;
+            const clampedAlpha = Math.max(0.15, Math.min(1, currentAlpha));
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = clampedAlpha;
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = p.color;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.globalAlpha = 1.0;
+        });
+
+        requestAnimationFrame(renderAcousticParticles);
+    }
+
+    renderAcousticParticles();
+}
+</script>
+{% endblock %}
+
