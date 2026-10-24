@@ -1,0 +1,789 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sales & Business Analytics Report | SoundSphere Admin{% endblock %}
+
+{% block content %}
+<style>
+/* Print Optimizations for PDF Export */
+@media print {
+    header.navbar, 
+    .admin-sticky-subnav, 
+    .report-filter-bar, 
+    .no-print, 
+    footer,
+    .btn,
+    .print-hide {
+        display: none !important;
+    }
+    body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        font-size: 11pt !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    .container {
+        max-width: 100% !important;
+        width: 100% !important;
+        padding: 0.5cm !important;
+        margin: 0 !important;
+    }
+    .glass-panel, .report-card, .admin-stat-card {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        color: #0f172a !important;
+        page-break-inside: avoid;
+    }
+    .print-header {
+        display: block !important;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid #0284c7;
+        padding-bottom: 1rem;
+    }
+    .print-text-dark {
+        color: #0f172a !important;
+    }
+    .print-text-muted {
+        color: #64748b !important;
+    }
+    table {
+        color: #0f172a !important;
+        border-collapse: collapse !important;
+        width: 100% !important;
+    }
+    th, td {
+        border: 1px solid #e2e8f0 !important;
+        color: #0f172a !important;
+        padding: 6px 8px !important;
+    }
+    th {
+        background: #f1f5f9 !important;
+    }
+}
+
+.print-header {
+    display: none;
+}
+
+/* Screen UI Styles */
+.admin-sticky-subnav {
+    position: relative !important;
+    top: 0 !important;
+    margin-bottom: 2rem !important;
+}
+
+.report-grid-kpi {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.report-card {
+    background: rgba(18, 24, 38, 0.7);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: var(--transition);
+}
+
+.report-card:hover {
+    border-color: var(--border-glow);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.report-chart-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.report-secondary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.period-pill {
+    padding: 0.45rem 0.9rem;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    text-decoration: none;
+    transition: var(--transition);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.period-pill:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary-cyan);
+}
+
+.period-pill.active {
+    background: var(--gradient-audio);
+    color: #05080f;
+    font-weight: 800;
+    border-color: var(--primary-cyan);
+    box-shadow: 0 0 12px rgba(0, 242, 254, 0.35);
+}
+
+@media (max-width: 1200px) {
+    .report-grid-kpi { grid-template-columns: repeat(2, 1fr); }
+    .report-chart-grid { grid-template-columns: 1fr; }
+    .report-secondary-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 650px) {
+    .report-grid-kpi { grid-template-columns: 1fr; }
+}
+</style>
+
+<!-- Chart.js CDN for Analytics Visualizations -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container" style="padding-top: 2rem; padding-bottom: 5rem;">
+
+    <!-- Print Only Official Letterhead -->
+    <div class="print-header">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <h1 style="font-size: 24pt; font-weight: 900; color: #0284c7; margin: 0;">SOUNDSPHERE</h1>
+                <p style="color: #64748b; font-size: 10pt; margin: 2px 0 0 0;">Official Executive Sales & eCommerce Analytics Statement</p>
+            </div>
+            <div style="text-align: right; font-size: 9pt; color: #475569;">
+                <div><strong>Statement Period:</strong> {{ date_label }}</div>
+                <div><strong>Generated:</strong> {{ generated_at|date:"F d, Y - H:i" }}</div>
+                <div><strong>Auditor:</strong> {{ request.user.username }} (System Admin)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- On-Screen Console Header -->
+    <div class="print-hide" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.75rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <div class="brand-tag-badge" style="margin-bottom: 0.4rem;">
+                <i class="bi bi-graph-up-arrow"></i> SoundSphere Business Intelligence
+            </div>
+            <h1 style="font-size: 2.2rem;">Sales & Analytics <span class="gradient-text">Report</span></h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+                Real-time transactional analytics, profit modeling, brand performance, and order invoice management.
+            </p>
+        </div>
+
+        <!-- Action Buttons: Print PDF & Export CSV -->
+        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <button onclick="window.print()" class="btn btn-primary btn-sm" style="display: inline-flex; align-items: center; gap: 0.45rem; font-weight: 700; box-shadow: 0 0 15px rgba(0, 242, 254, 0.35);">
+                <i class="bi bi-file-earmark-pdf-fill"></i> Download PDF / Print Report
+            </button>
+            <a href="{% url 'admin_panel:export_orders_csv' %}?period={{ period }}" class="btn btn-secondary btn-sm" style="display: inline-flex; align-items: center; gap: 0.45rem; font-weight: 600;">
+                <i class="bi bi-file-earmark-spreadsheet-fill" style="color: #10b981;"></i> Export CSV
+            </a>
+            <a href="{% url 'admin_panel:dashboard' %}" class="btn btn-secondary btn-sm">
+                <i class="bi bi-arrow-left"></i> Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Admin Subnav Bar -->
+    {% include 'admin_panel/subnav.html' %}
+
+    <!-- Report Period Filter Toolbar -->
+    <div class="glass-panel report-filter-bar print-hide" style="padding: 1.1rem 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.25rem;">
+        <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+            <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-right: 0.25rem;">
+                <i class="bi bi-calendar3"></i> Period:
+            </span>
+            <a href="?period=today" class="period-pill {% if period == 'today' %}active{% endif %}">Today</a>
+            <a href="?period=7d" class="period-pill {% if period == '7d' %}active{% endif %}">Last 7 Days</a>
+            <a href="?period=30d" class="period-pill {% if period == '30d' %}active{% endif %}">Last 30 Days</a>
+            <a href="?period=this_month" class="period-pill {% if period == 'this_month' %}active{% endif %}">This Month</a>
+            <a href="?period=this_year" class="period-pill {% if period == 'this_year' %}active{% endif %}">This Year</a>
+            <a href="?period=all" class="period-pill {% if period == 'all' %}active{% endif %}">All Time</a>
+        </div>
+
+        <!-- Custom Date Range Form -->
+        <form method="GET" action="{% url 'admin_panel:reports' %}" style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+            <input type="date" name="start_date" value="{{ start_date_str }}" required style="background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; padding: 0.4rem 0.7rem; border-radius: 8px; font-size: 0.82rem;">
+            <span style="color: var(--text-dim); font-size: 0.8rem;">to</span>
+            <input type="date" name="end_date" value="{{ end_date_str }}" required style="background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; padding: 0.4rem 0.7rem; border-radius: 8px; font-size: 0.82rem;">
+            <button type="submit" class="btn btn-secondary btn-sm" style="padding: 0.4rem 0.85rem; font-size: 0.82rem;">
+                Filter
+            </button>
+            {% if period == 'custom' %}
+                <a href="{% url 'admin_panel:reports' %}?period=30d" style="color: var(--danger-red); font-size: 0.82rem; text-decoration: none;">Clear</a>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Active Filter Badge (visible in print & screen) -->
+    <div style="margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
+        <div style="font-size: 0.95rem; color: #fff; font-weight: 600;">
+            Financial Summary & Metrics: <span style="color: var(--primary-cyan); font-weight: 800;">{{ date_label }}</span>
+        </div>
+        <div style="font-size: 0.82rem; color: var(--text-dim);">
+            Generated: <strong>{{ generated_at|date:"M d, Y - H:i" }}</strong>
+        </div>
+    </div>
+
+    <!-- Executive Presentation Explainer Banner -->
+    <div class="glass-panel" style="padding: 1.25rem 1.75rem; margin-bottom: 1.75rem; border-left: 4px solid var(--primary-cyan); background: linear-gradient(90deg, rgba(0, 242, 254, 0.08), rgba(79, 70, 229, 0.08));">
+        <div style="display: flex; align-items: flex-start; gap: 0.85rem;">
+            <i class="bi bi-lightbulb-fill" style="color: var(--star-gold); font-size: 1.4rem; margin-top: 0.15rem; flex-shrink: 0;"></i>
+            <div>
+                <div style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 800; color: var(--primary-cyan); margin-bottom: 0.25rem;">
+                    Executive Performance Snapshot (Ready to Present)
+                </div>
+                <div style="color: #f1f5f9; font-size: 0.98rem; line-height: 1.55; font-weight: 500;">
+                    During this period (<strong style="color: #fff;">{{ date_label }}</strong>), SoundSphere generated <strong style="color: var(--primary-cyan);">₹{{ gross_revenue|floatformat:2 }}</strong> in sales across <strong style="color: #fff;">{{ total_orders }} customer orders</strong>. A total of <strong style="color: #fff;">{{ total_units_sold }} headsets</strong> were ordered, yielding <strong style="color: var(--star-gold);">₹{{ estimated_profit|floatformat:2 }}</strong> in platform profit at a <strong style="color: #10b981;">{{ delivery_rate }}%</strong> delivery fulfillment rate.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4 Core Executive Metric Cards -->
+    <div class="report-grid-kpi">
+        <!-- 1. Total Sales / Revenue -->
+        <div class="report-card" style="border-top: 3px solid var(--primary-cyan);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Total Sales Revenue</span>
+                <i class="bi bi-currency-rupee" style="color: var(--primary-cyan); font-size: 1.35rem;"></i>
+            </div>
+            <div style="margin-top: 0.85rem;">
+                <div style="font-size: 2.1rem; font-weight: 800; color: #fff;">₹{{ gross_revenue|floatformat:2 }}</div>
+                <div style="font-size: 0.8rem; color: #10b981; font-weight: 600; margin-top: 0.3rem;">
+                    <i class="bi bi-check-circle-fill"></i> ₹{{ net_revenue|floatformat:2 }} realized net sales
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Platform Net Profit -->
+        <div class="report-card" style="border-top: 3px solid var(--star-gold);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Platform Net Profit</span>
+                <i class="bi bi-wallet2" style="color: var(--star-gold); font-size: 1.35rem;"></i>
+            </div>
+            <div style="margin-top: 0.85rem;">
+                <div style="font-size: 2.1rem; font-weight: 800; color: var(--star-gold);">₹{{ estimated_profit|floatformat:2 }}</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">
+                    12% marketplace take-rate commission
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Total Orders & Delivery Success -->
+        <div class="report-card" style="border-top: 3px solid #10b981;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Total Orders & Delivery</span>
+                <i class="bi bi-box-seam" style="color: #10b981; font-size: 1.35rem;"></i>
+            </div>
+            <div style="margin-top: 0.85rem;">
+                <div style="font-size: 2.1rem; font-weight: 800; color: #fff;">{{ total_orders }}</div>
+                <div style="font-size: 0.8rem; color: #10b981; font-weight: 600; margin-top: 0.3rem;">
+                    {{ delivered_count }} delivered ({{ delivery_rate }}% fulfillment rate)
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Total Headsets Sold -->
+        <div class="report-card" style="border-top: 3px solid var(--primary-indigo);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Headsets Sold</span>
+                <i class="bi bi-headphones" style="color: var(--primary-indigo); font-size: 1.35rem;"></i>
+            </div>
+            <div style="margin-top: 0.85rem;">
+                <div style="font-size: 2.1rem; font-weight: 800; color: #fff;">{{ total_units_sold }}</div>
+                <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem;">
+                    Physical acoustic units shipped
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Streamlined 2-Chart Section: Revenue Trend & Order Fulfillment -->
+    <div class="report-chart-grid">
+        <!-- Revenue Progression Timeline -->
+        <div class="glass-panel" style="padding: 1.75rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                <div>
+                    <h3 style="font-size: 1.15rem; color: #fff; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="bi bi-graph-up" style="color: var(--primary-cyan);"></i> Sales Revenue Timeline
+                    </h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">Daily gross transaction revenue trend.</p>
+                </div>
+            </div>
+            <div style="position: relative; height: 260px;">
+                <canvas id="revenueTrendChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Order Fulfillment Status Funnel -->
+        <div class="glass-panel" style="padding: 1.75rem;">
+            <h3 style="font-size: 1.15rem; color: #fff; margin: 0 0 0.3rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="bi bi-pie-chart-fill" style="color: var(--primary-indigo);"></i> Fulfillment Status
+            </h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0 0 1.25rem 0;">Delivered vs active vs cancelled orders.</p>
+            <div style="position: relative; height: 240px; display: flex; justify-content: center;">
+                <canvas id="orderStatusChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2 Additional Analytics Charts: Top Brands & Payment Gateways -->
+    <div class="report-secondary-grid">
+        <!-- Top Brands by Revenue Chart -->
+        <div class="glass-panel" style="padding: 1.75rem;">
+            <h3 style="font-size: 1.15rem; color: #fff; margin: 0 0 0.3rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="bi bi-award-fill" style="color: var(--star-gold);"></i> Top Brands by Sales Volume
+            </h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0 0 1.25rem 0;">Gross revenue generated per authorized brand seller.</p>
+            <div style="position: relative; height: 230px;">
+                <canvas id="brandRevenueChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Payment Methods Share -->
+        <div class="glass-panel" style="padding: 1.75rem;">
+            <h3 style="font-size: 1.15rem; color: #fff; margin: 0 0 0.3rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="bi bi-credit-card-2-front" style="color: #10b981;"></i> Payment Gateway Mix
+            </h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0 0 1.25rem 0;">Customer payment method adoption.</p>
+            <div style="position: relative; height: 230px; display: flex; justify-content: center;">
+                <canvas id="paymentMethodsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Brand / Merchant Performance Detailed Table -->
+    <div class="glass-panel" style="padding: 2rem; margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+                <h3 style="font-size: 1.25rem; color: #fff; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="bi bi-shop" style="color: var(--star-gold);"></i> Authorized Brand & Merchant Performance
+                </h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">Breakdown of units sold, gross merchandise value, and platform commission earned per brand.</p>
+            </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">
+                        <th style="padding: 0.75rem 1rem;">Brand / Store</th>
+                        <th style="padding: 0.75rem 1rem; text-align: center;">Units Sold</th>
+                        <th style="padding: 0.75rem 1rem; text-align: right;">Gross Sales (₹)</th>
+                        <th style="padding: 0.75rem 1rem; text-align: right;">Platform Take (12%)</th>
+                        <th style="padding: 0.75rem 1rem; text-align: center;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for b in brand_performance %}
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+                        <td style="padding: 0.9rem 1rem; font-weight: 700; color: #fff;">
+                            <i class="bi bi-patch-check-fill" style="color: var(--primary-cyan); margin-right: 0.4rem;"></i>
+                            {{ b.brand_name }}
+                        </td>
+                        <td style="padding: 0.9rem 1rem; text-align: center; color: var(--text-muted); font-weight: 600;">
+                            {{ b.units_sold }}
+                        </td>
+                        <td style="padding: 0.9rem 1rem; text-align: right; color: var(--primary-cyan); font-weight: 700;">
+                            ₹{{ b.revenue|floatformat:2 }}
+                        </td>
+                        <td style="padding: 0.9rem 1rem; text-align: right; color: var(--star-gold); font-weight: 700;">
+                            ₹{{ b.commission|floatformat:2 }}
+                        </td>
+                        <td style="padding: 0.9rem 1rem; text-align: center;">
+                            <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 6px;">
+                                Active Merchant
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" style="padding: 2rem; text-align: center; color: var(--text-muted);">
+                            No brand transactions recorded in this period.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Top Selling Audio Models -->
+    {% if top_products %}
+    <div class="glass-panel" style="padding: 2rem; margin-bottom: 2rem;">
+        <h3 style="font-size: 1.25rem; color: #fff; margin: 0 0 0.3rem 0; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="bi bi-trophy-fill" style="color: var(--star-gold);"></i> Best-Selling Headset Models
+        </h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 1.25rem 0;">Top models ranked by customer purchase frequency.</p>
+        
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">
+                        <th style="padding: 0.75rem 1rem;">Rank</th>
+                        <th style="padding: 0.75rem 1rem;">Headphone Model</th>
+                        <th style="padding: 0.75rem 1rem; text-align: center;">Units Shipped</th>
+                        <th style="padding: 0.75rem 1rem; text-align: right;">Total Model Sales</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in top_products %}
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                        <td style="padding: 0.85rem 1rem; font-weight: 800; color: var(--primary-cyan);">#{{ forloop.counter }}</td>
+                        <td style="padding: 0.85rem 1rem; font-weight: 600; color: #fff;">{{ p.name }}</td>
+                        <td style="padding: 0.85rem 1rem; text-align: center; font-weight: 700; color: #10b981;">{{ p.units }}</td>
+                        <td style="padding: 0.85rem 1rem; text-align: right; font-weight: 700; color: #fff;">₹{{ p.revenue|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Detailed Orders Ledger & Invoices Section -->
+    <div class="glass-panel" style="padding: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem;">
+            <div>
+                <h3 style="font-size: 1.25rem; color: #fff; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="bi bi-receipt-cutoff" style="color: var(--primary-cyan);"></i> Orders & Tax Invoice Ledger
+                </h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">
+                    Complete transaction history. Click any <strong>"Invoice (PDF)"</strong> button to view or print official GST tax invoices.
+                </p>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-muted);">
+                Showing <strong>{{ recent_orders|length }}</strong> most recent orders
+            </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase;">
+                        <th style="padding: 0.75rem 0.85rem;">Order #</th>
+                        <th style="padding: 0.75rem 0.85rem;">Date</th>
+                        <th style="padding: 0.75rem 0.85rem;">Customer</th>
+                        <th style="padding: 0.75rem 0.85rem;">Total</th>
+                        <th style="padding: 0.75rem 0.85rem; text-align: center;">Payment</th>
+                        <th style="padding: 0.75rem 0.85rem; text-align: center;">Fulfillment</th>
+                        <th style="padding: 0.75rem 0.85rem; text-align: right;" class="print-hide">Invoice & Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in recent_orders %}
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+                        <!-- Order # -->
+                        <td style="padding: 0.85rem; font-weight: 700; color: var(--primary-cyan); white-space: nowrap;">
+                            #{{ order.order_number }}
+                        </td>
+
+                        <!-- Date -->
+                        <td style="padding: 0.85rem; color: var(--text-dim); font-size: 0.82rem; white-space: nowrap;">
+                            {{ order.created_at|date:"M d, Y" }}<br>
+                            <span style="font-size: 0.75rem;">{{ order.created_at|date:"H:i" }}</span>
+                        </td>
+
+                        <!-- Customer -->
+                        <td style="padding: 0.85rem;">
+                            <div style="font-weight: 600; color: #fff;">{{ order.full_name }}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-dim);">{{ order.email }}</div>
+                        </td>
+
+                        <!-- Total -->
+                        <td style="padding: 0.85rem; font-weight: 700; color: #fff; white-space: nowrap;">
+                            ₹{{ order.total_amount|floatformat:2 }}
+                        </td>
+
+                        <!-- Payment -->
+                        <td style="padding: 0.85rem; text-align: center; white-space: nowrap;">
+                            {% if order.payment_status == 'Paid' %}
+                                <span style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); font-size: 0.75rem; padding: 0.2rem 0.55rem; border-radius: 6px; font-weight: 700;">
+                                    Paid ({{ order.payment.get_payment_method_display|default:'Online' }})
+                                </span>
+                            {% elif order.payment_status == 'Unpaid' %}
+                                <span style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); font-size: 0.75rem; padding: 0.2rem 0.55rem; border-radius: 6px; font-weight: 700;">
+                                    Unpaid / COD
+                                </span>
+                            {% else %}
+                                <span style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); font-size: 0.75rem; padding: 0.2rem 0.55rem; border-radius: 6px; font-weight: 700;">
+                                    {{ order.payment_status }}
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Fulfillment -->
+                        <td style="padding: 0.85rem; text-align: center; white-space: nowrap;">
+                            {% if order.status == 'Delivered' %}
+                                <span style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); font-size: 0.75rem; padding: 0.2rem 0.55rem; border-radius: 6px; font-weight: 700;">
+                                    <i class="bi bi-check-all"></i> Delivered
+                                </span>
+                            {% elif order.status == 'Cancelled' or order.status == 'Returned' %}
+                                <span style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); font-size: 0.75rem; padding: 0.2rem 0.55rem; border-radius: 6px; font-weight: 700;">
+                                    {{ order.status }}
+                                </span>
+                            {% else %}
+                                <span style="background: rgba(0, 242, 254, 0.15); color: var(--primary-cyan); border: 1px solid rgba(0, 242, 254, 0.3); font-size: 0.75rem; padding: 0.2rem 0.55rem; border-radius: 6px; font-weight: 700;">
+                                    {{ order.status }}
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Invoice PDF & Details Action Button -->
+                        <td style="padding: 0.85rem; text-align: right; white-space: nowrap;" class="print-hide">
+                            <a href="{% url 'orders:invoice' order.order_number %}" target="_blank" class="btn btn-primary btn-sm" style="padding: 0.35rem 0.75rem; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 700;">
+                                <i class="bi bi-file-earmark-pdf-fill"></i> Invoice (PDF)
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" style="padding: 3rem; text-align: center; color: var(--text-muted);">
+                            <i class="bi bi-inbox" style="font-size: 2rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>
+                            No orders found for the selected date range.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js Script Configuration -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    if (typeof Chart === 'undefined') {
+        console.warn("Chart.js library not yet loaded.");
+        return;
+    }
+
+    // 1. Revenue Progression Timeline Chart
+    try {
+        let trendDates = {{ chart_dates_json|safe }};
+        let trendRevenues = {{ chart_revenues_json|safe }};
+
+        if (!trendDates || trendDates.length === 0) {
+            trendDates = ['Day 1', 'Today'];
+            trendRevenues = [0, {{ gross_revenue|default:0 }}];
+        } else if (trendDates.length === 1) {
+            trendDates = ['Start', trendDates[0]];
+            trendRevenues = [0, trendRevenues[0]];
+        }
+
+        const ctxTrend = document.getElementById('revenueTrendChart');
+        if (ctxTrend) {
+            new Chart(ctxTrend, {
+                type: 'line',
+                data: {
+                    labels: trendDates,
+                    datasets: [
+                        {
+                            label: 'Gross Sales (₹)',
+                            data: trendRevenues,
+                            borderColor: '#00f2fe',
+                            backgroundColor: 'rgba(0, 242, 254, 0.16)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.35,
+                            pointBackgroundColor: '#00f2fe',
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' Gross Sales: ₹' + Number(context.parsed.y).toLocaleString('en-IN', {minimumFractionDigits: 2});
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#94a3b8', font: { size: 11 } }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: {
+                                color: '#94a3b8',
+                                font: { size: 11 },
+                                callback: function(val) { return '₹' + val.toLocaleString(); }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    } catch (e) {
+        console.error("Error creating Revenue Trend Chart:", e);
+    }
+
+    // 2. Order Fulfillment Status Doughnut Chart
+    try {
+        let statusCounts = {{ status_counts_json|safe }};
+        const totalStatus = (statusCounts || []).reduce((a, b) => a + b, 0);
+        let statusLabels = ['Delivered', 'In-Transit / Active', 'Cancelled', 'Returned'];
+        let statusColors = ['#10b981', '#00f2fe', '#ef4444', '#f59e0b'];
+
+        if (totalStatus === 0) {
+            statusCounts = [1];
+            statusLabels = ['No orders in period'];
+            statusColors = ['rgba(255, 255, 255, 0.15)'];
+        }
+
+        const ctxStatus = document.getElementById('orderStatusChart');
+        if (ctxStatus) {
+            new Chart(ctxStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: statusLabels,
+                    datasets: [{
+                        data: statusCounts,
+                        backgroundColor: statusColors,
+                        borderWidth: 0,
+                        hoverOffset: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#94a3b8', boxWidth: 12, padding: 12 }
+                        }
+                    },
+                    cutout: '68%'
+                }
+            });
+        }
+    } catch (e) {
+        console.error("Error creating Order Status Chart:", e);
+    }
+
+    // 3. Top Brands by Sales Volume Bar Chart
+    try {
+        let brandLabels = {{ top_brand_labels_json|safe }};
+        let brandRevenues = {{ top_brand_revenues_json|safe }};
+
+        if (!brandLabels || brandLabels.length === 0) {
+            brandLabels = ['SoundSphere Brands'];
+            brandRevenues = [{{ gross_revenue|default:0 }}];
+        }
+
+        const ctxBrand = document.getElementById('brandRevenueChart');
+        if (ctxBrand) {
+            new Chart(ctxBrand, {
+                type: 'bar',
+                data: {
+                    labels: brandLabels,
+                    datasets: [{
+                        label: 'Sales (₹)',
+                        data: brandRevenues,
+                        backgroundColor: 'rgba(255, 184, 0, 0.85)',
+                        borderRadius: 6,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' Brand Revenue: ₹' + Number(context.parsed.x).toLocaleString('en-IN', {minimumFractionDigits: 2});
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: {
+                                color: '#94a3b8',
+                                callback: function(v) { return '₹' + v.toLocaleString(); }
+                            }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { color: '#fff', font: { weight: '600' } }
+                        }
+                    }
+                }
+            });
+        }
+    } catch (e) {
+        console.error("Error creating Brand Revenue Chart:", e);
+    }
+
+    // 4. Payment Gateway Mix Chart
+    try {
+        let paymentCounts = {{ payment_counts_json|safe }};
+        let paymentLabels = ['Credit/Debit Card', 'UPI / QR Code', 'Net Banking', 'Cash on Delivery'];
+        let paymentColors = ['#4f46e5', '#00f2fe', '#10b981', '#f59e0b'];
+        const totalPayment = (paymentCounts || []).reduce((a, b) => a + b, 0);
+
+        if (totalPayment === 0) {
+            paymentCounts = [1];
+            paymentLabels = ['Unspecified / Pending'];
+            paymentColors = ['rgba(255, 255, 255, 0.15)'];
+        }
+
+        const ctxPayment = document.getElementById('paymentMethodsChart');
+        if (ctxPayment) {
+            new Chart(ctxPayment, {
+                type: 'pie',
+                data: {
+                    labels: paymentLabels,
+                    datasets: [{
+                        data: paymentCounts,
+                        backgroundColor: paymentColors,
+                        borderWidth: 0,
+                        hoverOffset: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#94a3b8', boxWidth: 12, padding: 10 }
+                        }
+                    }
+                }
+            });
+        }
+    } catch (e) {
+        console.error("Error creating Payment Chart:", e);
+    }
+});
+</script>
+{% endblock %}

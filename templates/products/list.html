@@ -868,9 +868,9 @@
 
                                 <!-- Actions -->
                                 <div class="card-actions-row">
-                                    {% if user.is_staff %}
+                                    {% if user.is_staff or user.profile.is_seller %}
                                         <a href="{% url 'products:detail' product.slug %}" class="btn btn-secondary btn-sm" style="flex: 1; justify-content: center;">
-                                            <i class="bi bi-eye"></i> View Preview
+                                            <i class="bi bi-eye"></i> View Specs & Details
                                         </a>
                                     {% elif product.stock > 0 %}
                                         <button class="btn btn-primary btn-sm btn-add-cart-primary ajax-add-to-cart" data-product-id="{{ product.id }}">
@@ -956,13 +956,15 @@
                                     </div>
 
                                     <div style="display: flex; gap: 0.6rem; align-items: center;">
-                                        <button class="card-wishlist-btn ajax-wishlist-toggle {% if product.id in wishlist_product_ids %}active{% endif %}" data-product-id="{{ product.id }}" title="Wishlist">
-                                            <i class="bi {% if product.id in wishlist_product_ids %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
-                                        </button>
-                                        {% if not user.is_staff and product.stock > 0 %}
-                                            <button class="btn btn-primary btn-sm ajax-add-to-cart" data-product-id="{{ product.id }}" style="padding: 0.55rem 1.2rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.4rem;">
-                                                <i class="bi bi-bag-plus-fill"></i> Add to Cart
+                                        {% if not user.is_staff and not user.profile.is_seller %}
+                                            <button class="card-wishlist-btn ajax-wishlist-toggle {% if product.id in wishlist_product_ids %}active{% endif %}" data-product-id="{{ product.id }}" title="Wishlist">
+                                                <i class="bi {% if product.id in wishlist_product_ids %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
                                             </button>
+                                            {% if product.stock > 0 %}
+                                                <button class="btn btn-primary btn-sm ajax-add-to-cart" data-product-id="{{ product.id }}" style="padding: 0.55rem 1.2rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.4rem;">
+                                                    <i class="bi bi-bag-plus-fill"></i> Add to Cart
+                                                </button>
+                                            {% endif %}
                                         {% endif %}
                                         <a href="{% url 'products:detail' product.slug %}" class="btn btn-secondary btn-sm" style="padding: 0.55rem 0.95rem;">
                                             View Full Specs <i class="bi bi-arrow-right"></i>

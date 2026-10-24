@@ -173,11 +173,19 @@ def seller_reapply_view(request):
 @seller_required
 def seller_products_view(request):
     seller_profile = getattr(request.user, 'seller_profile', None)
+    search_query = request.GET.get('q', '').strip()
     products = Product.objects.filter(seller=seller_profile) if seller_profile else Product.objects.none()
+    if search_query:
+        products = products.filter(
+            Q(name__icontains=search_query) |
+            Q(category__name__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
     is_approved = seller_profile.is_approved if seller_profile else False
     return render(request, 'sellers/products_list.html', {
         'products': products,
-        'is_approved': is_approved
+        'is_approved': is_approved,
+        'search_query': search_query,
     })
 
 DEFAULT_CATEGORIES = [
@@ -247,7 +255,8 @@ def seller_add_product_view(request):
 
     return render(request, 'sellers/product_form.html', {
         'categories': categories,
-        'action': 'List New'
+        'action': 'List New',
+        'seller_profile': seller_profile,
     })
 
 @seller_approved_required
@@ -291,7 +300,8 @@ def seller_edit_product_view(request, product_id):
     return render(request, 'sellers/product_form.html', {
         'product': product,
         'categories': categories,
-        'action': 'Edit'
+        'action': 'Edit',
+        'seller_profile': seller_profile,
     })
 
 @seller_approved_required
@@ -303,6 +313,16 @@ def seller_delete_product_view(request, product_id):
     messages.success(request, f"Removed product '{name}' from database.")
     return redirect('sellers:products')
 
+DELIVERY_FLOW = ['Processing', 'Packed', 'Shipped', 'Out for Delivery', 'Delivered']
+STATUS_PROGRESSION = {
+    'Pending': 0,
+    'Processing': 1,
+    'Packed': 2,
+    'Shipped': 3,
+    'Out for Delivery': 4,
+    'Delivered': 5,
+}
+
 @seller_required
 def seller_orders_view(request):
     seller_profile = getattr(request.user, 'seller_profile', None)
@@ -312,9 +332,21 @@ def seller_orders_view(request):
     orders_dict = {}
     for item in seller_order_items:
         if item.order.pk not in orders_dict:
+            curr_status = item.order.status
+            if curr_status in ['Cancelled', 'Delivered', 'Returned']:
+                selectable_statuses = []
+            elif curr_status in ['Pending', 'Processing']:
+                selectable_statuses = ['Processing', 'Packed', 'Shipped', 'Out for Delivery', 'Delivered']
+            elif curr_status in DELIVERY_FLOW:
+                idx = DELIVERY_FLOW.index(curr_status)
+                selectable_statuses = DELIVERY_FLOW[idx:]
+            else:
+                selectable_statuses = []
+
             orders_dict[item.order.pk] = {
                 'order': item.order,
-                'items': []
+                'items': [],
+                'selectable_statuses': selectable_statuses
             }
         orders_dict[item.order.pk]['items'].append(item)
         
@@ -338,18 +370,51 @@ def update_seller_order_status_view(request, order_number):
         
     order = get_object_or_404(Order, order_number=order_number)
     if request.method == 'POST':
+        # Cancelled, Delivered, or Returned orders cannot be updated by anyone
+        if order.status in ['Cancelled', 'Delivered', 'Returned']:
+            messages.error(request, f"Order #{order.order_number} is already '{order.status}' and cannot be modified.")
+            return redirect('sellers:orders')
+
         new_status = request.POST.get('status')
-        if new_status in dict(Order.STATUS_CHOICES):
-            order.status = new_status
-            order.save()
-            if order.user:
-                Notification.objects.create(
-                    user=order.user,
-                    title=f"Order #{order.order_number} Update from {seller_profile.store_name}",
-                    message=f"Your order #{order.order_number} status has been updated to '{new_status}' by {seller_profile.store_name}.",
-                    notification_type="order",
-                    link=f"/orders/detail/{order.order_number}/"
-                )
-            messages.success(request, f"Order #{order.order_number} status updated to '{new_status}'.")
+        current_rank = STATUS_PROGRESSION.get(order.status, 0)
+
+        # If submitted status is the current status (i.e. seller clicked Update Status directly):
+        # Automatically advance to the immediate next stage in the delivery lifecycle!
+        if new_status == order.status or (order.status == 'Pending' and new_status == 'Processing'):
+            curr_name = 'Processing' if order.status == 'Pending' else order.status
+            if curr_name in DELIVERY_FLOW:
+                curr_idx = DELIVERY_FLOW.index(curr_name)
+                if curr_idx + 1 < len(DELIVERY_FLOW):
+                    new_status = DELIVERY_FLOW[curr_idx + 1]
+                else:
+                    messages.info(request, f"Order #{order.order_number} has already reached the final delivery status.")
+                    return redirect('sellers:orders')
+
+        new_rank = STATUS_PROGRESSION.get(new_status, -1)
+
+        if new_rank == -1:
+            messages.error(request, f"Invalid delivery status '{new_status}' selected.")
+            return redirect('sellers:orders')
+
+        # Backward status progression is strictly prohibited
+        if new_rank < current_rank:
+            messages.error(
+                request,
+                f"Validation Error: Order #{order.order_number} is currently '{order.status}'. "
+                f"Delivery status cannot be moved backward to '{new_status}'. You can only advance forward to upcoming fulfillment stages."
+            )
+            return redirect('sellers:orders')
+
+        order.status = new_status
+        order.save()
+        if order.user:
+            Notification.objects.create(
+                user=order.user,
+                title=f"Order #{order.order_number} Update from {seller_profile.store_name}",
+                message=f"Your order #{order.order_number} status has been updated to '{new_status}' by {seller_profile.store_name}.",
+                notification_type="order",
+                link=f"/orders/detail/{order.order_number}/"
+            )
+        messages.success(request, f"Order #{order.order_number} status updated to '{new_status}'.")
     return redirect('sellers:orders')
 

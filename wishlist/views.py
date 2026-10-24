@@ -33,6 +33,17 @@ def toggle_wishlist_view(request, product_id):
         messages.info(request, "Please log in or register to manage your wishlist.")
         return redirect(f'/accounts/login/?next={request.META.get("HTTP_REFERER", "/")}')
 
+    user_is_seller = hasattr(request.user, 'profile') and request.user.profile.is_seller
+    if request.user.is_staff or user_is_seller:
+        role_label = "Admin" if request.user.is_staff else "Brand Merchant"
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': False,
+                'message': f'{role_label} Viewer Mode: Wishlist is restricted to customer accounts.'
+            })
+        messages.warning(request, f"{role_label} Viewer Mode: Wishlist is restricted to customer accounts.")
+        return redirect(request.META.get('HTTP_REFERER', 'products:list'))
+
     product = get_object_or_404(Product, id=product_id)
     wishlist, _ = Wishlist.objects.get_or_create(user=request.user)
     

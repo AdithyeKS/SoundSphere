@@ -18,6 +18,8 @@ def cart_detail_view(request):
 
     if request.user.is_staff:
         messages.info(request, "Admin Viewer Mode: Cart and checkout operations are disabled for staff accounts.")
+    elif hasattr(request.user, 'profile') and request.user.profile.is_seller:
+        messages.info(request, "Merchant Viewer Mode: Cart and checkout operations are disabled for brand merchant accounts.")
 
     cart = get_or_create_cart(request)
     coupon_code = request.session.get('coupon_code', '')
@@ -87,13 +89,15 @@ def cart_add_view(request, product_id):
         messages.info(request, "Please log in or register to add items to your cart.")
         return redirect(f'/accounts/login/?next={request.META.get("HTTP_REFERER", "/")}')
 
-    if request.user.is_staff:
+    user_is_seller = hasattr(request.user, 'profile') and request.user.profile.is_seller
+    if request.user.is_staff or user_is_seller:
+        role_label = "Admin" if request.user.is_staff else "Brand Merchant"
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({
                 'success': False,
-                'message': 'Admin Viewer Mode: Staff accounts cannot add items to cart or make purchases.'
+                'message': f'{role_label} Viewer Mode: Merchant accounts cannot add items to cart or make purchases.'
             })
-        messages.warning(request, "Admin Viewer Mode: Staff accounts cannot add items to cart.")
+        messages.warning(request, f"{role_label} Viewer Mode: {role_label} accounts cannot add items to cart.")
         return redirect(request.META.get('HTTP_REFERER', 'products:list'))
 
     product = get_object_or_404(Product, id=product_id, is_active=True)
@@ -134,8 +138,10 @@ def buy_now_view(request, product_id):
         messages.info(request, "Please log in or register to purchase products.")
         return redirect(f'/accounts/login/?next=/product/{product.slug}/')
 
-    if request.user.is_staff:
-        messages.warning(request, "Admin Viewer Mode: Staff accounts cannot purchase products.")
+    user_is_seller = hasattr(request.user, 'profile') and request.user.profile.is_seller
+    if request.user.is_staff or user_is_seller:
+        role_label = "Admin" if request.user.is_staff else "Brand Merchant"
+        messages.warning(request, f"{role_label} Viewer Mode: {role_label} accounts cannot purchase products.")
         return redirect(request.META.get('HTTP_REFERER', 'products:list'))
 
     product = get_object_or_404(Product, id=product_id, is_active=True)

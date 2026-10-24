@@ -470,8 +470,8 @@
                                     <span class="old-price">₹{{ product.price }}</span>
                                 {% endif %}
                             </div>
-                            {% if user.is_staff %}
-                                <a href="{% url 'products:detail' product.slug %}" class="icon-btn" title="View Product Preview" style="text-decoration: none;">
+                            {% if user.is_staff or user.profile.is_seller %}
+                                <a href="{% url 'products:detail' product.slug %}" class="icon-btn" title="View Product Details" style="text-decoration: none;">
                                     <i class="bi bi-eye"></i>
                                 </a>
                             {% else %}

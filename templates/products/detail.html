@@ -498,6 +498,34 @@
                             </a>
                         </div>
                     </div>
+                {% elif user.is_authenticated and user.profile.is_seller %}
+                    <!-- Seller / Merchant Preview Mode Card -->
+                    <div class="glass-card" style="padding: 1.25rem; border: 1px solid rgba(245, 158, 11, 0.35); background: rgba(245, 158, 11, 0.05); border-radius: 14px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; flex-wrap: wrap; gap: 0.5rem;">
+                            <span style="display: inline-flex; align-items: center; gap: 0.4rem; color: var(--star-gold); font-weight: 800; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.04em;">
+                                <i class="bi bi-shop"></i> Merchant Viewer Mode
+                            </span>
+                            <span style="font-size: 0.78rem; color: var(--text-dim); background: rgba(255,255,255,0.06); padding: 0.2rem 0.6rem; border-radius: 6px;">
+                                Brand: {{ product.seller.store_name|default:'Authorized Brand' }}
+                            </span>
+                        </div>
+                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.5;">
+                            You are viewing this product listing as an authorized brand merchant (<strong>{{ user.seller_profile.store_name|default:'Seller' }}</strong>). Purchasing, cart operations, and checkout are disabled for merchant accounts.
+                        </p>
+                        <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+                            {% if product.seller == user.seller_profile %}
+                                <a href="{% url 'sellers:edit_product' product.id %}" class="btn btn-primary btn-sm" style="flex: 1; font-size: 0.82rem; justify-content: center;">
+                                    <i class="bi bi-pencil-square"></i> Edit Listing
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'sellers:products' %}" class="btn btn-secondary btn-sm" style="flex: 1; font-size: 0.82rem; justify-content: center;">
+                                <i class="bi bi-headphones"></i> My Catalog
+                            </a>
+                            <a href="{% url 'sellers:dashboard' %}" class="btn btn-sm" style="flex: 1; font-size: 0.82rem; background: rgba(255,255,255,0.08); color: #fff; border: 1px solid var(--border-color); justify-content: center;">
+                                <i class="bi bi-speedometer2"></i> Portal
+                            </a>
+                        </div>
+                    </div>
                 {% else %}
                     <div style="display: flex; align-items: center; gap: 1rem;">
                         <div style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: var(--radius-full); padding: 0.2rem 0.5rem;">

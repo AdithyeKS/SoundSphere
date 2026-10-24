@@ -30,8 +30,10 @@ def _get_discount_from_session(request, cart_subtotal):
 
 @login_required
 def checkout_view(request):
-    if request.user.is_staff:
-        messages.warning(request, "Admin Viewer Mode: Staff accounts cannot proceed to checkout or place orders.")
+    user_is_seller = hasattr(request.user, 'profile') and request.user.profile.is_seller
+    if request.user.is_staff or user_is_seller:
+        role_label = "Admin" if request.user.is_staff else "Brand Merchant"
+        messages.warning(request, f"{role_label} Viewer Mode: {role_label} accounts cannot proceed to checkout or place orders.")
         return redirect('products:list')
 
     cart = get_or_create_cart(request)
@@ -69,8 +71,10 @@ def checkout_view(request):
 
 @login_required
 def payment_gateway_view(request):
-    if request.user.is_staff:
-        messages.warning(request, "Admin Viewer Mode: Staff accounts cannot process payments.")
+    user_is_seller = hasattr(request.user, 'profile') and request.user.profile.is_seller
+    if request.user.is_staff or user_is_seller:
+        role_label = "Admin" if request.user.is_staff else "Brand Merchant"
+        messages.warning(request, f"{role_label} Viewer Mode: {role_label} accounts cannot process payments.")
         return redirect('products:list')
 
     if request.method != 'POST':

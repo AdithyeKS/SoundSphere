@@ -16,6 +16,7 @@ urlpatterns = [
     path('products/moderation/', views.product_moderation_view, name='moderation'),
     path('products/approve/<int:product_id>/', views.approve_product_view, name='approve_product'),
     path('products/reject/<int:product_id>/', views.reject_product_view, name='reject_product'),
+    path('sellers/', views.seller_moderation_view, name='sellers'),
     path('sellers/moderation/', views.seller_moderation_view, name='seller_moderation'),
     path('sellers/approve/<int:seller_id>/', views.approve_seller_view, name='approve_seller'),
     path('sellers/reject/<int:seller_id>/', views.reject_seller_view, name='reject_seller'),
@@ -24,5 +25,7 @@ urlpatterns = [
     path('users/delete/<int:user_id>/', views.delete_user_view, name='delete_user'),
     path('feedback/', views.feedback_moderation_view, name='feedback_moderation'),
     path('feedback/delete/<int:feedback_id>/', views.delete_feedback_view, name='delete_feedback'),
+    path('reports/', views.analytics_reports_view, name='reports'),
+    path('reports/export/csv/', views.export_orders_csv_view, name='export_orders_csv'),
 ]
 

@@ -10,9 +10,25 @@
             <h1 style="font-size: 2.2rem;">My Listed <span class="gradient-text">Headsets</span></h1>
             <p style="color: var(--text-muted);">Manage headsets listed under your seller store.</p>
         </div>
-        <a href="{% url 'sellers:add_product' %}" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i> List New Product
-        </a>
+        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <form method="GET" action="{% url 'sellers:products' %}" style="display: flex; gap: 0.5rem; align-items: center;">
+                <div style="position: relative;">
+                    <i class="bi bi-search" style="position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--text-dim); font-size: 0.85rem;"></i>
+                    <input type="text" name="q" value="{{ search_query }}" placeholder="Search your catalog..." style="padding: 0.5rem 0.85rem 0.5rem 2.2rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: 10px; font-size: 0.85rem; outline: none; width: 220px;">
+                </div>
+                <button type="submit" class="btn btn-secondary btn-sm" style="padding: 0.5rem 0.85rem; display: inline-flex; align-items: center; gap: 0.35rem;">
+                    <i class="bi bi-search"></i> Search
+                </button>
+                {% if search_query %}
+                    <a href="{% url 'sellers:products' %}" class="btn btn-secondary btn-sm" style="padding: 0.5rem 0.7rem;" title="Clear search">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                {% endif %}
+            </form>
+            <a href="{% url 'sellers:add_product' %}" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-lg"></i> List New Product
+            </a>
+        </div>
     </div>
 
     <div class="glass-panel" style="padding: 1.5rem;">
@@ -61,6 +77,11 @@
                             </td>
                             <td>
                                 <div style="display: flex; gap: 0.5rem;">
+                                    {% if product.approval_status == 'approved' %}
+                                        <a href="{% url 'products:detail' product.slug %}" class="btn btn-secondary btn-sm" style="padding: 0.25rem 0.6rem;" title="View on Customer Storefront">
+                                            <i class="bi bi-eye"></i> View
+                                        </a>
+                                    {% endif %}
                                     <a href="{% url 'sellers:edit_product' product.id %}" class="btn btn-secondary btn-sm" style="padding: 0.25rem 0.6rem;">
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </a>

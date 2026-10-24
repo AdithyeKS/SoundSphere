@@ -188,9 +188,19 @@
                     </div>
                 </div>
 
-                <a href="{% url 'orders:checkout' %}" class="btn btn-primary" style="width: 100%;">
-                    Proceed to Checkout <i class="bi bi-arrow-right"></i>
-                </a>
+                {% if user.is_staff or user.profile.is_seller %}
+                    <div style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: var(--radius-sm); padding: 0.85rem; text-align: center; color: var(--star-gold); font-size: 0.88rem; font-weight: 600; line-height: 1.4;">
+                        {% if user.is_staff %}
+                            <i class="bi bi-shield-lock-fill"></i> Staff Viewer Mode: Admin accounts cannot checkout.
+                        {% else %}
+                            <i class="bi bi-shop"></i> Merchant Viewer Mode: Brand seller accounts cannot checkout.
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <a href="{% url 'orders:checkout' %}" class="btn btn-primary" style="width: 100%;">
+                        Proceed to Checkout <i class="bi bi-arrow-right"></i>
+                    </a>
+                {% endif %}
             </div>
         </div>
     {% else %}

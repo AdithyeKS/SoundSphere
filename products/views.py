@@ -196,9 +196,9 @@ def search_suggestions_view(request):
     query = request.GET.get('q', '').strip()
     results = []
     if len(query) >= 2:
-        products = Product.objects.select_related('category').filter(
-            Q(name__icontains=query) | Q(seller__seller_profile__store_name__icontains=query)
-        ).filter(is_active=True)[:5]
+        products = Product.objects.select_related('category', 'seller').filter(
+            Q(name__icontains=query) | Q(seller__store_name__icontains=query) | Q(category__name__icontains=query)
+        ).filter(is_active=True, approval_status='approved')[:8]
         
         for p in products:
             results.append({

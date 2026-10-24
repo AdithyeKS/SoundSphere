@@ -35,12 +35,8 @@
                     </select>
                 </div>
                 <div>
-                    <label style="font-size: 0.85rem; color: var(--text-muted);">Brand</label>
-                    <select name="brand" style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
-                        {% for b in brands %}
-                            <option value="{{ b.id }}" {% if product.brand.id == b.id %}selected{% endif %}>{{ b.name }}</option>
-                        {% endfor %}
-                    </select>
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Brand / Merchant</label>
+                    <input type="text" value="{{ product.seller.store_name|default:'SoundSphere Brand' }}" readonly style="width: 100%; padding: 0.75rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: var(--primary-cyan); font-weight: 600; border-radius: var(--radius-sm); cursor: default;">
                 </div>
             </div>
 

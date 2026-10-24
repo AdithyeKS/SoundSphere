@@ -142,10 +142,31 @@ function initAjaxCart() {
             }
             if (data.success) {
                 showToast(data.message);
-                const cartBadge = document.getElementById('cartBadgeCount');
+                const count = parseInt(data.cart_item_count, 10) || 0;
+                let cartBadge = document.getElementById('cartBadgeCount');
+                if (!cartBadge) {
+                    const navBtn = document.getElementById('cartNavBtn') ||
+                                   document.querySelector('a[title="Shopping Cart"]') ||
+                                   document.querySelector('a[href*="/cart/"]');
+                    if (navBtn) {
+                        cartBadge = document.createElement('span');
+                        cartBadge.id = 'cartBadgeCount';
+                        cartBadge.className = 'badge-dot-count';
+                        navBtn.appendChild(cartBadge);
+                    }
+                }
                 if (cartBadge) {
-                    cartBadge.textContent = data.cart_item_count;
-                    cartBadge.style.display = data.cart_item_count > 0 ? 'flex' : 'none';
+                    cartBadge.textContent = count > 99 ? '99+' : count;
+                    if (count > 0) {
+                        cartBadge.style.display = 'flex';
+                        cartBadge.animate([
+                            { transform: 'scale(1)' },
+                            { transform: 'scale(1.45)' },
+                            { transform: 'scale(1)' }
+                        ], { duration: 300, easing: 'ease-out' });
+                    } else {
+                        cartBadge.style.display = 'none';
+                    }
                 }
             } else {
                 showToast(data.message, true);
@@ -191,19 +212,55 @@ function initAjaxWishlist() {
             }
             if (data && data.success) {
                 showToast(data.message);
-                if (data.added) {
-                    btn.classList.add('active');
-                    btn.querySelector('i').className = 'bi bi-heart-fill';
-                } else {
-                    btn.classList.remove('active');
-                    btn.querySelector('i').className = 'bi bi-heart';
+                
+                // Synchronize all wishlist buttons on current page for this product (e.g. grid & list views)
+                const allProductBtns = document.querySelectorAll(`.ajax-wishlist-toggle[data-product-id="${productId}"]`);
+                allProductBtns.forEach(b => {
+                    const icon = b.querySelector('i');
+                    if (data.added) {
+                        b.classList.add('active');
+                        if (icon) icon.className = 'bi bi-heart-fill';
+                    } else {
+                        b.classList.remove('active');
+                        if (icon) icon.className = 'bi bi-heart';
+                    }
+                });
+
+                // Update Wishlist Badge Count in navbar
+                const count = parseInt(data.wishlist_count, 10) || 0;
+                let wishlistBadge = document.getElementById('wishlistBadgeCount');
+                
+                if (!wishlistBadge) {
+                    const navBtn = document.getElementById('wishlistNavBtn') || 
+                                   document.querySelector('a[title="Wishlist"]') || 
+                                   document.querySelector('a[href*="/wishlist/"]');
+                    if (navBtn) {
+                        wishlistBadge = document.createElement('span');
+                        wishlistBadge.id = 'wishlistBadgeCount';
+                        wishlistBadge.className = 'badge-dot-count';
+                        navBtn.appendChild(wishlistBadge);
+                    }
                 }
-                const wishlistBadge = document.getElementById('wishlistBadgeCount');
+
                 if (wishlistBadge) {
-                    wishlistBadge.textContent = data.wishlist_count;
-                    wishlistBadge.style.display = data.wishlist_count > 0 ? 'flex' : 'none';
+                    wishlistBadge.textContent = count > 99 ? '99+' : count;
+                    if (count > 0) {
+                        wishlistBadge.style.display = 'flex';
+                        wishlistBadge.animate([
+                            { transform: 'scale(1)' },
+                            { transform: 'scale(1.45)' },
+                            { transform: 'scale(1)' }
+                        ], { duration: 300, easing: 'ease-out' });
+                    } else {
+                        wishlistBadge.style.display = 'none';
+                    }
                 }
+            } else if (data && data.message) {
+                showToast(data.message, true);
             }
+        })
+        .catch(() => {
+            showToast("Failed to update wishlist.", true);
         });
     });
 }
