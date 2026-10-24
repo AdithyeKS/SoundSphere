@@ -9,7 +9,7 @@ def seller_required(view_func):
     def _wrapped_view(request, *args, **kwargs):
         if not request.user.is_authenticated:
             messages.error(request, "Session expired or authentication required. Please log in as a Seller to access the Seller Dashboard.")
-            resp = redirect(f"/seller/login/?next={request.path}")
+            resp = redirect(f"/accounts/login/?role=seller&next={request.path}")
             resp['Cache-Control'] = 'no-cache, no-store, must-revalidate, max-age=0, private'
             resp['Pragma'] = 'no-cache'
             resp['Expires'] = '0'
@@ -33,7 +33,7 @@ def seller_approved_required(view_func):
     def _wrapped_view(request, *args, **kwargs):
         if not request.user.is_authenticated:
             messages.error(request, "Session expired or authentication required. Please log in as a Seller.")
-            resp = redirect(f"/seller/login/?next={request.path}")
+            resp = redirect(f"/accounts/login/?role=seller&next={request.path}")
             resp['Cache-Control'] = 'no-cache, no-store, must-revalidate, max-age=0, private'
             resp['Pragma'] = 'no-cache'
             resp['Expires'] = '0'

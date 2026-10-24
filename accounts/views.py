@@ -252,22 +252,9 @@ def login_view(request):
         return render(request, 'accounts/login.html', {'role': role})
 
 def logout_view(request):
-    user_was_admin = request.user.is_authenticated and (request.user.is_staff or request.user.is_superuser)
-    user_was_seller = request.user.is_authenticated and (hasattr(request.user, 'seller_profile') or (hasattr(request.user, 'profile') and request.user.profile.is_seller))
-    referer = request.META.get('HTTP_REFERER', '')
-
     logout(request)
-
-    if user_was_admin or '/admin-panel/' in referer or '/admin/' in referer:
-        messages.info(request, "You have been securely signed out of the Admin Control Panel.")
-        response = redirect('/accounts/login/?role=admin')
-    elif user_was_seller or '/seller/' in referer:
-        messages.info(request, "You have been signed out of the Seller Portal.")
-        response = redirect('/seller/login/')
-    else:
-        messages.info(request, "You have been logged out.")
-        response = redirect('products:home')
-
+    messages.info(request, "You have been logged out successfully.")
+    response = redirect('products:home')
     response['Cache-Control'] = 'no-cache, no-store, must-revalidate, max-age=0, private'
     response['Pragma'] = 'no-cache'
     response['Expires'] = '0'

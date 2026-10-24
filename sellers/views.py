@@ -17,37 +17,7 @@ def seller_register_view(request):
     return redirect('/accounts/register/?role=seller')
 
 def seller_login_view(request):
-    if request.user.is_authenticated:
-        if hasattr(request.user, 'profile') and request.user.profile.is_seller:
-            return redirect('sellers:dashboard')
-        elif request.user.is_staff or request.user.is_superuser:
-            return redirect('admin_panel:dashboard')
-        return redirect('products:home')
-
-    if request.method == 'POST':
-        login_input = request.POST.get('username', '').strip()
-        password = request.POST.get('password', '')
-        user_obj = User.objects.filter(Q(email__iexact=login_input) | Q(username__iexact=login_input)).first()
-        target_username = user_obj.username if user_obj else login_input
-
-        user = authenticate(username=target_username, password=password)
-        if user:
-            user_is_seller = (hasattr(user, 'profile') and user.profile.is_seller) or hasattr(user, 'seller_profile')
-            user_is_admin = user.is_staff or user.is_superuser
-            if user_is_seller or user_is_admin:
-                login(request, user)
-                if user_is_admin:
-                    return redirect('admin_panel:dashboard')
-                store_name = user.seller_profile.store_name if hasattr(user, 'seller_profile') else user.username
-                messages.success(request, f"Welcome back, {store_name}!")
-                return redirect('sellers:dashboard')
-            else:
-                messages.error(request, "Access restricted. This account is registered as a Customer. Please log in through Customer login.")
-                return render(request, 'sellers/login.html', {'login_input': login_input})
-        else:
-            messages.error(request, "Invalid email address or password for Seller login.")
-            return render(request, 'sellers/login.html', {'login_input': login_input})
-    return render(request, 'sellers/login.html')
+    return redirect('/accounts/login/?role=seller')
 
 @seller_required
 def seller_dashboard_view(request):
