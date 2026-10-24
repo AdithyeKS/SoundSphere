@@ -4,6 +4,90 @@
 {% block title %}Shopping Cart | SoundSphere{% endblock %}
 
 {% block content %}
+<style>
+/* Quantity Stepper & Save Button */
+.cart-qty-stepper {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    padding: 0.15rem 0.35rem;
+    transition: var(--transition);
+}
+.cart-qty-stepper:focus-within, .cart-qty-stepper:hover {
+    border-color: rgba(0, 242, 254, 0.4);
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.15);
+}
+.cart-qty-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    width: 26px;
+    height: 26px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: var(--transition);
+}
+.cart-qty-btn:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+}
+.cart-qty-input {
+    width: 36px;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-align: center;
+    outline: none;
+    -moz-appearance: textfield;
+}
+.cart-qty-input::-webkit-outer-spin-button,
+.cart-qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.btn-cart-save {
+    background: rgba(0, 242, 254, 0.1);
+    color: var(--primary-cyan);
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    border-radius: var(--radius-full);
+    padding: 0.35rem 0.8rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: var(--transition);
+}
+.btn-cart-save:hover {
+    background: var(--gradient-audio);
+    color: #07090e;
+    border-color: transparent;
+    box-shadow: 0 0 12px rgba(0, 242, 254, 0.35);
+    transform: translateY(-1px);
+}
+.btn-cart-save.is-dirty {
+    background: var(--gradient-audio);
+    color: #07090e;
+    border-color: transparent;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+    animation: savePulse 1.5s infinite alternate;
+}
+@keyframes savePulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
+}
+</style>
+
 <div class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
     <h1 style="font-size: 2.2rem; margin-bottom: 2rem;">Your Shopping <span class="gradient-text">Cart</span></h1>
 
@@ -41,11 +125,15 @@
                                 </td>
                                 <td style="font-weight: 600;">₹{{ item.product.current_price }}</td>
                                 <td>
-                                    <form method="POST" action="{% url 'cart:update' item.id %}" style="display: flex; align-items: center; gap: 0.4rem;">
+                                    <form method="POST" action="{% url 'cart:update' item.id %}" style="display: inline-flex; align-items: center; gap: 0.5rem;">
                                         {% csrf_token %}
-                                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" style="width: 55px; padding: 0.4rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); text-align: center;">
-                                        <button type="submit" class="btn btn-sm btn-secondary" title="Update Quantity">
-                                            <i class="bi bi-arrow-repeat"></i>
+                                        <div class="cart-qty-stepper">
+                                            <button type="button" class="cart-qty-btn" onclick="stepCartQty(this, -1)" title="Decrease quantity">−</button>
+                                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" class="cart-qty-input" oninput="markQtyChanged(this)">
+                                            <button type="button" class="cart-qty-btn" onclick="stepCartQty(this, 1)" title="Increase quantity">+</button>
+                                        </div>
+                                        <button type="submit" class="btn-cart-save" title="Save quantity changes">
+                                            <i class="bi bi-check2"></i> Save
                                         </button>
                                     </form>
                                 </td>
@@ -53,7 +141,7 @@
                                 <td>
                                     <form method="POST" action="{% url 'cart:remove' item.id %}">
                                         {% csrf_token %}
-                                        <button type="submit" style="background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 1.1rem; transition: var(--transition);" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#64748b'">
+                                        <button type="submit" style="background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 1.1rem; transition: var(--transition);" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#64748b'" title="Remove from cart">
                                             <i class="bi bi-trash3"></i>
                                         </button>
                                     </form>
@@ -71,7 +159,7 @@
                 <!-- Coupon Form -->
                 <form method="POST" action="{% url 'cart:apply_coupon' %}" style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
                     {% csrf_token %}
-                    <input type="text" name="code" placeholder="Promo code (e.g. SOUND10)" value="{{ coupon_code|default:'' }}" style="flex: 1; padding: 0.6rem 0.8rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.85rem; uppercase;">
+                    <input type="text" name="code" placeholder="Promo code (e.g. SOUND10)" value="{{ coupon_code|default:'' }}" style="flex: 1; padding: 0.6rem 0.8rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm); font-size: 0.85rem; text-transform: uppercase;">
                     <button type="submit" class="btn btn-secondary btn-sm">Apply</button>
                 </form>
 
@@ -81,7 +169,7 @@
                         <span>₹{{ cart.subtotal }}</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; color: var(--text-muted);">
-                        <span>Estimated Tax (8%)</span>
+                        <span>Estimated Tax (3%)</span>
                         <span>₹{{ cart.tax }}</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; color: var(--text-muted);">
@@ -114,4 +202,32 @@
         </div>
     {% endif %}
 </div>
+
+<script>
+function stepCartQty(btn, delta) {
+    const form = btn.closest('form');
+    const input = form.querySelector('.cart-qty-input');
+    const saveBtn = form.querySelector('.btn-cart-save');
+    let val = parseInt(input.value) || 1;
+    const min = parseInt(input.min) || 1;
+    const max = parseInt(input.max) || 999;
+    val += delta;
+    if (val < min) val = min;
+    if (val > max) val = max;
+    input.value = val;
+    if (saveBtn) {
+        saveBtn.classList.add('is-dirty');
+        saveBtn.innerHTML = '<i class="bi bi-check-lg"></i> Save';
+    }
+}
+
+function markQtyChanged(input) {
+    const form = input.closest('form');
+    const saveBtn = form.querySelector('.btn-cart-save');
+    if (saveBtn) {
+        saveBtn.classList.add('is-dirty');
+        saveBtn.innerHTML = '<i class="bi bi-check-lg"></i> Save';
+    }
+}
+</script>
 {% endblock %}

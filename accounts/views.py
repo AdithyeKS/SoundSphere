@@ -26,6 +26,7 @@ from .forms import (
     UserUpdateForm,
 )
 from .models import CustomerFeedback, SellerProfile, ShippingAddress, UserProfile
+from orders.models import Order
 
 
 def register_view(request):
@@ -131,8 +132,16 @@ def register_view(request):
                 messages.error(request, f"Brand Name '{store_name}' is already registered.")
                 return render(request, 'accounts/register.html', form_data)
 
-        # Derive unique username automatically from email
-        base_username = email.split('@')[0]
+        # Derive unique username automatically from First & Last name (fallback to email)
+        clean_first = re.sub(r'[^a-zA-Z0-9]', '', first_name).lower()
+        clean_last = re.sub(r'[^a-zA-Z0-9]', '', last_name).lower()
+        if clean_first and clean_last:
+            base_username = f"{clean_first}_{clean_last}"
+        elif clean_first:
+            base_username = clean_first
+        else:
+            base_username = email.split('@')[0]
+
         username = base_username
         counter = 1
         while User.objects.filter(username=username).exists():
@@ -169,6 +178,15 @@ def register_view(request):
                 logo=logo_file,
                 status='pending'
             )
+            from notifications.models import Notification
+            for admin_user in User.objects.filter(is_staff=True):
+                Notification.objects.create(
+                    user=admin_user,
+                    title="New Seller Application 📋",
+                    message=f"Brand '{store_name}' (@{user.username}) registered and submitted a seller application.",
+                    notification_type="seller",
+                    link="/admin-panel/sellers/moderation/"
+                )
 
         # Auto login
         login(request, user)
@@ -241,8 +259,19 @@ def logout_view(request):
 @login_required
 def profile_view(request):
     addresses = ShippingAddress.objects.filter(user=request.user)
+    orders = Order.objects.filter(user=request.user).prefetch_related('items__product').order_by('-created_at')
+    orders_count = orders.count()
+    latest_order = orders.first()
+
+    wishlist_count = 0
+    if hasattr(request.user, 'wishlist'):
+        wishlist_count = request.user.wishlist.items.count()
+
     return render(request, 'accounts/profile.html', {
-        'addresses': addresses
+        'addresses': addresses,
+        'orders_count': orders_count,
+        'latest_order': latest_order,
+        'wishlist_count': wishlist_count,
     })
 
 @login_required
@@ -308,6 +337,15 @@ def feedback_view(request):
             message=message,
             rating=int(rating)
         )
+        from notifications.models import Notification
+        for admin_user in User.objects.filter(is_staff=True):
+            Notification.objects.create(
+                user=admin_user,
+                title="New Customer Feedback 💬",
+                message=f"Feedback from {name}: '{subject}'",
+                notification_type="system",
+                link="/admin-panel/feedback/"
+            )
         messages.success(request, "Thank you for sending your feedback! We appreciate your thoughts.")
         return redirect('products:home')
 

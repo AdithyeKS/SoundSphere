@@ -36,7 +36,7 @@
                                 <span style="font-size: 0.8rem; background: rgba(0, 240, 255, 0.1); color: var(--primary-cyan); padding: 0.15rem 0.5rem; border-radius: var(--radius-full); font-weight: 700;">
                                     {{ product.category.name }}
                                 </span>
-                                <span style="color: var(--text-dim); font-size: 0.85rem;">Submitted by: <strong>{{ product.seller.username }}</strong></span>
+                                <span style="color: var(--text-dim); font-size: 0.85rem;">Submitted by: <strong>{{ product.seller.store_name|default:product.seller.user.username }}</strong></span>
                             </div>
                             <h3 style="font-size: 1.2rem; margin-bottom: 0.4rem; color: #fff;">{{ product.name }}</h3>
                             <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4; margin-bottom: 0.5rem;">{{ product.description|truncatewords:20 }}</p>
@@ -45,7 +45,7 @@
 
                         <!-- Action Buttons -->
                         <div style="display: flex; flex-direction: column; gap: 0.75rem; border-left: 1px solid var(--border-color); padding-left: 1.5rem;">
-                            <button type="button" class="btn btn-primary btn-sm" style="background: #10b981; border-color: #10b981; width: 100%; justify-content: center;" onclick="openApproveModal('{{ product.id }}', '{{ product.name|escapejs }}', '{{ product.seller.username|escapejs }}', '₹{{ product.current_price }}', '{% if product.image %}{{ product.image.url }}{% endif %}')">
+                            <button type="button" class="btn btn-primary btn-sm" style="background: #10b981; border-color: #10b981; width: 100%; justify-content: center;" onclick="openApproveModal('{{ product.id }}', '{{ product.name|escapejs }}', '{{ product.seller.store_name|default:product.seller.user.username|escapejs }}', '₹{{ product.current_price }}', '{% if product.image %}{{ product.image.url }}{% endif %}')">
                                 <i class="bi bi-check-circle-fill"></i> Approve & Publish
                             </button>
 

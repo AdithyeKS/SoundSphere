@@ -9,6 +9,7 @@ from products.models import Product
 class Order(models.Model):
     STATUS_CHOICES = (
         ('Pending', 'Pending'),
+        ('Processing', 'Processing'),
         ('Confirmed', 'Confirmed'),
         ('Packed', 'Packed'),
         ('Shipped', 'Shipped'),
@@ -21,6 +22,7 @@ class Order(models.Model):
     PAYMENT_STATUS_CHOICES = (
         ('Unpaid', 'Unpaid'),
         ('Paid', 'Paid'),
+        ('Refund Initiated', 'Refund Initiated'),
         ('Refunded', 'Refunded'),
     )
 
@@ -62,6 +64,31 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order #{self.order_number} - {self.full_name}"
+
+    @property
+    def is_cancellable(self):
+        return self.status in ['Pending', 'Processing', 'Confirmed', 'Packed', 'Shipped']
+
+    @property
+    def estimated_delivery_date(self):
+        import datetime
+        try:
+            days = max([item.estimated_delivery_days for item in self.items.all()] or [3])
+        except Exception:
+            days = 3
+        return self.created_at + datetime.timedelta(days=days)
+
+    @property
+    def is_paid_online(self):
+        if hasattr(self, 'payment') and self.payment:
+            return self.payment.payment_method != 'cod' and self.payment_status in ['Paid', 'Refund Initiated', 'Refunded']
+        return self.payment_status in ['Paid', 'Refund Initiated', 'Refunded']
+
+    @property
+    def is_cod(self):
+        if hasattr(self, 'payment') and self.payment:
+            return self.payment.payment_method == 'cod'
+        return False
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')

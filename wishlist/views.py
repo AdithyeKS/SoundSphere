@@ -13,9 +13,12 @@ from .models import Wishlist, WishlistItem
 @login_required
 def wishlist_view(request):
     wishlist, _ = Wishlist.objects.get_or_create(user=request.user)
-    items = wishlist.items.select_related('product')
+    items = wishlist.items.select_related('product', 'product__category')
+    total_value = sum(item.product.current_price for item in items)
     return render(request, 'wishlist/wishlist.html', {
-        'items': items
+        'items': items,
+        'total_items': items.count(),
+        'total_value': total_value,
     })
 
 def toggle_wishlist_view(request, product_id):
@@ -71,3 +74,40 @@ def move_to_cart_view(request, product_id):
 
     messages.success(request, f"Moved {product.name} from wishlist to your cart!")
     return redirect('cart:detail')
+
+@login_required
+def move_all_to_cart_view(request):
+    if request.method == 'POST':
+        wishlist, _ = Wishlist.objects.get_or_create(user=request.user)
+        items = list(wishlist.items.select_related('product'))
+        if not items:
+            messages.info(request, "Your wishlist is empty.")
+            return redirect('wishlist:view')
+            
+        cart = get_or_create_cart(request)
+        moved_count = 0
+        for item in items:
+            if item.product.is_active and item.product.stock > 0:
+                cart_item, created = CartItem.objects.get_or_create(cart=cart, product=item.product)
+                if not created:
+                    cart_item.quantity += 1
+                    cart_item.save()
+                item.delete()
+                moved_count += 1
+                
+        if moved_count > 0:
+            messages.success(request, f"Moved {moved_count} item{'s' if moved_count > 1 else ''} from your wishlist into your shopping cart!")
+            return redirect('cart:detail')
+        else:
+            messages.warning(request, "No in-stock items were available to move.")
+            return redirect('wishlist:view')
+    return redirect('wishlist:view')
+
+@login_required
+def clear_wishlist_view(request):
+    if request.method == 'POST':
+        wishlist, _ = Wishlist.objects.get_or_create(user=request.user)
+        count = wishlist.items.count()
+        wishlist.items.all().delete()
+        messages.info(request, f"Cleared {count} item{'s' if count != 1 else ''} from your wishlist.")
+    return redirect('wishlist:view')

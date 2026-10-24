@@ -23,21 +23,21 @@
     <div style="display: flex; gap: 0.75rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; flex-wrap: wrap;">
         <button type="button" class="tab-btn {% if active_tab == 'pending' or not active_tab %}active{% endif %}" onclick="switchModerationTab('pending', this)" style="background: none; border: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 700; padding: 0.6rem 1.25rem; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: var(--transition);">
             <i class="bi bi-hourglass-split" style="color: var(--star-gold);"></i> Pending Review
-            <span class="badge" style="background: rgba(251, 191, 36, 0.15); color: var(--star-gold); border: 1px solid rgba(251, 191, 36, 0.4); font-size: 0.78rem; padding: 0.2rem 0.6rem; border-radius: 12px;">
+            <span class="admin-badge admin-badge-pending" style="padding: 0.15rem 0.6rem; font-size: 0.75rem;">
                 {{ pending_count }}
             </span>
         </button>
 
         <button type="button" class="tab-btn {% if active_tab == 'approved' %}active{% endif %}" onclick="switchModerationTab('approved', this)" style="background: none; border: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 700; padding: 0.6rem 1.25rem; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: var(--transition);">
             <i class="bi bi-check-circle-fill" style="color: var(--success-green);"></i> Approved Stores
-            <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: var(--success-green); border: 1px solid rgba(16, 185, 129, 0.4); font-size: 0.78rem; padding: 0.2rem 0.6rem; border-radius: 12px;">
+            <span class="admin-badge admin-badge-approved" style="padding: 0.15rem 0.6rem; font-size: 0.75rem;">
                 {{ approved_count }}
             </span>
         </button>
 
         <button type="button" class="tab-btn {% if active_tab == 'rejected' %}active{% endif %}" onclick="switchModerationTab('rejected', this)" style="background: none; border: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 700; padding: 0.6rem 1.25rem; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: var(--transition);">
             <i class="bi bi-x-circle-fill" style="color: var(--danger-red);"></i> Rejected Applications
-            <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: var(--danger-red); border: 1px solid rgba(239, 68, 68, 0.4); font-size: 0.78rem; padding: 0.2rem 0.6rem; border-radius: 12px;">
+            <span class="admin-badge admin-badge-rejected" style="padding: 0.15rem 0.6rem; font-size: 0.75rem;">
                 {{ rejected_count }}
             </span>
         </button>
@@ -59,22 +59,22 @@
         </div>
 
         {% if pending_sellers %}
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+            <div style="overflow-x: auto; width: 100%;">
+                <table class="admin-table">
                     <thead>
-                        <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem;">
-                            <th style="padding: 0.85rem 0.75rem;">Brand Name & Logo</th>
-                            <th style="padding: 0.85rem 0.75rem;">Owner Contact</th>
-                            <th style="padding: 0.85rem 0.75rem;">Application Status</th>
-                            <th style="padding: 0.85rem 0.75rem;">Business ID / Tax ID</th>
-                            <th style="padding: 0.85rem 0.75rem;">Location</th>
-                            <th style="padding: 0.85rem 0.75rem; text-align: right;">Action</th>
+                        <tr>
+                            <th style="min-width: 200px;">Brand Name & Logo</th>
+                            <th style="min-width: 180px;">Owner Contact</th>
+                            <th style="min-width: 170px;">Application Status</th>
+                            <th style="min-width: 130px;">Business ID / Tax ID</th>
+                            <th style="min-width: 140px;">Location</th>
+                            <th style="min-width: 140px; text-align: right;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for seller in pending_sellers %}
-                            <tr style="border-bottom: 1px solid var(--border-color);">
-                                <td style="padding: 1rem 0.75rem;">
+                            <tr>
+                                <td>
                                     <div style="display: flex; align-items: center; gap: 0.75rem;">
                                         {% if seller.logo %}
                                             <img src="{{ seller.logo.url }}" alt="Logo" onclick="openLogoModal('{{ seller.logo.url }}', '{{ seller.store_name|escapejs }}')" style="width: 44px; height: 44px; border-radius: 10px; object-fit: cover; border: 1px solid var(--border-glow); cursor: pointer; transition: transform 0.2s ease;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" title="Click to enlarge logo">
@@ -84,21 +84,21 @@
                                             </div>
                                         {% endif %}
                                         <div>
-                                            <div style="font-size: 1rem; font-weight: 700; color: #fff;">{{ seller.store_name }}</div>
+                                            <div style="font-size: 0.95rem; font-weight: 700; color: #fff;">{{ seller.store_name }}</div>
                                             {% if seller.tagline %}
                                                 <div style="font-size: 0.78rem; color: var(--primary-cyan); font-style: italic;">"{{ seller.tagline }}"</div>
                                             {% endif %}
                                         </div>
                                     </div>
                                 </td>
-                                <td style="padding: 1rem 0.75rem;">
+                                <td>
                                     <div style="color: #fff; font-weight: 600;">{{ seller.user.get_full_name|default:seller.user.username }}</div>
                                     <div style="font-size: 0.8rem; color: var(--text-muted);">{{ seller.user.email }}</div>
                                     <div style="font-size: 0.8rem; color: var(--text-muted);"><i class="bi bi-telephone"></i> {{ seller.phone|default:'N/A' }}</div>
                                 </td>
-                                <td style="padding: 1rem 0.75rem;">
+                                <td>
                                     {% if seller.reapplication_count > 0 %}
-                                        <span class="badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); font-size: 0.78rem; padding: 0.25rem 0.65rem; border-radius: 12px; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                        <span class="admin-badge admin-badge-attempt">
                                             <i class="bi bi-arrow-repeat"></i> Reapplied (Attempt #{{ seller.reapplication_count|add:1 }})
                                         </span>
                                         {% if seller.reapplication_notes %}
@@ -107,7 +107,7 @@
                                             </div>
                                         {% endif %}
                                     {% else %}
-                                        <span class="badge" style="background: rgba(251, 191, 36, 0.15); color: var(--star-gold); border: 1px solid rgba(251, 191, 36, 0.4); font-size: 0.78rem; padding: 0.25rem 0.65rem; border-radius: 12px;">
+                                        <span class="admin-badge admin-badge-pending">
                                             Initial Application (Attempt #1)
                                         </span>
                                     {% endif %}
@@ -160,16 +160,16 @@
         </div>
 
         {% if approved_sellers %}
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+            <div style="overflow-x: auto; width: 100%;">
+                <table class="admin-table">
                     <thead>
-                        <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem;">
-                            <th style="padding: 0.85rem 0.75rem;">Brand Name & Logo</th>
-                            <th style="padding: 0.85rem 0.75rem;">Owner Contact</th>
-                            <th style="padding: 0.85rem 0.75rem;">Location</th>
-                            <th style="padding: 0.85rem 0.75rem;">Business ID / Tax ID</th>
-                            <th style="padding: 0.85rem 0.75rem;">Total Attempts</th>
-                            <th style="padding: 0.85rem 0.75rem;">Status</th>
+                        <tr>
+                            <th style="min-width: 200px;">Brand Name & Logo</th>
+                            <th style="min-width: 180px;">Owner Contact</th>
+                            <th style="min-width: 140px;">Location</th>
+                            <th style="min-width: 140px;">Business ID / Tax ID</th>
+                            <th style="min-width: 120px;">Total Attempts</th>
+                            <th style="min-width: 140px;">Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -234,16 +234,16 @@
         </div>
 
         {% if rejected_sellers %}
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+            <div style="overflow-x: auto; width: 100%;">
+                <table class="admin-table">
                     <thead>
-                        <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem;">
-                            <th style="padding: 0.85rem 0.75rem;">Brand Name & Logo</th>
-                            <th style="padding: 0.85rem 0.75rem;">Owner Contact</th>
-                            <th style="padding: 0.85rem 0.75rem;">Rejection Reason & Feedback</th>
-                            <th style="padding: 0.85rem 0.75rem;">Attempts</th>
-                            <th style="padding: 0.85rem 0.75rem;">Business ID / Tax ID</th>
-                            <th style="padding: 0.85rem 0.75rem; text-align: right;">Action</th>
+                        <tr>
+                            <th style="min-width: 200px;">Brand Name & Logo</th>
+                            <th style="min-width: 180px;">Owner Contact</th>
+                            <th style="min-width: 220px;">Rejection Reason & Feedback</th>
+                            <th style="min-width: 120px;">Attempts</th>
+                            <th style="min-width: 140px;">Business ID / Tax ID</th>
+                            <th style="min-width: 160px; text-align: right;">Action</th>
                         </tr>
                     </thead>
                     <tbody>

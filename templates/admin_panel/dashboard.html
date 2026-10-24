@@ -114,7 +114,13 @@
             </div>
             <div>
                 <div style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-top: 0.2rem;">{{ total_users }}</div>
-                <div style="font-size: 0.8rem; color: var(--text-dim);">Customers: {{ total_customers }} | Sellers: {{ total_sellers }}</div>
+                <div style="font-size: 0.8rem; color: var(--text-dim); display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+                    <span>Customers: <strong style="color: #fff;">{{ total_customers }}</strong></span>
+                    <span>&bull;</span>
+                    <span>Sellers: <strong style="color: var(--star-gold);">{{ total_sellers }}</strong></span>
+                    <span>&bull;</span>
+                    <span>Admins: <strong style="color: var(--primary-cyan);">{{ total_admins }}</strong></span>
+                </div>
             </div>
             <a href="{% url 'admin_panel:users' %}" style="font-size: 0.82rem; color: var(--primary-indigo); font-weight: 700; margin-top: 0.5rem; display: inline-block;">Manage Accounts →</a>
         </div>
@@ -125,7 +131,7 @@
                 <i class="bi bi-shop" style="font-size: 1.4rem; color: var(--star-gold);"></i>
             </div>
             <div>
-                <div style="font-size: 2.2rem; font-weight: 800; color: var(--star-gold); margin-top: 0.2rem;">{{ total_sellers }}</div>
+                <div style="font-size: 2.2rem; font-weight: 800; color: var(--star-gold); margin-top: 0.2rem;">{{ approved_sellers_count }}</div>
                 <div style="font-size: 0.8rem; color: var(--text-dim);">Pending Applications: {{ pending_sellers_count }}</div>
             </div>
             <a href="{% url 'admin_panel:seller_moderation' %}" style="font-size: 0.82rem; color: var(--star-gold); font-weight: 700; margin-top: 0.5rem; display: inline-block;">Review Applications →</a>
@@ -178,65 +184,67 @@
             </div>
 
             {% if pending_sellers or pending_products %}
-                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem;">
-                    <thead>
-                        <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); text-transform: uppercase; font-size: 0.78rem;">
-                            <th style="padding: 0.65rem 0;">Request Type</th>
-                            <th style="padding: 0.65rem 0;">Name / Applicant</th>
-                            <th style="padding: 0.65rem 0;">Status</th>
-                            <th style="padding: 0.65rem 0; text-align: right;">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for seller in pending_sellers %}
-                            <tr style="border-bottom: 1px solid var(--border-color);">
-                                <td style="padding: 0.85rem 0;">
-                                    <span style="font-size: 0.75rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; background: rgba(251, 191, 36, 0.12); color: var(--star-gold); border: 1px solid rgba(251, 191, 36, 0.3);">
-                                        <i class="bi bi-shop"></i> Seller Store
-                                    </span>
-                                </td>
-                                <td style="padding: 0.85rem 0;">
-                                    <div style="font-weight: 700; color: #fff;">{{ seller.store_name }}</div>
-                                    <div style="font-size: 0.78rem; color: var(--text-muted);">by {{ seller.user.username }}</div>
-                                </td>
-                                <td style="padding: 0.85rem 0;">
-                                    <span style="color: var(--star-gold); font-size: 0.78rem; font-weight: 700;">
-                                        <i class="bi bi-clock-history"></i> Pending Approval
-                                    </span>
-                                </td>
-                                <td style="padding: 0.85rem 0; text-align: right;">
-                                    <a href="{% url 'admin_panel:seller_moderation' %}" class="btn btn-sm" style="background: rgba(251, 191, 36, 0.15); color: var(--star-gold); border: 1px solid rgba(251, 191, 36, 0.4); padding: 0.2rem 0.65rem; font-size: 0.78rem;">
-                                        Review App &rarr;
-                                    </a>
-                                </td>
+                <div style="overflow-x: auto; width: 100%;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th style="min-width: 140px;">Request Type</th>
+                                <th style="min-width: 180px;">Name / Applicant</th>
+                                <th style="min-width: 140px;">Status</th>
+                                <th style="min-width: 130px; text-align: right;">Action</th>
                             </tr>
-                        {% endfor %}
+                        </thead>
+                        <tbody>
+                            {% for seller in pending_sellers %}
+                                <tr>
+                                    <td>
+                                        <span class="admin-badge admin-badge-seller">
+                                            <i class="bi bi-shop"></i> Seller Store
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight: 700; color: #fff; font-size: 0.92rem;">{{ seller.store_name }}</div>
+                                        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem;">by @{{ seller.user.username }}</div>
+                                    </td>
+                                    <td>
+                                        <span class="admin-badge admin-badge-pending">
+                                            <i class="bi bi-hourglass-split"></i> Pending Approval
+                                        </span>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <a href="{% url 'admin_panel:seller_moderation' %}" class="admin-btn admin-btn-review">
+                                            Review App &rarr;
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
 
-                        {% for product in pending_products %}
-                            <tr style="border-bottom: 1px solid var(--border-color);">
-                                <td style="padding: 0.85rem 0;">
-                                    <span style="font-size: 0.75rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px; background: rgba(0, 242, 254, 0.12); color: var(--primary-cyan); border: 1px solid rgba(0, 242, 254, 0.3);">
-                                        <i class="bi bi-headphones"></i> Product Listing
-                                    </span>
-                                </td>
-                                <td style="padding: 0.85rem 0;">
-                                    <div style="font-weight: 700; color: #fff;">{{ product.name|truncatechars:24 }}</div>
-                                    <div style="font-size: 0.78rem; color: var(--text-muted);">Seller: {{ product.seller.username }}</div>
-                                </td>
-                                <td style="padding: 0.85rem 0;">
-                                    <span style="color: var(--primary-cyan); font-size: 0.78rem; font-weight: 700;">
-                                        <i class="bi bi-clock-history"></i> Pending Queue
-                                    </span>
-                                </td>
-                                <td style="padding: 0.85rem 0; text-align: right;">
-                                    <a href="{% url 'admin_panel:moderation' %}" class="btn btn-sm" style="background: rgba(0, 242, 254, 0.15); color: var(--primary-cyan); border: 1px solid rgba(0, 242, 254, 0.4); padding: 0.2rem 0.65rem; font-size: 0.78rem;">
-                                        Moderate &rarr;
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                            {% for product in pending_products %}
+                                <tr>
+                                    <td>
+                                        <span class="admin-badge admin-badge-admin">
+                                            <i class="bi bi-headphones"></i> Headset Listing
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight: 700; color: #fff; font-size: 0.92rem;">{{ product.name|truncatechars:26 }}</div>
+                                        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem;">Seller: {{ product.seller.store_name|default:product.seller.user.username }}</div>
+                                    </td>
+                                    <td>
+                                        <span class="admin-badge admin-badge-admin">
+                                            <i class="bi bi-clock-history"></i> Pending Queue
+                                        </span>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <a href="{% url 'admin_panel:moderation' %}" class="admin-btn admin-btn-review">
+                                            Moderate &rarr;
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             {% else %}
                 <div style="text-align: center; padding: 2rem 0; color: var(--text-muted);">
                     <i class="bi bi-check-circle-fill" style="font-size: 2rem; color: var(--success-green); display: block; margin-bottom: 0.5rem;"></i>

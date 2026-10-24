@@ -4,114 +4,745 @@
 {% block title %}Checkout - Shipping Address | SoundSphere{% endblock %}
 
 {% block content %}
-<div class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
-    <!-- Step Wizard Bar -->
-    <div style="display: flex; align-items: center; justify-content: center; gap: 2rem; margin-bottom: 3rem;">
-        <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--primary-cyan); font-weight: 700;">
-            <div style="width: 32px; height: 32px; border-radius: var(--radius-full); background: var(--gradient-audio); color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800;">1</div>
+<style>
+/* Checkout Wizard & Address Form Styles */
+.checkout-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding-top: 2.5rem;
+    padding-bottom: 5rem;
+}
+
+/* Step Wizard Navigation */
+.checkout-wizard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+}
+
+.wizard-step {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.wizard-step.active {
+    color: var(--primary-cyan);
+    font-weight: 800;
+}
+
+.wizard-step.pending {
+    color: var(--text-dim);
+}
+
+.wizard-step-bubble {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.88rem;
+    transition: var(--transition);
+}
+
+.wizard-step.active .wizard-step-bubble {
+    background: var(--gradient-audio);
+    color: #05080f;
+    box-shadow: 0 0 16px rgba(0, 242, 254, 0.4);
+}
+
+.wizard-step.pending .wizard-step-bubble {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-dim);
+}
+
+.wizard-line {
+    width: 50px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 640px) {
+    .wizard-line {
+        display: none;
+    }
+}
+
+/* Two Column Layout */
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 370px;
+    gap: 2.25rem;
+    align-items: start;
+}
+
+@media (max-width: 960px) {
+    .checkout-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Shipping Form Card */
+.shipping-card {
+    background: rgba(13, 17, 27, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    border-radius: var(--radius-md);
+    padding: 2.25rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.shipping-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.75rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.shipping-title {
+    font-size: 1.45rem;
+    font-weight: 800;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: #ffffff;
+}
+
+.shipping-subtitle {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    margin: 0;
+}
+
+/* Form Input Elements */
+.field-group {
+    margin-bottom: 1.25rem;
+}
+
+.field-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.45rem;
+}
+
+.field-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-main);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.req-star {
+    color: #ef4444;
+    font-weight: 700;
+}
+
+.input-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    pointer-events: none;
+    transition: color 0.25s ease;
+}
+
+.checkout-input {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 2.6rem;
+    background: rgba(22, 29, 46, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border-radius: var(--radius-sm);
+    font-size: 0.92rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.checkout-input::placeholder {
+    color: #64748b;
+    opacity: 0.85;
+}
+
+.checkout-input:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.checkout-input:focus {
+    background: rgba(22, 29, 46, 0.95);
+    border-color: var(--primary-cyan);
+    box-shadow: 0 0 14px rgba(0, 242, 254, 0.2);
+}
+
+.input-icon-wrapper:focus-within .input-icon {
+    color: var(--primary-cyan);
+}
+
+/* Two and Three Column Grids */
+.grid-2-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+.grid-3-col {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 1.25rem;
+}
+
+@media (max-width: 600px) {
+    .grid-2-col, .grid-3-col {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Saved Address Sidebar Card */
+.checkout-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.saved-address-sidebar-card {
+    background: rgba(13, 17, 27, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.saved-sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+}
+
+.saved-sidebar-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.saved-sidebar-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--primary-cyan);
+    background: rgba(0, 242, 254, 0.1);
+    border: 1px solid rgba(0, 242, 254, 0.25);
+    padding: 0.15rem 0.5rem;
+    border-radius: 12px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.saved-sidebar-hint {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    margin: 0 0 0.85rem 0;
+    line-height: 1.4;
+}
+
+.saved-address-chip {
+    background: rgba(22, 29, 46, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-sm);
+    padding: 0.95rem 1rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    margin-bottom: 0.75rem;
+}
+
+.saved-address-chip:last-child {
+    margin-bottom: 0;
+}
+
+.saved-address-chip:hover {
+    background: rgba(22, 29, 46, 0.95);
+    border-color: rgba(0, 242, 254, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 12px rgba(0, 242, 254, 0.2);
+}
+
+.saved-address-chip.selected {
+    background: rgba(0, 242, 254, 0.08);
+    border-color: var(--primary-cyan);
+    box-shadow: 0 0 16px rgba(0, 242, 254, 0.3);
+}
+
+.autofill-btn-trigger {
+    margin-top: 0.7rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 0.78rem;
+    color: var(--primary-cyan);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: transform 0.2s ease;
+}
+
+.saved-address-chip:hover .autofill-btn-trigger {
+    transform: translateX(3px);
+}
+
+/* Submit CTA */
+.btn-checkout-submit {
+    width: 100%;
+    padding: 0.95rem;
+    font-size: 1rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 1.75rem;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(0, 242, 254, 0.35);
+    transition: var(--transition);
+}
+
+.btn-checkout-submit:hover {
+    box-shadow: 0 6px 24px rgba(0, 242, 254, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Order Summary Card */
+.order-summary-card {
+    background: rgba(13, 17, 27, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    border-radius: var(--radius-md);
+    padding: 1.75rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.summary-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0.85rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.summary-item-row {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.summary-thumb-box {
+    width: 50px;
+    height: 50px;
+    background: radial-gradient(circle, rgba(0, 242, 254, 0.08) 0%, rgba(255, 255, 255, 0.02) 70%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.summary-thumb-box img {
+    max-width: 85%;
+    max-height: 85%;
+    object-fit: contain;
+}
+
+.summary-calc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.9rem;
+}
+
+.summary-calc-row {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-muted);
+}
+
+.summary-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 1rem;
+    margin-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+</style>
+
+<div class="checkout-container">
+    <!-- Step Wizard Bar (Clickable Navigation) -->
+    <div class="checkout-wizard">
+        <a href="{% url 'orders:checkout' %}" class="wizard-step active" title="Shipping Address">
+            <div class="wizard-step-bubble">1</div>
             <span>Shipping Address</span>
-        </div>
-        <div style="width: 60px; height: 2px; background: var(--border-color);"></div>
-        <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-dim);">
-            <div style="width: 32px; height: 32px; border-radius: var(--radius-full); background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;">2</div>
+        </a>
+        <div class="wizard-line"></div>
+        <div class="wizard-step pending">
+            <div class="wizard-step-bubble">2</div>
             <span>Payment Simulation</span>
         </div>
-        <div style="width: 60px; height: 2px; background: var(--border-color);"></div>
-        <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-dim);">
-            <div style="width: 32px; height: 32px; border-radius: var(--radius-full); background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;">3</div>
+        <div class="wizard-line"></div>
+        <div class="wizard-step pending">
+            <div class="wizard-step-bubble">3</div>
             <span>Order Confirmation</span>
         </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 340px; gap: 2.5rem;">
-        <!-- Shipping Address Selection / Form -->
-        <form method="POST" action="{% url 'orders:payment' %}" class="glass-panel" style="padding: 2rem;">
+    <!-- Main Checkout Grid -->
+    <div class="checkout-grid">
+        <!-- Shipping Address Form -->
+        <form method="POST" action="{% url 'orders:payment' %}" class="shipping-card" id="shippingForm" novalidate onsubmit="return validateShippingForm(event)">
             {% csrf_token %}
-            <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Shipping Address</h2>
+            
+            <div class="shipping-header">
+                <div>
+                    <h2 class="shipping-title">
+                        <i class="bi bi-geo-alt-fill" style="color: var(--primary-cyan);"></i> Shipping Address
+                    </h2>
+                    <p class="shipping-subtitle">All fields are required for accurate delivery routing and parcel insurance.</p>
+                </div>
+            </div>
 
-            {% if addresses %}
-                <div style="margin-bottom: 2rem;">
-                    <h4 style="font-size: 1rem; color: var(--text-muted); margin-bottom: 1rem;">Saved Addresses</h4>
-                    <div style="display: flex; flex-direction: column; gap: 1rem;">
-                        {% for addr in addresses %}
-                            <label class="glass-card" style="padding: 1rem; cursor: pointer; display: flex; align-items: flex-start; gap: 1rem;">
-                                <input type="radio" name="address_id" value="{{ addr.id }}" {% if addr.is_default or forloop.first %}checked{% endif %} style="margin-top: 0.25rem;">
-                                <div>
-                                    <div style="font-weight: 700; color: #fff;">{{ addr.full_name }} ({{ addr.phone_number }})</div>
-                                    <div style="color: var(--text-muted); font-size: 0.9rem;">
-                                        {{ addr.street_address }}{% if addr.apartment_address %}, {{ addr.apartment_address }}{% endif %}, {{ addr.city }}, {{ addr.state }} {{ addr.postal_code }}, {{ addr.country }}
-                                    </div>
-                                </div>
+            <div id="addressFields">
+                <!-- Full Name & Phone Number (Row 1) -->
+                <div class="grid-2-col field-group">
+                    <div>
+                        <div class="field-label-row">
+                            <label class="field-label" for="full_name">
+                                Full Name <span class="req-star">*</span>
                             </label>
-                        {% endfor %}
+                        </div>
+                        <div class="input-icon-wrapper">
+                            <i class="bi bi-person input-icon"></i>
+                            <input type="text" id="full_name" name="full_name" class="checkout-input" value="{{ default_full_name|default:'' }}" placeholder="Enter full name" required>
+                        </div>
+                        <div class="field-error-msg" id="err_full_name" style="color: #ef4444; font-size: 0.78rem; margin-top: 0.35rem; display: none;">Please enter your full name.</div>
+                    </div>
+
+                    <div>
+                        <div class="field-label-row">
+                            <label class="field-label" for="phone">
+                                Phone Number <span class="req-star">*</span>
+                            </label>
+                        </div>
+                        <div class="input-icon-wrapper">
+                            <i class="bi bi-telephone input-icon"></i>
+                            <input type="tel" id="phone" name="phone" class="checkout-input" value="{{ default_phone|default:'' }}" placeholder="Enter phone number" required>
+                        </div>
+                        <div class="field-error-msg" id="err_phone" style="color: #ef4444; font-size: 0.78rem; margin-top: 0.35rem; display: none;">Please enter a valid phone number.</div>
                     </div>
                 </div>
-                <h4 style="font-size: 1rem; color: var(--text-muted); margin-bottom: 1rem;">Or Enter New Shipping Address:</h4>
-            {% endif %}
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                <div>
-                    <label style="font-size: 0.85rem; color: var(--text-muted);">Full Name</label>
-                    <input type="text" name="full_name" placeholder="John Doe" style="width: 100%; padding: 0.7rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+                <!-- Street Address (Row 2) -->
+                <div class="field-group">
+                    <div class="field-label-row">
+                        <label class="field-label" for="street_address">
+                            Street Address <span class="req-star">*</span>
+                        </label>
+                    </div>
+                    <div class="input-icon-wrapper">
+                        <i class="bi bi-geo-alt input-icon"></i>
+                        <input type="text" id="street_address" name="street_address" class="checkout-input" value="" placeholder="Enter street address" required>
+                    </div>
+                    <div class="field-error-msg" id="err_street_address" style="color: #ef4444; font-size: 0.78rem; margin-top: 0.35rem; display: none;">Please enter your street address.</div>
                 </div>
-                <div>
-                    <label style="font-size: 0.85rem; color: var(--text-muted);">Phone Number</label>
-                    <input type="text" name="phone" placeholder="+1 (555) 000-0000" style="width: 100%; padding: 0.7rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
+
+                <!-- City, State, Postal Code (Row 3) -->
+                <div class="grid-3-col field-group">
+                    <div>
+                        <div class="field-label-row">
+                            <label class="field-label" for="city">
+                                City <span class="req-star">*</span>
+                            </label>
+                        </div>
+                        <div class="input-icon-wrapper">
+                            <i class="bi bi-building input-icon"></i>
+                            <input type="text" id="city" name="city" class="checkout-input" value="" placeholder="Enter city" required>
+                        </div>
+                        <div class="field-error-msg" id="err_city" style="color: #ef4444; font-size: 0.78rem; margin-top: 0.35rem; display: none;">Please enter your city.</div>
+                    </div>
+
+                    <div>
+                        <div class="field-label-row">
+                            <label class="field-label" for="state">
+                                State <span class="req-star">*</span>
+                            </label>
+                        </div>
+                        <div class="input-icon-wrapper">
+                            <i class="bi bi-signpost-2 input-icon"></i>
+                            <input type="text" id="state" name="state" class="checkout-input" value="" placeholder="Enter state" required>
+                        </div>
+                        <div class="field-error-msg" id="err_state" style="color: #ef4444; font-size: 0.78rem; margin-top: 0.35rem; display: none;">Please enter your state.</div>
+                    </div>
+
+                    <div>
+                        <div class="field-label-row">
+                            <label class="field-label" for="postal_code">
+                                Postal Code <span class="req-star">*</span>
+                            </label>
+                        </div>
+                        <div class="input-icon-wrapper">
+                            <i class="bi bi-mailbox input-icon"></i>
+                            <input type="text" id="postal_code" name="postal_code" class="checkout-input" value="" placeholder="Enter postal code" required>
+                        </div>
+                        <div class="field-error-msg" id="err_postal_code" style="color: #ef4444; font-size: 0.78rem; margin-top: 0.35rem; display: none;">Please enter your postal code.</div>
+                    </div>
                 </div>
             </div>
 
-            <div style="margin-bottom: 1rem;">
-                <label style="font-size: 0.85rem; color: var(--text-muted);">Street Address</label>
-                <input type="text" name="street_address" placeholder="123 Audio Wave Blvd" style="width: 100%; padding: 0.7rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
-                <div>
-                    <label style="font-size: 0.85rem; color: var(--text-muted);">City</label>
-                    <input type="text" name="city" placeholder="San Francisco" style="width: 100%; padding: 0.7rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
-                </div>
-                <div>
-                    <label style="font-size: 0.85rem; color: var(--text-muted);">State</label>
-                    <input type="text" name="state" placeholder="CA" style="width: 100%; padding: 0.7rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
-                </div>
-                <div>
-                    <label style="font-size: 0.85rem; color: var(--text-muted);">Postal Code</label>
-                    <input type="text" name="postal_code" placeholder="94103" style="width: 100%; padding: 0.7rem; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: var(--radius-sm);">
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.9rem;">
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary btn-checkout-submit">
                 Continue to Payment <i class="bi bi-credit-card-2-front-fill"></i>
             </button>
         </form>
 
-        <!-- Summary -->
-        <div class="glass-panel" style="padding: 1.5rem; height: fit-content;">
-            <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">Order Items ({{ cart.total_items }})</h3>
-            <div style="display: flex; flex-direction: column; gap: 1rem; max-height: 300px; overflow-y: auto; margin-bottom: 1.5rem;">
-                {% for item in cart.items.all %}
-                    <div style="display: flex; align-items: center; gap: 0.75rem;">
-                        <div style="width: 45px; height: 45px; background: rgba(255,255,255,0.03); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center;">
-                            {% if item.product.image %}
-                                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" style="max-width: 90%; max-height: 90%;">
-                            {% else %}
-                                <i class="bi bi-headphones" style="color: var(--primary-indigo);"></i>
-                            {% endif %}
+        <!-- Right Column: Order Summary & Saved Addresses -->
+        <div class="checkout-sidebar">
+            <div class="order-summary-card">
+                <div class="summary-title-row">
+                    <h3 style="font-size: 1.15rem; font-weight: 800; margin: 0; color: #ffffff;">Order Items</h3>
+                    <span style="font-size: 0.85rem; color: var(--primary-cyan); font-weight: 700;">{{ cart.total_items }} Item{% if cart.total_items != 1 %}s{% endif %}</span>
+                </div>
+
+                <!-- Items List -->
+                <div style="max-height: 280px; overflow-y: auto;">
+                    {% for item in cart.items.all %}
+                        <div class="summary-item-row">
+                            <div class="summary-thumb-box">
+                                {% if item.product.image %}
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                                {% else %}
+                                    <i class="bi bi-headphones" style="color: var(--primary-indigo);"></i>
+                                {% endif %}
+                            </div>
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="font-size: 0.88rem; font-weight: 700; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ item.product.name }}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.15rem;">Qty: {{ item.quantity }} × ₹{{ item.product.current_price }}</div>
+                            </div>
+                            <div style="font-weight: 700; font-size: 0.92rem; color: #ffffff;">₹{{ item.total_price }}</div>
                         </div>
-                        <div style="flex: 1;">
-                            <div style="font-size: 0.85rem; font-weight: 700; color: #fff;">{{ item.product.name }}</div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted);">Qty: {{ item.quantity }} × ₹{{ item.product.current_price }}</div>
-                        </div>
-                        <div style="font-weight: 700; font-size: 0.9rem;">₹{{ item.total_price }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Calculations Breakdown -->
+                <div class="summary-calc-list">
+                    <div class="summary-calc-row">
+                        <span>Subtotal</span>
+                        <span>₹{{ cart.subtotal }}</span>
                     </div>
-                {% endfor %}
+                    <div class="summary-calc-row">
+                        <span>Estimated Tax (3%)</span>
+                        <span>₹{{ cart.tax }}</span>
+                    </div>
+                    <div class="summary-calc-row">
+                        <span>Express Audio Courier</span>
+                        <span style="color: var(--success-green); font-weight: 700;">FREE</span>
+                    </div>
+                    {% if discount > 0 %}
+                        <div class="summary-calc-row" style="color: var(--success-green); font-weight: 700;">
+                            <span>Coupon Discount</span>
+                            <span>-₹{{ discount }}</span>
+                        </div>
+                    {% endif %}
+                    <div class="summary-total-row">
+                        <span>Total Due</span>
+                        <span class="gradient-text">₹{{ total_amount }}</span>
+                    </div>
+                </div>
+
+                <!-- Trust Badge -->
+                <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; gap: 0.5rem; color: var(--text-dim); font-size: 0.75rem;">
+                    <i class="bi bi-shield-lock-fill" style="color: var(--primary-cyan);"></i>
+                    <span>256-Bit SSL Encrypted & Insured Checkout</span>
+                </div>
             </div>
 
-            <div style="border-top: 1px solid var(--border-color); padding-top: 1rem; display: flex; justify-content: space-between; font-weight: 800; font-size: 1.2rem; color: #fff;">
-                <span>Total Due</span>
-                <span class="gradient-text">₹{{ total_amount }}</span>
-            </div>
+            <!-- Saved Addresses Auto-Fill Selector (Located below Order Items Summary) -->
+            {% if addresses %}
+                <div class="saved-address-sidebar-card">
+                    <div class="saved-sidebar-header">
+                        <span class="saved-sidebar-title">
+                            <i class="bi bi-bookmark-check-fill" style="color: var(--primary-cyan);"></i> Saved Address
+                        </span>
+                        <span class="saved-sidebar-badge">Auto-fill</span>
+                    </div>
+                    <p class="saved-sidebar-hint">Tap below to fill shipping fields instantly:</p>
+
+                    {% for addr in addresses %}
+                        <div class="saved-address-chip" onclick="autofillAddress(this)" 
+                             data-fullname="{{ addr.full_name }}"
+                             data-phone="{{ addr.phone_number }}"
+                             data-street="{{ addr.street_address }}{% if addr.apartment_address %}, {{ addr.apartment_address }}{% endif %}"
+                             data-city="{{ addr.city }}"
+                             data-state="{{ addr.state }}"
+                             data-postal="{{ addr.postal_code }}">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                                <strong style="color: #ffffff; font-size: 0.92rem;">{{ addr.full_name }}</strong>
+                                {% if addr.is_default %}
+                                    <span style="font-size: 0.68rem; color: var(--primary-cyan); background: rgba(0,242,254,0.12); padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 700; border: 1px solid rgba(0,242,254,0.25);">DEFAULT</span>
+                                {% endif %}
+                            </div>
+                            <div style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.45;">
+                                {{ addr.street_address }}<br>
+                                {{ addr.city }}, {{ addr.state }} {{ addr.postal_code }}
+                            </div>
+                            <div style="font-size: 0.78rem; color: var(--text-dim); margin-top: 0.35rem;">
+                                <i class="bi bi-telephone" style="font-size: 0.75rem;"></i> {{ addr.phone_number }}
+                            </div>
+                            <div class="autofill-btn-trigger">
+                                <i class="bi bi-box-arrow-in-down-left"></i> Click to Auto-fill Form
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>
+
+<script>
+function autofillAddress(card) {
+    const fullName = card.dataset.fullname || '';
+    const phone = card.dataset.phone || '';
+    const street = card.dataset.street || '';
+    const city = card.dataset.city || '';
+    const state = card.dataset.state || '';
+    const postal = card.dataset.postal || '';
+
+    const elName = document.getElementById('full_name');
+    const elPhone = document.getElementById('phone');
+    const elStreet = document.getElementById('street_address');
+    const elCity = document.getElementById('city');
+    const elState = document.getElementById('state');
+    const elPostal = document.getElementById('postal_code');
+
+    if (elName && fullName) elName.value = fullName;
+    if (elPhone && phone) elPhone.value = phone;
+    if (elStreet && street) elStreet.value = street;
+    if (elCity && city) elCity.value = city;
+    if (elState && state) elState.value = state;
+    if (elPostal && postal) elPostal.value = postal;
+
+    // Highlight selected chip
+    document.querySelectorAll('.saved-address-chip').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+
+    // Visual pulse feedback on populated inputs
+    [elName, elPhone, elStreet, elCity, elState, elPostal].forEach(input => {
+        if (input) {
+            input.style.borderColor = 'rgba(0, 242, 254, 0.8)';
+            input.style.boxShadow = '0 0 12px rgba(0, 242, 254, 0.3)';
+            setTimeout(() => {
+                input.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                input.style.boxShadow = 'none';
+            }, 800);
+            const err = document.getElementById('err_' + input.id);
+            if (err) err.style.display = 'none';
+        }
+    });
+
+    // Smooth scroll up to form
+    elName.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function validateShippingForm(e) {
+    const fields = [
+        { id: 'full_name', name: 'Full Name' },
+        { id: 'phone', name: 'Phone Number' },
+        { id: 'street_address', name: 'Street Address' },
+        { id: 'city', name: 'City' },
+        { id: 'state', name: 'State' },
+        { id: 'postal_code', name: 'Postal Code' }
+    ];
+
+    let hasError = false;
+    let firstErrorField = null;
+
+    fields.forEach(field => {
+        const input = document.getElementById(field.id);
+        const errEl = document.getElementById('err_' + field.id);
+        if (!input) return;
+
+        const val = input.value.trim();
+        if (!val) {
+            hasError = true;
+            input.style.borderColor = '#ef4444';
+            input.style.boxShadow = '0 0 10px rgba(239, 68, 68, 0.25)';
+            if (errEl) errEl.style.display = 'block';
+            if (!firstErrorField) firstErrorField = input;
+        } else {
+            input.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            input.style.boxShadow = 'none';
+            if (errEl) errEl.style.display = 'none';
+        }
+    });
+
+    if (hasError) {
+        e.preventDefault();
+        if (firstErrorField) firstErrorField.focus();
+        return false;
+    }
+    return true;
+}
+
+// Clear red border on input
+document.addEventListener('DOMContentLoaded', () => {
+    const inputs = document.querySelectorAll('.checkout-input');
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+            if (input.value.trim()) {
+                input.style.borderColor = 'rgba(0, 242, 254, 0.5)';
+                input.style.boxShadow = '0 0 10px rgba(0, 242, 254, 0.15)';
+                const err = document.getElementById('err_' + input.id);
+                if (err) err.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

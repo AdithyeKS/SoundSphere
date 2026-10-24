@@ -7,13 +7,13 @@
 <div class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
     <!-- Step Wizard Bar -->
     <div style="display: flex; align-items: center; justify-content: center; gap: 2rem; margin-bottom: 3rem;">
-        <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--success-green); font-weight: 700;">
-            <div style="width: 32px; height: 32px; border-radius: var(--radius-full); background: var(--success-green); color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800;"><i class="bi bi-check-lg"></i></div>
-            <span>Shipping Address</span>
-        </div>
+        <a href="{% url 'orders:checkout' %}" style="display: flex; align-items: center; gap: 0.5rem; color: var(--success-green); font-weight: 700; text-decoration: none; transition: var(--transition);" title="Edit Shipping Address">
+            <div style="width: 32px; height: 32px; border-radius: var(--radius-full); background: rgba(16, 185, 129, 0.2); border: 1px solid var(--success-green); color: var(--success-green); display: flex; align-items: center; justify-content: center; font-weight: 800;"><i class="bi bi-check-lg"></i></div>
+            <span style="border-bottom: 1px dashed var(--success-green);">Shipping Address</span>
+        </a>
         <div style="width: 60px; height: 2px; background: var(--success-green);"></div>
         <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--primary-cyan); font-weight: 700;">
-            <div style="width: 32px; height: 32px; border-radius: var(--radius-full); background: var(--gradient-audio); color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800;">2</div>
+            <div style="width: 32px; height: 32px; border-radius: var(--radius-full); background: var(--gradient-audio); color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800; box-shadow: 0 0 16px rgba(0, 242, 254, 0.4);">2</div>
             <span>Payment Simulation</span>
         </div>
         <div style="width: 60px; height: 2px; background: var(--border-color);"></div>

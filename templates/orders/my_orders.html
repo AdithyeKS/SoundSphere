@@ -4,58 +4,97 @@
 {% block title %}My Order History | SoundSphere{% endblock %}
 
 {% block content %}
-<div class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
-    <h1 style="font-size: 2.2rem; margin-bottom: 2rem;">Order <span class="gradient-text">History</span></h1>
+<div class="container" style="padding-top: 3rem; padding-bottom: 5rem; max-width: 1100px;">
+    
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h1 style="font-size: 2.2rem; margin: 0;">Order <span class="gradient-text">History</span></h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.25rem;">
+                Manage and live-track your past and active headset purchases
+            </p>
+        </div>
+        <a href="{% url 'products:list' %}" class="btn btn-secondary btn-sm" style="display: inline-flex; align-items: center; gap: 0.4rem;">
+            <i class="bi bi-bag-plus"></i> Continue Shopping
+        </a>
+    </div>
 
     {% if orders %}
-        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div style="display: flex; flex-direction: column; gap: 1.75rem;">
             {% for order in orders %}
-                <div class="glass-panel" style="padding: 1.5rem;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
-                        <div>
-                            <span style="font-size: 0.85rem; color: var(--text-dim);">ORDER PLACED</span>
-                            <div style="font-weight: 700; color: #fff;">{{ order.created_at|date:"F d, Y" }}</div>
+                <div class="glass-panel" style="padding: 1.75rem; border-radius: 16px; border: 1px solid var(--border-color); transition: border-color 0.2s;" onmouseover="this.style.borderColor='rgba(0, 240, 255, 0.4)'" onmouseout="this.style.borderColor='var(--border-color)'">
+                    
+                    <!-- Header Bar -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 1.25rem; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+                        <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                            <div>
+                                <span style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px;">ORDER PLACED</span>
+                                <div style="font-weight: 700; color: #fff; font-size: 0.95rem;">{{ order.created_at|date:"F d, Y" }}</div>
+                            </div>
+                            <div>
+                                <span style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px;">ORDER NUMBER</span>
+                                <div style="font-weight: 700; color: var(--primary-cyan); font-size: 0.95rem; font-family: monospace;">#{{ order.order_number }}</div>
+                            </div>
+                            <div>
+                                <span style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px;">TOTAL AMOUNT</span>
+                                <div style="font-weight: 800; color: #fff; font-size: 0.95rem;">₹{{ order.total_amount }}</div>
+                            </div>
                         </div>
+
                         <div>
-                            <span style="font-size: 0.85rem; color: var(--text-dim);">ORDER NUMBER</span>
-                            <div style="font-weight: 700; color: var(--primary-cyan);">#{{ order.order_number }}</div>
-                        </div>
-                        <div>
-                            <span style="font-size: 0.85rem; color: var(--text-dim);">TOTAL</span>
-                            <div style="font-weight: 800; color: #fff;">₹{{ order.total_amount }}</div>
-                        </div>
-                        <div>
-                            <span class="badge" style="position: static; font-size: 0.85rem; width: auto; padding: 0.3rem 0.8rem; height: auto;
-                                {% if order.status == 'Delivered' %}background: var(--success-green); color: #000;
-                                {% elif order.status == 'Shipped' %}background: var(--primary-cyan); color: #000;
-                                {% else %}background: var(--primary-indigo); color: #000;{% endif %}">
-                                Status: {{ order.status }}
+                            <span class="status-badge {% if order.status == 'Delivered' %}status-badge-delivered{% elif order.status == 'Cancelled' %}status-badge-cancelled{% elif order.status == 'Shipped' %}status-badge-shipped{% else %}status-badge-processing{% endif %}">
+                                {{ order.status }}
                             </span>
                         </div>
                     </div>
 
-                    <!-- Items Summary -->
-                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
-                        <div>
+                    <!-- Items Summary & Quick Actions -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.25rem;">
+                        <div style="display: flex; flex-direction: column; gap: 0.6rem;">
                             {% for item in order.items.all %}
-                                <div style="font-size: 0.95rem; color: var(--text-main);">
-                                    • {{ item.quantity }} × <strong>{{ item.product_name }}</strong>
+                                <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.95rem; color: var(--text-main);">
+                                    <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                                        {% if item.product and item.product.image %}
+                                            <img src="{{ item.product.image.url }}" alt="{{ item.product_name }}" style="width: 100%; height: 100%; object-fit: contain; padding: 2px;">
+                                        {% else %}
+                                            <i class="bi bi-headphones" style="font-size: 1.2rem; color: var(--primary-cyan);"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <span style="color: var(--text-muted); font-size: 0.85rem;">{{ item.quantity }} ×</span>
+                                        <strong style="color: #fff; margin-left: 0.25rem;">{{ item.product_name }}</strong>
+                                        <span style="color: var(--primary-cyan); font-weight: 700; margin-left: 0.5rem; font-size: 0.9rem;">₹{{ item.total_price }}</span>
+                                    </div>
                                 </div>
                             {% endfor %}
+                            
+                            {% if order.status != 'Cancelled' and order.status != 'Delivered' %}
+                                <div style="font-size: 0.82rem; color: var(--success-green); margin-top: 0.35rem; display: flex; align-items: center; gap: 0.35rem;">
+                                    <i class="bi bi-truck"></i> Est. Delivery: <strong>{{ order.estimated_delivery_date|date:"l, M d" }}</strong>
+                                </div>
+                            {% elif order.status == 'Cancelled' and order.is_paid_online %}
+                                <div style="font-size: 0.82rem; color: var(--star-gold); margin-top: 0.35rem; display: flex; align-items: center; gap: 0.35rem;">
+                                    <i class="bi bi-arrow-repeat"></i> Refund of ₹{{ order.total_amount }} initiated (credits within 24 hours)
+                                </div>
+                            {% endif %}
                         </div>
-                        <a href="{% url 'orders:detail' order.order_number %}" class="btn btn-secondary btn-sm">
-                            View Order Details <i class="bi bi-chevron-right"></i>
-                        </a>
+
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <a href="{% url 'orders:detail' order.order_number %}" class="btn btn-primary btn-sm" style="display: inline-flex; align-items: center; gap: 0.4rem;">
+                                <i class="bi bi-geo-alt"></i> Track & View Order <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
     {% else %}
-        <div class="glass-panel" style="text-align: center; padding: 5rem 2rem;">
+        <div class="glass-panel" style="text-align: center; padding: 5rem 2rem; border-radius: 20px;">
             <i class="bi bi-box-seam" style="font-size: 4.5rem; color: var(--primary-cyan);"></i>
-            <h2 style="margin-top: 1rem;">No Orders Yet</h2>
-            <p style="color: var(--text-muted); margin-bottom: 2rem;">You haven't placed any orders with SoundSphere yet.</p>
-            <a href="{% url 'products:list' %}" class="btn btn-primary">Start Shopping</a>
+            <h2 style="margin-top: 1.5rem; font-size: 1.6rem;">No Orders Yet</h2>
+            <p style="color: var(--text-muted); margin-bottom: 2rem; max-width: 400px; margin-left: auto; margin-right: auto;">
+                You haven't placed any orders with SoundSphere yet. Explore our curated catalog of studio-grade headsets.
+            </p>
+            <a href="{% url 'products:list' %}" class="btn btn-primary">Start Exploring Headsets</a>
         </div>
     {% endif %}
 </div>

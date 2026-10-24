@@ -4,65 +4,209 @@
 {% block title %}Order Confirmation #{{ order.order_number }} | SoundSphere{% endblock %}
 
 {% block content %}
-<div class="container" style="padding-top: 3rem; padding-bottom: 5rem; max-width: 800px;">
-    <div class="glass-panel" style="padding: 3rem; text-align: center;">
-        <div style="width: 80px; height: 80px; border-radius: var(--radius-full); background: rgba(16, 185, 129, 0.15); border: 2px solid var(--success-green); color: var(--success-green); font-size: 3rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;">
+<style>
+.confirmation-container {
+    padding-top: 1.75rem;
+    padding-bottom: 2.5rem;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.confirmation-card {
+    background: rgba(13, 17, 27, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    border-radius: var(--radius-md);
+    padding: 1.75rem 2.25rem;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+.success-icon-badge {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.12);
+    border: 2px solid var(--success-green);
+    color: var(--success-green);
+    font-size: 1.85rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.85rem;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.25);
+}
+
+.confirmation-title {
+    font-size: 1.65rem;
+    font-weight: 800;
+    margin: 0 0 0.35rem 0;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+}
+
+.confirmation-subtitle {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    margin: 0 0 1.25rem 0;
+}
+
+.receipt-box {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: var(--radius-sm);
+    padding: 1.25rem 1.5rem;
+    text-align: left;
+    margin-bottom: 1.25rem;
+}
+
+.receipt-header-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.receipt-label-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    margin-bottom: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.receipt-content-text {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    line-height: 1.45;
+}
+
+.receipt-items-section {
+    padding: 0.85rem 0;
+}
+
+.receipt-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.88rem;
+    padding: 0.35rem 0;
+}
+
+.delivery-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.75rem;
+    color: var(--success-green);
+    background: rgba(16, 185, 129, 0.1);
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-full);
+    margin-top: 0.2rem;
+}
+
+.receipt-total-row {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 0.75rem;
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.confirmation-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+</style>
+
+<div class="container confirmation-container">
+    <div class="confirmation-card">
+        <!-- Success Badge -->
+        <div class="success-icon-badge">
             <i class="bi bi-check-lg"></i>
         </div>
 
-        <h1 style="font-size: 2.2rem; margin-bottom: 0.5rem;">Order Placed Successfully!</h1>
-        <p style="color: var(--text-muted); margin-bottom: 2rem;">Thank you for shopping with SoundSphere. Your order reference is <strong style="color: var(--primary-cyan);">#{{ order.order_number }}</strong>.</p>
+        <h1 class="confirmation-title">Order Placed Successfully!</h1>
+        <p class="confirmation-subtitle">
+            Thank you for shopping with SoundSphere. Reference: <strong style="color: var(--primary-cyan);">#{{ order.order_number }}</strong>
+        </p>
 
-        <!-- Receipt Card -->
-        <div style="background: rgba(0,0,0,0.3); border: 1px dashed var(--border-color); border-radius: var(--radius-md); padding: 2rem; text-align: left; margin-bottom: 2.5rem;">
-            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+        <!-- Receipt Summary Card -->
+        <div class="receipt-box">
+            <div class="receipt-header-grid">
                 <div>
-                    <h3 style="font-size: 1.1rem; color: #fff;">Shipping Destination</h3>
-                    <div style="color: var(--text-muted); font-size: 0.9rem;">
-                        <strong>{{ order.full_name }}</strong><br>
+                    <div class="receipt-label-title">
+                        <i class="bi bi-geo-alt-fill" style="color: var(--primary-cyan);"></i> Shipping Destination
+                    </div>
+                    <div class="receipt-content-text">
+                        <strong style="color: #ffffff;">{{ order.full_name }}</strong><br>
                         {{ order.street_address }}<br>
                         {{ order.city }}, {{ order.state }} {{ order.postal_code }}<br>
                         Phone: {{ order.phone }}
                     </div>
                 </div>
+
                 <div style="text-align: right;">
-                    <h3 style="font-size: 1.1rem; color: #fff;">Payment Details</h3>
-                    <div style="color: var(--text-muted); font-size: 0.9rem;">
-                        Method: <strong style="color: #fff; text-transform: uppercase;">{{ order.payment.payment_method }}</strong><br>
+                    <div class="receipt-label-title" style="justify-content: flex-end;">
+                        <i class="bi bi-credit-card-2-front-fill" style="color: var(--primary-cyan);"></i> Payment Details
+                    </div>
+                    <div class="receipt-content-text">
+                        Method: <strong style="color: #ffffff; text-transform: uppercase;">{{ order.payment.payment_method }}</strong><br>
                         Txn ID: <span style="color: var(--primary-cyan);">{{ order.payment.transaction_id }}</span><br>
                         Status: <span style="color: var(--success-green); font-weight: 700;">{{ order.payment_status }}</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Items -->
-            <h4 style="font-size: 1rem; color: #fff; margin-bottom: 1rem;">Items Purchased</h4>
-            <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem;">
+            <!-- Items Purchased -->
+            <div class="receipt-items-section">
+                <div class="receipt-label-title" style="margin-bottom: 0.5rem;">
+                    <i class="bi bi-bag-check-fill" style="color: var(--primary-cyan);"></i> Items Purchased
+                </div>
                 {% for item in order.items.all %}
-                    <div style="display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 0.5rem; align-items: flex-start;">
+                    <div class="receipt-item-row">
                         <div>
-                            <span>{{ item.quantity }} × {{ item.product_name }}</span>
-                            <div style="font-size: 0.8rem; color: var(--success-green); margin-top: 0.2rem;">
-                                <i class="bi bi-clock-history"></i> Est. Delivery: {{ item.estimated_delivery_days }} Day{{ item.estimated_delivery_days|pluralize }}
+                            <span style="color: #ffffff; font-weight: 600;">{{ item.quantity }} × {{ item.product_name }}</span>
+                            <div>
+                                <span class="delivery-pill">
+                                    <i class="bi bi-truck"></i> Est. Delivery: {{ item.estimated_delivery_days }} Day{{ item.estimated_delivery_days|pluralize }}
+                                </span>
                             </div>
                         </div>
-                        <span style="font-weight: 700; color: #fff;">₹{{ item.total_price }}</span>
+                        <span style="font-weight: 700; color: #ffffff;">₹{{ item.total_price }}</span>
                     </div>
                 {% endfor %}
             </div>
 
-            <div style="border-top: 1px solid var(--border-color); padding-top: 1rem; display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: 800; color: #fff;">
+            <!-- Total Amount -->
+            <div class="receipt-total-row">
                 <span>Total Amount</span>
                 <span class="gradient-text">₹{{ order.total_amount }}</span>
             </div>
         </div>
 
-        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-            <button onclick="window.print()" class="btn btn-secondary">
+        <!-- Action Buttons -->
+        <div class="confirmation-actions">
+            <button onclick="window.print()" class="btn btn-secondary btn-sm" style="padding: 0.6rem 1.3rem; font-weight: 700;">
                 <i class="bi bi-printer"></i> Print Invoice
             </button>
-            <a href="{% url 'orders:my_orders' %}" class="btn btn-primary">
-                View My Orders <i class="bi bi-clock-history"></i>
+            <a href="{% url 'orders:my_orders' %}" class="btn btn-primary btn-sm" style="padding: 0.6rem 1.4rem; font-weight: 700;">
+                View My Orders <i class="bi bi-arrow-right"></i>
+            </a>
+            <a href="{% url 'products:list' %}" class="btn btn-secondary btn-sm" style="padding: 0.6rem 1.1rem; color: var(--text-dim);">
+                Continue Shopping
             </a>
         </div>
     </div>

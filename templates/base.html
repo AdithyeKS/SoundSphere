@@ -13,7 +13,7 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <!-- Main Style -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2.5">
 </head>
 <body>
 
@@ -97,7 +97,9 @@
                     <!-- Notifications Icon -->
                     <a href="{% url 'notifications:list' %}" class="icon-btn" title="Notifications">
                         <i class="bi bi-bell"></i>
-                        <span class="badge" style="{% if unread_notifications_count == 0 %}display:none;{% endif %}">{{ unread_notifications_count }}</span>
+                        {% if unread_notifications_count > 0 %}
+                            <span class="badge-dot-count">{% if unread_notifications_count > 99 %}99+{% else %}{{ unread_notifications_count }}{% endif %}</span>
+                        {% endif %}
                     </a>
                 {% endif %}
 
@@ -105,13 +107,17 @@
                     <!-- Wishlist Icon -->
                     <a href="{% if user.is_authenticated %}{% url 'wishlist:view' %}{% else %}{% url 'accounts:login' %}?next=/wishlist/{% endif %}" class="icon-btn" title="Wishlist">
                         <i class="bi bi-heart"></i>
-                        <span id="wishlistBadgeCount" class="badge" style="{% if wishlist_count == 0 %}display:none;{% endif %}">{{ wishlist_count }}</span>
+                        {% if wishlist_count > 0 %}
+                            <span id="wishlistBadgeCount" class="badge-dot-count">{{ wishlist_count }}</span>
+                        {% endif %}
                     </a>
 
                     <!-- Cart Icon -->
                     <a href="{% if user.is_authenticated %}{% url 'cart:detail' %}{% else %}{% url 'accounts:login' %}?next=/cart/{% endif %}" class="icon-btn" title="Shopping Cart">
                         <i class="bi bi-bag"></i>
-                        <span id="cartBadgeCount" class="badge" style="{% if cart_item_count == 0 %}display:none;{% endif %}">{{ cart_item_count }}</span>
+                        {% if cart_item_count > 0 %}
+                            <span id="cartBadgeCount" class="badge-dot-count">{{ cart_item_count }}</span>
+                        {% endif %}
                     </a>
                 {% endif %}
 

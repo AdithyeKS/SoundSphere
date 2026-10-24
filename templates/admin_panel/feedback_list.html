@@ -44,9 +44,9 @@
                     </div>
 
                     <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end;">
-                        <a href="{% url 'admin_panel:delete_feedback' fb.id %}" class="btn btn-sm btn-danger" style="font-size: 0.8rem;" onclick="return confirm('Delete this feedback entry?')">
+                        <button type="button" class="btn btn-sm btn-danger" style="font-size: 0.8rem;" onclick="openDeleteFeedbackModal('{{ fb.id }}', '{{ fb.subject|escapejs }}')">
                             <i class="bi bi-trash"></i> Delete Feedback
-                        </a>
+                        </button>
                     </div>
                 </div>
             {% endfor %}
@@ -59,4 +59,61 @@
         {% endif %}
     </div>
 </div>
+
+<!-- ============================================== -->
+<!-- CUSTOM GLASSMORPHISM DELETE FEEDBACK MODAL     -->
+<!-- ============================================== -->
+<div id="deleteFeedbackModal" class="admin-modal-backdrop">
+    <div class="admin-modal-dialog admin-modal-dialog-danger">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(239, 68, 68, 0.15); border: 2px solid #ef4444; color: #ef4444; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; font-size: 2rem;">
+                <i class="bi bi-trash3-fill"></i>
+            </div>
+            <h2 style="font-size: 1.5rem; color: #fff; margin-bottom: 0.35rem;">Delete Feedback?</h2>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0; line-height: 1.5;">Are you sure you want to permanently delete this customer feedback message?</p>
+        </div>
+
+        <div style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.25); border-radius: 12px; padding: 0.9rem 1.1rem; margin-bottom: 1.75rem; text-align: center;">
+            <div id="deleteFeedbackSubject" style="font-weight: 700; color: #fff; font-size: 0.95rem;"></div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem;">
+            <a id="deleteFeedbackConfirmBtn" href="#" class="btn btn-danger" style="flex: 1; padding: 0.75rem; justify-content: center; font-weight: 700; background: #ef4444; border-color: #ef4444; border-radius: 10px;">
+                <i class="bi bi-trash-fill"></i> Delete Permanently
+            </a>
+            <button type="button" class="btn btn-secondary" onclick="closeDeleteFeedbackModal()" style="padding: 0.75rem 1.25rem; border-radius: 10px;">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function openDeleteFeedbackModal(feedbackId, subject) {
+    const modal = document.getElementById('deleteFeedbackModal');
+    const subjectEl = document.getElementById('deleteFeedbackSubject');
+    const confirmBtn = document.getElementById('deleteFeedbackConfirmBtn');
+
+    subjectEl.textContent = '“' + subject + '”';
+    const url = "{% url 'admin_panel:delete_feedback' 999999 %}".replace('999999', feedbackId);
+    confirmBtn.href = url;
+
+    modal.classList.add('active');
+}
+
+function closeDeleteFeedbackModal() {
+    document.getElementById('deleteFeedbackModal').classList.remove('active');
+}
+
+window.addEventListener('click', function(e) {
+    const modal = document.getElementById('deleteFeedbackModal');
+    if (e.target === modal) closeDeleteFeedbackModal();
+});
+
+window.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeDeleteFeedbackModal();
+    }
+});
+</script>
 {% endblock %}

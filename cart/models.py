@@ -25,7 +25,7 @@ class Cart(models.Model):
 
     @property
     def tax(self):
-        return round(self.subtotal * Decimal('0.08'), 2)
+        return round(self.subtotal * Decimal('0.03'), 2)
 
     @property
     def shipping(self):

@@ -17,44 +17,53 @@
 
     {% include 'admin_panel/subnav.html' %}
 
-    <div class="glass-panel" style="padding: 1.5rem;">
+    <div class="glass-panel" style="padding: 1.5rem; border-radius: 16px;">
         {% if orders %}
-            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
-                <thead>
-                    <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); text-transform: uppercase;">
-                        <th style="padding: 0.75rem 0;">Order #</th>
-                        <th style="padding: 0.75rem 0;">Customer Name</th>
-                        <th style="padding: 0.75rem 0;">Date</th>
-                        <th style="padding: 0.75rem 0;">Total</th>
-                        <th style="padding: 0.75rem 0;">Payment</th>
-                        <th style="padding: 0.75rem 0;">Fulfillment Status</th>
-                        <th style="padding: 0.75rem 0;">Fulfillment Managed By</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for order in orders %}
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 0.9rem 0; font-weight: 700; color: var(--primary-cyan);">#{{ order.order_number }}</td>
-                            <td style="color: #fff;">{{ order.full_name }}<br><span style="font-size: 0.8rem; color: var(--text-muted);">{{ order.email }}</span></td>
-                            <td style="color: var(--text-muted);">{{ order.created_at|date:"M d, Y" }}</td>
-                            <td style="font-weight: 800; color: #fff;">₹{{ order.total_amount }}</td>
-                            <td><span style="color: var(--success-green); font-weight: 700;">{{ order.payment_status }}</span></td>
-                            <td>
-                                <span style="padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; background: rgba(0, 240, 255, 0.12); color: var(--primary-cyan); border: 1px solid rgba(0, 240, 255, 0.3);">
-                                    {{ order.status }}
-                                </span>
-                            </td>
-                            <td>
-                                <span style="font-size: 0.8rem; color: var(--star-gold); font-weight: 600;">
-                                    <i class="bi bi-shop"></i> Brand Seller
-                                </span>
-                            </td>
+            <div style="overflow-x: auto; width: 100%;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th style="min-width: 140px;">Order #</th>
+                            <th style="min-width: 190px;">Customer Name</th>
+                            <th style="min-width: 130px;">Date</th>
+                            <th style="min-width: 110px;">Total</th>
+                            <th style="min-width: 110px;">Payment</th>
+                            <th style="min-width: 140px;">Fulfillment Status</th>
+                            <th style="min-width: 160px;">Fulfillment Managed By</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                            <tr>
+                                <td style="font-weight: 700; color: var(--primary-cyan); font-family: monospace;">#{{ order.order_number }}</td>
+                                <td>
+                                    <div style="font-weight: 700; color: #fff; font-size: 0.92rem;">{{ order.full_name }}</div>
+                                    <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem;">{{ order.email }}</div>
+                                </td>
+                                <td style="color: var(--text-muted); font-size: 0.84rem; white-space: nowrap;">{{ order.created_at|date:"M d, Y" }}</td>
+                                <td style="font-weight: 800; color: #fff; font-size: 0.95rem;">₹{{ order.total_amount }}</td>
+                                <td>
+                                    <span class="admin-badge admin-badge-approved">
+                                        <i class="bi bi-check-circle-fill"></i> {{ order.payment_status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="admin-badge admin-badge-admin">
+                                        {{ order.status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="admin-badge admin-badge-seller">
+                                        <i class="bi bi-shop"></i> Brand Seller
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
-            <p style="color: var(--text-muted);">No orders found.</p>
+            <p style="color: var(--text-muted); text-align: center; padding: 2rem 0;">No orders found.</p>
         {% endif %}
     </div>
 </div>

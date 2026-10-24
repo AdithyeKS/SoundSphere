@@ -1,112 +1,567 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Order Details #{{ order.order_number }} | SoundSphere{% endblock %}
+{% block title %}Order #{{ order.order_number }} Tracking & Details | SoundSphere{% endblock %}
 
 {% block content %}
-<div class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
+<div class="container" style="padding-top: 2.5rem; padding-bottom: 5rem; max-width: 1240px;">
+    
+    <!-- Top Bar Navigation & Actions -->
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
         <div>
-            <h1 style="font-size: 2rem;">Order Details <span class="gradient-text">#{{ order.order_number }}</span></h1>
-            <p style="color: var(--text-muted); font-size: 0.95rem;">Placed on {{ order.created_at|date:"F d, Y at h:i A" }}</p>
-        </div>
-        <div style="display: flex; gap: 0.5rem; align-items: center;">
-            <a href="{% url 'orders:invoice' order.order_number %}" target="_blank" class="btn btn-secondary btn-sm">
-                <i class="bi bi-file-earmark-pdf-fill"></i> Download Invoice
+            <a href="{% url 'orders:my_orders' %}" style="display: inline-flex; align-items: center; gap: 0.4rem; color: var(--primary-cyan); text-decoration: none; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">
+                <i class="bi bi-arrow-left"></i> Back to Order History
             </a>
-            {% if order.status == 'Pending' or order.status == 'Confirmed' or order.status == 'Packed' %}
-                <a href="{% url 'orders:cancel' order.order_number %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this order?')">
+            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                <h1 style="font-size: 2.2rem; margin: 0; line-height: 1.2;">
+                    Order <span class="gradient-text">#{{ order.order_number }}</span>
+                </h1>
+                <span class="status-badge {% if order.status == 'Delivered' %}status-badge-delivered{% elif order.status == 'Cancelled' %}status-badge-cancelled{% elif order.status == 'Shipped' %}status-badge-shipped{% else %}status-badge-processing{% endif %}">
+                    {{ order.status }}
+                </span>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.45rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <span><i class="bi bi-calendar3"></i> Placed on {{ order.created_at|date:"F d, Y \a\t h:i A" }}</span>
+                <span style="opacity: 0.4;">•</span>
+                <span>Payment: <strong style="color: {% if order.payment_status == 'Paid' %}var(--success-green){% elif order.payment_status == 'Refund Initiated' or order.payment_status == 'Refunded' %}var(--star-gold){% else %}var(--text-muted){% endif %};">{{ order.payment_status }}</strong></span>
+            </p>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <a href="{% url 'orders:invoice' order.order_number %}" target="_blank" class="btn btn-secondary btn-sm" style="display: inline-flex; align-items: center; gap: 0.4rem;">
+                <i class="bi bi-file-earmark-pdf-fill" style="color: var(--primary-cyan);"></i> Download Invoice
+            </a>
+
+            {% if order.is_cancellable %}
+                <button type="button" class="btn btn-danger btn-sm" onclick="openCancelModal()" style="display: inline-flex; align-items: center; gap: 0.4rem;">
                     <i class="bi bi-x-circle-fill"></i> Cancel Order
-                </a>
+                </button>
+            {% elif order.status == 'Delivered' %}
+                <span class="status-badge status-badge-delivered">
+                    <i class="bi bi-check-circle-fill"></i> Delivered
+                </span>
+            {% elif order.status == 'Cancelled' %}
+                <span class="status-badge status-badge-cancelled">
+                    <i class="bi bi-x-octagon-fill"></i> Cancelled
+                </span>
             {% endif %}
-            <a href="{% url 'orders:my_orders' %}" class="btn btn-secondary btn-sm">
-                <i class="bi bi-arrow-left"></i> Back to Orders
-            </a>
         </div>
     </div>
 
-    <!-- Status Timeline Card -->
-    <div class="glass-panel" style="padding: 2rem; margin-bottom: 2rem;">
-        <h3 style="font-size: 1.1rem; margin-bottom: 1.5rem; color: #fff;">Order Tracking Status</h3>
-        <div style="display: flex; align-items: center; justify-content: space-around; position: relative;">
-            <div style="text-align: center;">
-                <div style="width: 40px; height: 40px; border-radius: var(--radius-full); background: var(--success-green); color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800; margin: 0 auto 0.5rem auto;">
-                    <i class="bi bi-check-lg"></i>
+    <!-- Cancellation Notice Banner (Shown if Cancelled) -->
+    {% if order.status == 'Cancelled' %}
+        {% if order.is_paid_online %}
+            <div class="glass-panel" style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.35); padding: 1.5rem; margin-bottom: 2rem; border-radius: 16px; display: flex; align-items: flex-start; gap: 1rem;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(245, 158, 11, 0.15); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--star-gold); flex-shrink: 0;">
+                    <i class="bi bi-clock-history"></i>
                 </div>
-                <div style="font-size: 0.9rem; font-weight: 700; color: #fff;">Order Placed</div>
+                <div>
+                    <h4 style="color: var(--star-gold); margin: 0 0 0.35rem 0; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        Order Cancelled & Refund Initiated
+                    </h4>
+                    <p style="color: var(--text-main); margin: 0; font-size: 0.95rem; line-height: 1.5;">
+                        Your refund of <strong style="color: #fff;">₹{{ order.total_amount }}</strong> has been registered with the payment gateway.
+                        Credits typically reflect back in your source account / card / UPI within <strong style="color: var(--star-gold);">24 hours</strong>. Reference ID: <code style="color: var(--primary-cyan);">{{ order.payment.transaction_id|default:order.order_number }}</code>.
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <div class="glass-panel" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); padding: 1.25rem 1.5rem; margin-bottom: 2rem; border-radius: 16px; display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(239, 68, 68, 0.15); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--danger-red); flex-shrink: 0;">
+                    <i class="bi bi-x-octagon-fill"></i>
+                </div>
+                <div>
+                    <h4 style="color: #fff; margin: 0 0 0.25rem 0; font-size: 1.05rem;">
+                        Order Cancelled Successfully
+                    </h4>
+                    <p style="color: var(--text-muted); margin: 0; font-size: 0.9rem;">
+                        Your order has been cancelled and returned to inventory. Since this was placed as Cash on Delivery (COD), no payment was deducted.
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <!-- Live Order Tracking & Stepper Card -->
+    <div class="glass-panel" style="padding: 2rem; margin-bottom: 2rem; border-radius: 16px; position: relative;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h3 style="font-size: 1.25rem; margin: 0; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="bi bi-geo-alt-fill" style="color: var(--primary-cyan);"></i> Live Order Tracking
+                </h3>
+                <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0.25rem 0 0 0;">
+                    Real-time fulfillment stages powered by SoundSphere Express Logistics
+                </p>
             </div>
 
-            <div style="text-align: center;">
-                <div style="width: 40px; height: 40px; border-radius: var(--radius-full); background: {% if order.status == 'Processing' or order.status == 'Shipped' or order.status == 'Delivered' %}var(--success-green){% else %}rgba(255,255,255,0.1){% endif %}; color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800; margin: 0 auto 0.5rem auto;">
-                    <i class="bi bi-gear-fill"></i>
+            <!-- Estimated Delivery Box -->
+            {% if order.status != 'Cancelled' and order.status != 'Returned' %}
+                <div style="background: rgba(0, 240, 255, 0.08); border: 1px solid rgba(0, 240, 255, 0.25); border-radius: 12px; padding: 0.6rem 1.2rem; text-align: right;">
+                    <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--primary-cyan); font-weight: 700; letter-spacing: 0.5px;">
+                        {% if order.status == 'Delivered' %}Delivered On{% else %}Estimated Delivery{% endif %}
+                    </div>
+                    <div style="font-size: 1rem; font-weight: 800; color: #fff; margin-top: 0.15rem;">
+                        <i class="bi bi-truck" style="margin-right: 0.3rem; color: var(--primary-cyan);"></i>
+                        {{ order.estimated_delivery_date|date:"l, M d, Y" }}
+                    </div>
                 </div>
-                <div style="font-size: 0.9rem; font-weight: 700; color: #fff;">Processing</div>
-            </div>
+            {% endif %}
+        </div>
 
-            <div style="text-align: center;">
-                <div style="width: 40px; height: 40px; border-radius: var(--radius-full); background: {% if order.status == 'Shipped' or order.status == 'Delivered' %}var(--success-green){% else %}rgba(255,255,255,0.1){% endif %}; color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800; margin: 0 auto 0.5rem auto;">
-                    <i class="bi bi-truck"></i>
-                </div>
-                <div style="font-size: 0.9rem; font-weight: 700; color: #fff;">Shipped</div>
-            </div>
+        {% if order.status == 'Cancelled' %}
+            {% if order.is_paid_online %}
+                <!-- Online Paid Cancelled Stepper: 4 Steps including Refund -->
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; position: relative; margin-top: 1.5rem;">
+                    <div style="text-align: center;">
+                        <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--success-green); color: #000; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin: 0 auto 0.75rem auto; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+                        <div style="font-weight: 700; color: #fff; font-size: 0.95rem;">Order Placed</div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;">{{ order.created_at|date:"M d, h:i A" }}</div>
+                    </div>
 
-            <div style="text-align: center;">
-                <div style="width: 40px; height: 40px; border-radius: var(--radius-full); background: {% if order.status == 'Delivered' %}var(--success-green){% else %}rgba(255,255,255,0.1){% endif %}; color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800; margin: 0 auto 0.5rem auto;">
-                    <i class="bi bi-box-seam"></i>
+                    <div style="text-align: center;">
+                        <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--danger-red); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin: 0 auto 0.75rem auto; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);">
+                            <i class="bi bi-x-lg"></i>
+                        </div>
+                        <div style="font-weight: 700; color: var(--danger-red); font-size: 0.95rem;">Order Cancelled</div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;">{{ order.updated_at|date:"M d, h:i A" }}</div>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--star-gold); color: #000; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin: 0 auto 0.75rem auto; box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);">
+                            <i class="bi bi-arrow-repeat"></i>
+                        </div>
+                        <div style="font-weight: 700; color: var(--star-gold); font-size: 0.95rem;">Refund Initiated</div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;">Processed via Gateway</div>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 2px dashed rgba(255,255,255,0.25); color: var(--text-dim); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin: 0 auto 0.75rem auto;">
+                            <i class="bi bi-bank"></i>
+                        </div>
+                        <div style="font-weight: 700; color: var(--text-muted); font-size: 0.95rem;">Bank Credit</div>
+                        <div style="font-size: 0.78rem; color: var(--star-gold); margin-top: 0.2rem;">Within 24 Hours</div>
+                    </div>
                 </div>
-                <div style="font-size: 0.9rem; font-weight: 700; color: #fff;">Delivered</div>
+            {% else %}
+                <!-- COD Cancelled Stepper: Clean 3 Steps (NO refund/bank crediting) -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; position: relative; margin-top: 1.5rem; max-width: 750px; margin-left: auto; margin-right: auto;">
+                    <div style="text-align: center;">
+                        <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--success-green); color: #000; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin: 0 auto 0.75rem auto; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+                        <div style="font-weight: 700; color: #fff; font-size: 0.95rem;">Order Placed</div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;">{{ order.created_at|date:"M d, h:i A" }}</div>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--danger-red); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin: 0 auto 0.75rem auto; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);">
+                            <i class="bi bi-x-lg"></i>
+                        </div>
+                        <div style="font-weight: 700; color: var(--danger-red); font-size: 0.95rem;">Order Cancelled</div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;">{{ order.updated_at|date:"M d, h:i A" }}</div>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.2); color: var(--text-muted); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin: 0 auto 0.75rem auto;">
+                            <i class="bi bi-check2-all"></i>
+                        </div>
+                        <div style="font-weight: 700; color: #fff; font-size: 0.95rem;">Order Closed</div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;">No Payment Deducted</div>
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+            <!-- Standard Active Order Progress Stepper -->
+            {% with s=order.status %}
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; position: relative; margin-top: 1.5rem;">
+                
+                <!-- Step 1: Placed -->
+                <div style="text-align: center;">
+                    <div style="width: 46px; height: 46px; border-radius: 50%; background: var(--success-green); color: #000; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 800; margin: 0 auto 0.6rem auto; box-shadow: 0 0 12px rgba(16, 185, 129, 0.35);">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+                    <div style="font-weight: 700; color: #fff; font-size: 0.88rem;">Order Placed</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem;">{{ order.created_at|date:"M d, h:i A" }}</div>
+                </div>
+
+                <!-- Step 2: Processing & Packed -->
+                <div style="text-align: center;">
+                    <div style="width: 46px; height: 46px; border-radius: 50%; 
+                        {% if s == 'Processing' or s == 'Confirmed' or s == 'Packed' or s == 'Shipped' or s == 'Out for Delivery' or s == 'Delivered' %}
+                            background: var(--success-green); color: #000; box-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
+                        {% else %}
+                            background: rgba(255, 255, 255, 0.08); color: var(--text-muted);
+                        {% endif %}
+                        display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 800; margin: 0 auto 0.6rem auto;">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+                    <div style="font-weight: 700; color: {% if s == 'Processing' or s == 'Confirmed' or s == 'Packed' or s == 'Shipped' or s == 'Out for Delivery' or s == 'Delivered' %}#fff{% else %}var(--text-muted){% endif %}; font-size: 0.88rem;">
+                        Processing
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem;">Warehouse Verified</div>
+                </div>
+
+                <!-- Step 3: Shipped -->
+                <div style="text-align: center;">
+                    <div style="width: 46px; height: 46px; border-radius: 50%; 
+                        {% if s == 'Shipped' or s == 'Out for Delivery' or s == 'Delivered' %}
+                            background: var(--success-green); color: #000; box-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
+                        {% else %}
+                            background: rgba(255, 255, 255, 0.08); color: var(--text-muted);
+                        {% endif %}
+                        display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 800; margin: 0 auto 0.6rem auto;">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <div style="font-weight: 700; color: {% if s == 'Shipped' or s == 'Out for Delivery' or s == 'Delivered' %}#fff{% else %}var(--text-muted){% endif %}; font-size: 0.88rem;">
+                        Shipped
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem;">
+                        {% if s == 'Shipped' or s == 'Out for Delivery' or s == 'Delivered' %}In Transit{% else %}Awaiting Dispatch{% endif %}
+                    </div>
+                </div>
+
+                <!-- Step 4: Out for Delivery -->
+                <div style="text-align: center;">
+                    <div style="width: 46px; height: 46px; border-radius: 50%; 
+                        {% if s == 'Out for Delivery' or s == 'Delivered' %}
+                            background: var(--success-green); color: #000; box-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
+                        {% else %}
+                            background: rgba(255, 255, 255, 0.08); color: var(--text-muted);
+                        {% endif %}
+                        display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 800; margin: 0 auto 0.6rem auto;">
+                        <i class="bi bi-bicycle"></i>
+                    </div>
+                    <div style="font-weight: 700; color: {% if s == 'Out for Delivery' or s == 'Delivered' %}#fff{% else %}var(--text-muted){% endif %}; font-size: 0.88rem;">
+                        Out for Delivery
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem;">Courier Assigned</div>
+                </div>
+
+                <!-- Step 5: Delivered -->
+                <div style="text-align: center;">
+                    <div style="width: 46px; height: 46px; border-radius: 50%; 
+                        {% if s == 'Delivered' %}
+                            background: var(--success-green); color: #000; box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+                        {% else %}
+                            background: rgba(255, 255, 255, 0.08); color: var(--text-muted);
+                        {% endif %}
+                        display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 800; margin: 0 auto 0.6rem auto;">
+                        <i class="bi bi-house-door-fill"></i>
+                    </div>
+                    <div style="font-weight: 700; color: {% if s == 'Delivered' %}var(--success-green){% else %}var(--text-muted){% endif %}; font-size: 0.88rem;">
+                        Delivered
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem;">
+                        {% if s == 'Delivered' %}Completed{% else %}Est. {{ order.estimated_delivery_date|date:"M d" }}{% endif %}
+                    </div>
+                </div>
+
+            </div>
+            {% endwith %}
+        {% endif %}
+
+        <!-- Courier & Tracking Number Bar -->
+        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.88rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span style="color: var(--text-muted);">Carrier Partner:</span>
+                <span style="font-weight: 700; color: #fff;"><i class="bi bi-airplane-engines" style="color: var(--primary-cyan);"></i> SoundSphere Express Logistics</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span style="color: var(--text-muted);">Tracking Number:</span>
+                <span style="font-family: monospace; font-weight: 700; color: var(--primary-cyan); background: rgba(0, 240, 255, 0.1); padding: 0.2rem 0.6rem; border-radius: 6px;">
+                    SS-EXP-{{ order.order_number }}
+                </span>
             </div>
         </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 340px; gap: 2rem;">
-        <div class="glass-panel" style="padding: 1.5rem;">
-            <h3 style="font-size: 1.2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Items</h3>
-            <div style="display: flex; flex-direction: column; gap: 1rem;">
+    <!-- 3-Column Balanced Information Cards Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.75rem; align-items: stretch;">
+        
+        <!-- Card 1: Ordered Items -->
+        <div class="glass-panel" style="padding: 1.75rem; border-radius: 16px; display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1.25rem;">
+                <h3 style="font-size: 1.15rem; margin: 0; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="bi bi-box-seam" style="color: var(--primary-cyan);"></i> Package Items
+                </h3>
+                <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">
+                    {{ order.items.count }} item{{ order.items.count|pluralize }}
+                </span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 1.25rem; flex-grow: 1;">
                 {% for item in order.items.all %}
-                    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;">
-                        <div>
-                            <div style="font-weight: 700; color: #fff;">{{ item.product_name }}</div>
-                            <div style="font-size: 0.85rem; color: var(--text-muted);">Quantity: {{ item.quantity }} × ₹{{ item.price }}</div>
-                            {% if order.status != 'Delivered' and order.status != 'Cancelled' and order.status != 'Returned' %}
-                                <div style="font-size: 0.8rem; color: var(--success-green); margin-top: 0.3rem;">
-                                    <i class="bi bi-clock-history"></i> Est. Delivery: {{ item.estimated_delivery_days }} Day{{ item.estimated_delivery_days|pluralize }}
-                                </div>
+                    <div style="display: flex; gap: 1rem; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 1.25rem;">
+                        
+                        <!-- Product Thumbnail -->
+                        <div style="width: 72px; height: 72px; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                            {% if item.product and item.product.image %}
+                                <img src="{{ item.product.image.url }}" alt="{{ item.product_name }}" style="width: 100%; height: 100%; object-fit: contain; padding: 4px;">
+                            {% else %}
+                                <i class="bi bi-headphones" style="font-size: 2rem; color: var(--primary-cyan);"></i>
                             {% endif %}
                         </div>
-                        <div style="font-weight: 800; color: var(--primary-cyan);">₹{{ item.total_price }}</div>
+
+                        <!-- Details -->
+                        <div style="flex-grow: 1;">
+                            <h4 style="font-size: 1rem; margin: 0 0 0.25rem 0; color: #fff; line-height: 1.4;">
+                                {% if item.product %}
+                                    <a href="{% url 'products:detail' item.product.slug %}" style="color: #fff; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-cyan)'" onmouseout="this.style.color='#fff'">
+                                        {{ item.product_name }}
+                                    </a>
+                                {% else %}
+                                    {{ item.product_name }}
+                                {% endif %}
+                            </h4>
+
+                            <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; color: var(--text-muted); flex-wrap: wrap;">
+                                <span>Qty: <strong style="color: #fff;">{{ item.quantity }}</strong></span>
+                                <span>•</span>
+                                <span>Price: <strong style="color: #fff;">₹{{ item.price }}</strong></span>
+                                {% if item.product and item.product.seller %}
+                                    <span>•</span>
+                                    <span>Brand: <strong style="color: var(--star-gold);">{{ item.product.seller.store_name }}</strong></span>
+                                {% endif %}
+                            </div>
+
+                            <div style="font-weight: 800; font-size: 1.05rem; color: var(--primary-cyan); margin-top: 0.35rem;">
+                                ₹{{ item.total_price }}
+                            </div>
+                        </div>
                     </div>
                 {% endfor %}
             </div>
+
+            <!-- 1-Year Warranty Note -->
+            <div style="margin-top: 1.25rem; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 10px; padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; color: var(--text-muted);">
+                <i class="bi bi-shield-check" style="color: var(--primary-cyan); font-size: 1.1rem;"></i>
+                <span>SoundSphere 1-Year Official Manufacturer Warranty included.</span>
+            </div>
         </div>
 
-        <div class="glass-panel" style="padding: 1.5rem;">
-            <h3 style="font-size: 1.2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Summary</h3>
-            <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.95rem;">
-                <div style="display: flex; justify-content: space-between; color: var(--text-muted);">
-                    <span>Subtotal</span>
-                    <span>₹{{ order.subtotal }}</span>
+        <!-- Card 2: Delivery & Destination -->
+        <div class="glass-panel" style="padding: 1.75rem; border-radius: 16px; display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1.25rem;">
+                <h3 style="font-size: 1.15rem; margin: 0; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="bi bi-geo-alt" style="color: var(--primary-cyan);"></i> Delivery Address
+                </h3>
+                <span style="font-size: 0.8rem; color: var(--success-green); font-weight: 600;">
+                    <i class="bi bi-check2-circle"></i> Verified
+                </span>
+            </div>
+
+            <div style="flex-grow: 1; font-size: 0.92rem; line-height: 1.6; color: var(--text-main);">
+                <div style="font-weight: 700; color: #fff; font-size: 1.05rem; margin-bottom: 0.35rem;">
+                    {{ order.full_name }}
                 </div>
-                <div style="display: flex; justify-content: space-between; color: var(--text-muted);">
-                    <span>Tax</span>
-                    <span>₹{{ order.tax }}</span>
+                <div style="color: var(--text-muted);">
+                    {{ order.street_address }}<br>
+                    {% if order.apartment_address %}{{ order.apartment_address }}<br>{% endif %}
+                    {{ order.city }}, {{ order.state }} - {{ order.postal_code }}<br>
+                    {{ order.country }}
                 </div>
-                <div style="display: flex; justify-content: space-between; color: var(--text-muted);">
-                    <span>Shipping</span>
-                    <span>₹{{ order.shipping }}</span>
+
+                <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="bi bi-telephone" style="color: var(--primary-cyan);"></i>
+                        <span style="color: #fff;">{{ order.phone }}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="bi bi-envelope" style="color: var(--primary-cyan);"></i>
+                        <span style="color: #fff;">{{ order.email }}</span>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Shipping Method Info -->
+            <div style="margin-top: 1.25rem; background: rgba(0, 240, 255, 0.05); border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.82rem; color: var(--text-main);">
+                <div style="font-weight: 700; color: var(--primary-cyan); margin-bottom: 0.15rem;">
+                    <i class="bi bi-lightning-charge-fill"></i> SoundSphere Air Express
+                </div>
+                <div style="color: var(--text-muted);">Intra-state next-day / Pan-India 3-day delivery guarantee</div>
+            </div>
+        </div>
+
+        <!-- Card 3: Payment & Cost Summary -->
+        <div class="glass-panel" style="padding: 1.75rem; border-radius: 16px; display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1.25rem;">
+                <h3 style="font-size: 1.15rem; margin: 0; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="bi bi-receipt" style="color: var(--star-gold);"></i> Payment Summary
+                </h3>
+                <span style="font-size: 0.8rem; padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 700;
+                    {% if order.payment_status == 'Paid' %}background: rgba(16, 185, 129, 0.15); color: var(--success-green);
+                    {% elif order.payment_status == 'Refund Initiated' or order.payment_status == 'Refunded' %}background: rgba(245, 158, 11, 0.15); color: var(--star-gold);
+                    {% else %}background: rgba(255,255,255,0.08); color: var(--text-muted);{% endif %}">
+                    {{ order.payment_status }}
+                </span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.92rem; flex-grow: 1;">
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; color: var(--text-muted);">
+                    <span>Payment Mode</span>
+                    <span style="font-weight: 700; color: #fff; text-transform: uppercase; font-size: 0.85rem; background: rgba(255,255,255,0.06); padding: 0.2rem 0.6rem; border-radius: 6px;">
+                        <i class="bi bi-credit-card-2-front" style="margin-right: 0.25rem; color: var(--primary-cyan);"></i>
+                        {{ order.payment.get_payment_method_display|default:order.payment.payment_method|default:"Online Payment" }}
+                    </span>
+                </div>
+
+                {% if order.payment.transaction_id %}
+                    <div style="display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); font-size: 0.82rem;">
+                        <span>Txn ID</span>
+                        <span style="font-family: monospace; color: var(--primary-cyan);">{{ order.payment.transaction_id }}</span>
+                    </div>
+                {% endif %}
+
+                <div style="border-top: 1px solid rgba(255,255,255,0.05); margin: 0.25rem 0;"></div>
+
+                <div style="display: flex; justify-content: space-between; color: var(--text-muted);">
+                    <span>Items Subtotal</span>
+                    <span style="color: #fff; font-weight: 600;">₹{{ order.subtotal }}</span>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; color: var(--text-muted);">
+                    <span>GST (Estimated Tax)</span>
+                    <span style="color: #fff; font-weight: 600;">₹{{ order.tax }}</span>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; color: var(--text-muted);">
+                    <span>Shipping Charges</span>
+                    <span style="color: {% if order.shipping == 0 %}var(--success-green){% else %}#fff{% endif %}; font-weight: 600;">
+                        {% if order.shipping == 0 %}FREE{% else %}₹{{ order.shipping }}{% endif %}
+                    </span>
+                </div>
+
                 {% if order.discount > 0 %}
-                    <div style="display: flex; justify-content: space-between; color: var(--success-green);">
-                        <span>Discount</span>
+                    <div style="display: flex; justify-content: space-between; color: var(--success-green); font-weight: 600;">
+                        <span>Coupon Discount</span>
                         <span>-₹{{ order.discount }}</span>
                     </div>
                 {% endif %}
-                <div style="border-top: 1px solid var(--border-color); padding-top: 0.75rem; display: flex; justify-content: space-between; font-weight: 800; font-size: 1.2rem; color: #fff;">
-                    <span>Total Amount</span>
-                    <span class="gradient-text">₹{{ order.total_amount }}</span>
+
+                <div style="border-top: 1px solid var(--border-color); padding-top: 0.85rem; margin-top: auto; display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 1.25rem;">
+                    <span style="color: #fff;">Total Paid</span>
+                    <span class="gradient-text" style="font-size: 1.35rem;">₹{{ order.total_amount }}</span>
                 </div>
             </div>
+
+            <!-- Invoice Link -->
+            <div style="margin-top: 1.25rem; text-align: center;">
+                <a href="{% url 'orders:invoice' order.order_number %}" target="_blank" style="color: var(--primary-cyan); font-size: 0.85rem; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.35rem;">
+                    <i class="bi bi-file-earmark-text"></i> View Official Tax Invoice (PDF)
+                </a>
+            </div>
         </div>
+
+    </div>
+
+</div>
+
+<!-- Cancellation Modal with 24-Hour Refund Notice -->
+<div id="cancelOrderModal" style="display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 1.5rem;">
+    <div class="glass-panel" style="background: rgba(18, 20, 29, 0.95); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; max-width: 520px; width: 100%; padding: 2.2rem; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7); animation: modalFadeIn 0.25s ease-out;">
+        
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(239, 68, 68, 0.15); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--danger-red);">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+                <div>
+                    <h3 style="font-size: 1.3rem; margin: 0; color: #fff;">Cancel Order?</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0.15rem 0 0 0;">Order #{{ order.order_number }}</p>
+                </div>
+            </div>
+            <button type="button" onclick="closeCancelModal()" style="background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; line-height: 1;">&times;</button>
+        </div>
+
+        <p style="color: var(--text-main); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.25rem;">
+            Are you sure you want to cancel this order? Once cancelled, the items will be returned to store inventory and your shipment will be stopped.
+        </p>
+
+        <!-- Payment/Refund Information Notice based on payment type -->
+        {% if order.is_paid_online %}
+            <div style="background: rgba(0, 240, 255, 0.08); border: 1px solid rgba(0, 240, 255, 0.25); border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: 1.5rem;">
+                <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+                    <i class="bi bi-info-circle-fill" style="color: var(--primary-cyan); font-size: 1.2rem; margin-top: 0.1rem;"></i>
+                    <div style="font-size: 0.88rem; line-height: 1.5;">
+                        <strong style="color: #fff; display: block; margin-bottom: 0.2rem;">24-Hour Refund Guarantee</strong>
+                        Your complete payment of <strong style="color: var(--primary-cyan);">₹{{ order.total_amount }}</strong> will be automatically credited back to your original payment method within <strong style="color: #fff;">24 hours</strong>.
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: 1.5rem;">
+                <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+                    <i class="bi bi-cash-stack" style="color: var(--success-green); font-size: 1.2rem; margin-top: 0.1rem;"></i>
+                    <div style="font-size: 0.88rem; line-height: 1.5;">
+                        <strong style="color: #fff; display: block; margin-bottom: 0.2rem;">Cash on Delivery (COD) Order</strong>
+                        No advance payment was collected. Your order will simply be cancelled and the items returned to store stock.
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Cancellation Form -->
+        <form method="POST" action="{% url 'orders:cancel' order.order_number %}">
+            {% csrf_token %}
+            
+            <div style="margin-bottom: 1.5rem;">
+                <label for="cancellationReason" style="display: block; font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 600;">
+                    Please select a reason for cancellation:
+                </label>
+                <select name="reason" id="cancellationReason" style="width: 100%; background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: #fff; border-radius: 8px; padding: 0.75rem; font-size: 0.92rem; outline: none;">
+                    <option value="Ordered by mistake">Ordered by mistake</option>
+                    <option value="Found a better price elsewhere">Found a better price elsewhere</option>
+                    <option value="Estimated delivery time is too long">Estimated delivery time is too long</option>
+                    <option value="Need to change shipping address or phone">Need to change shipping address or phone</option>
+                    <option value="Decided to purchase a different headset model">Decided to purchase a different headset model</option>
+                    <option value="Other reasons">Other reasons</option>
+                </select>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+                <button type="button" class="btn btn-secondary" onclick="closeCancelModal()">
+                    Keep Order
+                </button>
+                <button type="submit" class="btn btn-danger" style="display: inline-flex; align-items: center; gap: 0.4rem;">
+                    <i class="bi bi-x-circle"></i> Confirm Cancellation
+                </button>
+            </div>
+        </form>
     </div>
 </div>
+
+<script>
+function openCancelModal() {
+    const modal = document.getElementById('cancelOrderModal');
+    modal.style.display = 'flex';
+}
+
+function closeCancelModal() {
+    const modal = document.getElementById('cancelOrderModal');
+    modal.style.display = 'none';
+}
+
+// Close on escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeCancelModal();
+    }
+});
+</script>
+
+<style>
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+</style>
 {% endblock %}

@@ -17,82 +17,87 @@
 
     {% include 'admin_panel/subnav.html' %}
 
-    <div class="glass-panel" style="padding: 1.5rem;">
-        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
-            <thead>
-                <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem;">
-                    <th style="padding: 0.85rem 0.5rem;">Product Name</th>
-                    <th style="padding: 0.85rem 0.5rem;">Seller / Brand</th>
-                    <th style="padding: 0.85rem 0.5rem;">Category</th>
-                    <th style="padding: 0.85rem 0.5rem;">Price</th>
-                    <th style="padding: 0.85rem 0.5rem;">Stock</th>
-                    <th style="padding: 0.85rem 0.5rem;">Status</th>
-                    <th style="padding: 0.85rem 0.5rem; text-align: right;">Admin Controls</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for product in products %}
-                    <tr style="border-bottom: 1px solid var(--border-color);">
-                        <td style="padding: 0.9rem 0.5rem; font-weight: 700; color: #fff;">
-                            <div style="display: flex; align-items: center; gap: 0.75rem;">
-                                {% if product.image %}
-                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 40px; height: 40px; object-fit: contain; border-radius: 8px; background: rgba(255,255,255,0.05); padding: 2px;">
-                                {% else %}
-                                    <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(0, 240, 255, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-cyan);">
-                                        <i class="bi bi-headphones"></i>
-                                    </div>
-                                {% endif %}
-                                <span>{{ product.name }}</span>
-                            </div>
-                        </td>
-                        <td style="padding: 0.9rem 0.5rem;">
-                            {% if product.seller %}
-                                <span style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4); padding: 0.2rem 0.6rem; border-radius: 8px; font-size: 0.78rem; font-weight: 600;">
-                                    <i class="bi bi-shop"></i> {{ product.seller.seller_profile.store_name|default:product.seller.username }}
-                                </span>
-                            {% else %}
-                                <span style="background: rgba(0, 240, 255, 0.1); color: var(--primary-cyan); border: 1px solid rgba(0, 240, 255, 0.3); padding: 0.2rem 0.6rem; border-radius: 8px; font-size: 0.78rem; font-weight: 600;">
-                                    <i class="bi bi-shield-check"></i> SoundSphere Direct
-                                </span>
-                            {% endif %}
-                        </td>
-                        <td style="padding: 0.9rem 0.5rem;"><span style="color: var(--primary-cyan);">{{ product.category.name }}</span></td>
-                        <td style="padding: 0.9rem 0.5rem; font-weight: 700; color: #fff;">₹{{ product.current_price }}</td>
-                        <td style="padding: 0.9rem 0.5rem;">
-                            {% if product.stock <= 5 %}
-                                <span style="color: var(--danger-red); font-weight: 800;">{{ product.stock }} (LOW)</span>
-                            {% else %}
-                                <span style="color: var(--success-green); font-weight: 700;">{{ product.stock }}</span>
-                            {% endif %}
-                        </td>
-                        <td style="padding: 0.9rem 0.5rem;">
-                            {% if product.is_active %}
-                                <span style="padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">
-                                    <i class="bi bi-check-circle-fill"></i> Live
-                                </span>
-                            {% else %}
-                                <span style="padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3);">
-                                    <i class="bi bi-slash-circle-fill"></i> Blocked
-                                </span>
-                            {% endif %}
-                        </td>
-                        <td style="padding: 0.9rem 0.5rem; text-align: right;">
-                            <div style="display: flex; gap: 0.5rem; justify-content: flex-end; align-items: center;">
-                                {% if product.is_active %}
-                                    <a href="{% url 'admin_panel:toggle_product_block' product.id %}" class="btn btn-warning btn-sm" style="padding: 0.3rem 0.7rem; font-size: 0.8rem; background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.5);" onclick="return confirm('Block {{ product.name|escapejs }}? This will hide the product from customers.')">
-                                        <i class="bi bi-slash-circle"></i> Block
-                                    </a>
-                                {% else %}
-                                    <a href="{% url 'admin_panel:toggle_product_block' product.id %}" class="btn btn-success btn-sm" style="padding: 0.3rem 0.7rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.5);" onclick="return confirm('Unblock {{ product.name|escapejs }}? This will restore the product to live status.')">
-                                        <i class="bi bi-check-circle"></i> Unblock
-                                    </a>
-                                {% endif %}
-                                <a href="{% url 'admin_panel:delete_product' product.id %}" class="btn btn-danger btn-sm" style="padding: 0.3rem 0.7rem; font-size: 0.8rem;" onclick="return confirm('Are you sure you want to permanently remove {{ product.name|escapejs }}?')">
-                                    <i class="bi bi-trash"></i> Delete
-                                </a>
-                            </div>
-                        </td>
+    <div class="glass-panel" style="padding: 1.5rem; border-radius: 16px;">
+        <div style="overflow-x: auto; width: 100%;">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th style="min-width: 220px;">Product Name</th>
+                        <th style="min-width: 170px;">Seller / Brand</th>
+                        <th style="min-width: 120px;">Category</th>
+                        <th style="min-width: 100px;">Price</th>
+                        <th style="min-width: 100px;">Stock</th>
+                        <th style="min-width: 120px;">Status</th>
+                        <th style="min-width: 190px; text-align: right;">Admin Controls</th>
                     </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td style="font-weight: 700; color: #fff;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    {% if product.image %}
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 44px; height: 44px; object-fit: contain; border-radius: 8px; background: rgba(255,255,255,0.05); padding: 3px; border: 1px solid rgba(255,255,255,0.1);">
+                                    {% else %}
+                                        <div style="width: 44px; height: 44px; border-radius: 8px; background: rgba(0, 240, 255, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-cyan); border: 1px solid rgba(0, 240, 255, 0.25);">
+                                            <i class="bi bi-headphones" style="font-size: 1.25rem;"></i>
+                                        </div>
+                                    {% endif %}
+                                    <span style="font-size: 0.92rem;">{{ product.name }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                {% if product.seller %}
+                                    <span class="admin-badge admin-badge-seller">
+                                        <i class="bi bi-shop"></i> {{ product.seller.store_name|default:product.seller.user.username }}
+                                    </span>
+                                {% else %}
+                                    <span class="admin-badge admin-badge-admin">
+                                        <i class="bi bi-shield-check"></i> SoundSphere Direct
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td><span style="color: var(--primary-cyan); font-weight: 600; font-size: 0.86rem;">{{ product.category.name }}</span></td>
+                            <td style="font-weight: 800; color: #fff; font-size: 0.95rem;">₹{{ product.current_price }}</td>
+                            <td>
+                                {% if product.stock <= 5 %}
+                                    <span class="admin-badge admin-badge-rejected" style="font-size: 0.75rem;">
+                                        <i class="bi bi-exclamation-triangle-fill"></i> {{ product.stock }} Low
+                                    </span>
+                                {% else %}
+                                    <span class="admin-badge admin-badge-approved" style="font-size: 0.75rem;">
+                                        {{ product.stock }} In Stock
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if product.is_active %}
+                                    <span class="admin-badge admin-badge-active">
+                                        <i class="bi bi-check-circle-fill"></i> Live
+                                    </span>
+                                {% else %}
+                                    <span class="admin-badge admin-badge-inactive">
+                                        <i class="bi bi-slash-circle-fill"></i> Blocked
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td style="text-align: right;">
+                                <div style="display: flex; gap: 0.45rem; justify-content: flex-end; align-items: center;">
+                                    {% if product.is_active %}
+                                        <button type="button" class="admin-btn admin-btn-deactivate" onclick="openToggleProductModal('{{ product.id }}', '{{ product.name|escapejs }}', true)" title="Block product listing">
+                                            <i class="bi bi-slash-circle"></i> Block
+                                        </button>
+                                    {% else %}
+                                        <button type="button" class="admin-btn admin-btn-activate" onclick="openToggleProductModal('{{ product.id }}', '{{ product.name|escapejs }}', false)" title="Unblock product listing">
+                                            <i class="bi bi-check-circle"></i> Unblock
+                                        </button>
+                                    {% endif %}
+                                    <button type="button" class="admin-btn admin-btn-delete" onclick="openDeleteProductModal('{{ product.id }}', '{{ product.name|escapejs }}')" title="Permanently delete product">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
                 {% empty %}
                     <tr>
                         <td colspan="7" style="text-align: center; padding: 3rem; color: var(--text-muted);">
@@ -105,4 +110,136 @@
         </table>
     </div>
 </div>
+
+<!-- ============================================== -->
+<!-- CUSTOM GLASSMORPHISM TOGGLE PRODUCT MODAL      -->
+<!-- ============================================== -->
+<div id="toggleProductModal" class="admin-modal-backdrop">
+    <div class="admin-modal-dialog">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+            <div id="toggleProdIconRing" style="width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; font-size: 2rem;">
+                <i id="toggleProdIcon" class="bi"></i>
+            </div>
+            <h2 id="toggleProdTitle" style="font-size: 1.5rem; color: #fff; margin-bottom: 0.35rem;"></h2>
+            <p id="toggleProdDesc" style="color: var(--text-muted); font-size: 0.88rem; margin: 0; line-height: 1.5;"></p>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--border-color); border-radius: 12px; padding: 0.9rem 1.1rem; margin-bottom: 1.75rem; text-align: center;">
+            <div id="toggleProdName" style="font-weight: 700; color: #fff; font-size: 1rem;"></div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem;">
+            <a id="toggleProdConfirmBtn" href="#" class="btn btn-primary" style="flex: 1; padding: 0.75rem; justify-content: center; font-weight: 700; border-radius: 10px;">
+                Confirm
+            </a>
+            <button type="button" class="btn btn-secondary" onclick="closeToggleProductModal()" style="padding: 0.75rem 1.25rem; border-radius: 10px;">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- CUSTOM GLASSMORPHISM DELETE PRODUCT MODAL      -->
+<!-- ============================================== -->
+<div id="deleteProductModal" class="admin-modal-backdrop">
+    <div class="admin-modal-dialog admin-modal-dialog-danger">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(239, 68, 68, 0.15); border: 2px solid #ef4444; color: #ef4444; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; font-size: 2rem;">
+                <i class="bi bi-trash3-fill"></i>
+            </div>
+            <h2 style="font-size: 1.5rem; color: #fff; margin-bottom: 0.35rem;">Delete Product Listing?</h2>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0; line-height: 1.5;">Are you sure you want to permanently delete this product? All reviews and associations will be removed.</p>
+        </div>
+
+        <div style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.25); border-radius: 12px; padding: 0.9rem 1.1rem; margin-bottom: 1.75rem; text-align: center;">
+            <div id="deleteProdName" style="font-weight: 700; color: #fff; font-size: 1rem;"></div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem;">
+            <a id="deleteProdConfirmBtn" href="#" class="btn btn-danger" style="flex: 1; padding: 0.75rem; justify-content: center; font-weight: 700; background: #ef4444; border-color: #ef4444; border-radius: 10px;">
+                <i class="bi bi-trash-fill"></i> Delete Permanently
+            </a>
+            <button type="button" class="btn btn-secondary" onclick="closeDeleteProductModal()" style="padding: 0.75rem 1.25rem; border-radius: 10px;">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function openToggleProductModal(productId, productName, isCurrentlyActive) {
+    const modal = document.getElementById('toggleProductModal');
+    const title = document.getElementById('toggleProdTitle');
+    const desc = document.getElementById('toggleProdDesc');
+    const iconRing = document.getElementById('toggleProdIconRing');
+    const icon = document.getElementById('toggleProdIcon');
+    const confirmBtn = document.getElementById('toggleProdConfirmBtn');
+    const nameEl = document.getElementById('toggleProdName');
+
+    nameEl.textContent = productName;
+    const url = "{% url 'admin_panel:toggle_product_block' 999999 %}".replace('999999', productId);
+    confirmBtn.href = url;
+
+    if (isCurrentlyActive) {
+        title.textContent = 'Block Product Listing?';
+        desc.textContent = 'This product will be hidden from the store catalog and customers cannot purchase it.';
+        iconRing.style.background = 'rgba(245, 158, 11, 0.15)';
+        iconRing.style.border = '2px solid #f59e0b';
+        iconRing.style.color = '#f59e0b';
+        icon.className = 'bi bi-slash-circle-fill';
+        confirmBtn.style.background = '#f59e0b';
+        confirmBtn.style.borderColor = '#f59e0b';
+        confirmBtn.style.color = '#05080f';
+        confirmBtn.innerHTML = '<i class="bi bi-slash-circle-fill"></i> Confirm Block';
+    } else {
+        title.textContent = 'Unblock Product Listing?';
+        desc.textContent = 'This product will be restored to active status and visible to all shoppers.';
+        iconRing.style.background = 'rgba(16, 185, 129, 0.15)';
+        iconRing.style.border = '2px solid #10b981';
+        iconRing.style.color = '#10b981';
+        icon.className = 'bi bi-check-circle-fill';
+        confirmBtn.style.background = '#10b981';
+        confirmBtn.style.borderColor = '#10b981';
+        confirmBtn.style.color = '#05080f';
+        confirmBtn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Confirm Unblock';
+    }
+
+    modal.classList.add('active');
+}
+
+function closeToggleProductModal() {
+    document.getElementById('toggleProductModal').classList.remove('active');
+}
+
+function openDeleteProductModal(productId, productName) {
+    const modal = document.getElementById('deleteProductModal');
+    const nameEl = document.getElementById('deleteProdName');
+    const confirmBtn = document.getElementById('deleteProdConfirmBtn');
+
+    nameEl.textContent = productName;
+    const url = "{% url 'admin_panel:delete_product' 999999 %}".replace('999999', productId);
+    confirmBtn.href = url;
+
+    modal.classList.add('active');
+}
+
+function closeDeleteProductModal() {
+    document.getElementById('deleteProductModal').classList.remove('active');
+}
+
+window.addEventListener('click', function(e) {
+    const toggleModal = document.getElementById('toggleProductModal');
+    const deleteModal = document.getElementById('deleteProductModal');
+    if (e.target === toggleModal) closeToggleProductModal();
+    if (e.target === deleteModal) closeDeleteProductModal();
+});
+
+window.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeToggleProductModal();
+        closeDeleteProductModal();
+    }
+});
+</script>
 {% endblock %}

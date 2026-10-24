@@ -18,9 +18,23 @@ def get_admin_common_context():
 
 @staff_member_required
 def dashboard_view(request):
+    # Ensure profile role consistency
+    all_users = User.objects.all().select_related('profile', 'seller_profile')
+    for u in all_users:
+        prof, _ = UserProfile.objects.get_or_create(user=u)
+        if (u.is_staff or u.is_superuser) and prof.role != 'admin':
+            prof.role = 'admin'
+            prof.save()
+        elif hasattr(u, 'seller_profile') and prof.role != 'seller':
+            prof.role = 'seller'
+            prof.save()
+
     total_users = User.objects.count()
-    total_customers = UserProfile.objects.filter(role='customer').count()
-    total_sellers = SellerProfile.objects.filter(status='approved').count()
+    total_admins = User.objects.filter(Q(is_staff=True) | Q(is_superuser=True) | Q(profile__role='admin')).distinct().count()
+    total_sellers = User.objects.filter(Q(seller_profile__isnull=False) | Q(profile__role='seller')).exclude(Q(is_staff=True) | Q(is_superuser=True) | Q(profile__role='admin')).distinct().count()
+    total_customers = User.objects.exclude(Q(is_staff=True) | Q(is_superuser=True) | Q(profile__role='admin')).exclude(Q(seller_profile__isnull=False) | Q(profile__role='seller')).distinct().count()
+
+    approved_sellers_count = SellerProfile.objects.filter(status='approved').count()
     total_products = Product.objects.count()
     active_products = Product.objects.filter(is_active=True).count()
     blocked_products = Product.objects.filter(is_active=False).count()
@@ -41,6 +55,8 @@ def dashboard_view(request):
         'total_users': total_users,
         'total_customers': total_customers,
         'total_sellers': total_sellers,
+        'total_admins': total_admins,
+        'approved_sellers_count': approved_sellers_count,
         'total_products': total_products,
         'active_products': active_products,
         'blocked_products': blocked_products,
@@ -58,7 +74,7 @@ def dashboard_view(request):
 
 @staff_member_required
 def manage_products_view(request):
-    products = Product.objects.all().select_related('category', 'seller').order_by('-created_at')
+    products = Product.objects.all().select_related('category', 'seller', 'seller__user').order_by('-created_at')
     ctx = get_admin_common_context()
     ctx['products'] = products
     return render(request, 'admin_panel/products_list.html', ctx)
@@ -71,7 +87,8 @@ def add_product_view(request):
 @staff_member_required
 def edit_product_view(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    if product.seller and product.seller != request.user:
+    seller_user = product.seller.user if (product.seller and hasattr(product.seller, 'user')) else product.seller
+    if seller_user and seller_user != request.user:
         messages.error(request, f"Admin cannot edit seller-listed products ('{product.name}'). You can only remove items from the catalog.")
         return redirect('admin_panel:products')
 
@@ -107,10 +124,11 @@ def delete_product_view(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     name = product.name
     seller = product.seller
+    seller_user = seller.user if (seller and hasattr(seller, 'user')) else seller
 
-    if seller and seller != request.user:
+    if seller_user and seller_user != request.user:
         Notification.objects.create(
-            user=seller,
+            user=seller_user,
             title="Product Listing Removed by Admin",
             message=f"Your product listing '{name}' has been removed from the SoundSphere catalog by Admin.",
             notification_type="product",
@@ -118,8 +136,8 @@ def delete_product_view(request, product_id):
         )
 
     product.delete()
-    if seller and seller != request.user:
-        seller_name = seller.seller_profile.store_name if hasattr(seller, 'seller_profile') else seller.username
+    if seller_user and seller_user != request.user:
+        seller_name = seller.store_name if hasattr(seller, 'store_name') else seller_user.username
         messages.success(request, f"Product '{name}' was removed from the store catalog. Seller '{seller_name}' has been sent a notification.")
     else:
         messages.success(request, f"Product '{name}' deleted from store catalog.")
@@ -186,8 +204,9 @@ def approve_product_view(request, product_id):
     product.save()
 
     if product.seller:
+        seller_user = product.seller.user if hasattr(product.seller, 'user') else product.seller
         Notification.objects.create(
-            user=product.seller,
+            user=seller_user,
             title="Product Listing Approved!",
             message=f"Great news! Your product listing '{product.name}' was approved by Admin and is now live in the store.",
             notification_type="product",
@@ -206,8 +225,9 @@ def reject_product_view(request, product_id):
         product.save()
 
         if product.seller:
+            seller_user = product.seller.user if hasattr(product.seller, 'user') else product.seller
             Notification.objects.create(
-                user=product.seller,
+                user=seller_user,
                 title="Product Listing Update Needed",
                 message=f"Your product listing '{product.name}' was not approved. Reason: {reason}",
                 notification_type="product",
@@ -294,9 +314,9 @@ def manage_users_view(request):
 
     # Base counts for tabs
     total_users_count = User.objects.count()
-    customers_count = UserProfile.objects.filter(role='customer').exclude(user__is_staff=True).exclude(user__is_superuser=True).exclude(user__seller_profile__isnull=False).count()
-    sellers_count = SellerProfile.objects.count()
     admins_count = User.objects.filter(Q(is_staff=True) | Q(is_superuser=True) | Q(profile__role='admin')).distinct().count()
+    sellers_count = User.objects.filter(Q(seller_profile__isnull=False) | Q(profile__role='seller')).exclude(Q(is_staff=True) | Q(is_superuser=True) | Q(profile__role='admin')).distinct().count()
+    customers_count = User.objects.exclude(Q(is_staff=True) | Q(is_superuser=True) | Q(profile__role='admin')).exclude(Q(seller_profile__isnull=False) | Q(profile__role='seller')).distinct().count()
 
     # Seller application status counts
     pending_sellers_count = SellerProfile.objects.filter(status='pending').count()
