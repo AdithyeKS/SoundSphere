@@ -1,0 +1,2467 @@
+[
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$sGXHHvQAVlqdsBYpy2xqYF$mUMb9OLU5Cxj9Uip2x+tQ2n4WuxlvVGUaucTAj50fVI=",
+    "last_login": "2026-10-24T07:20:05.736Z",
+    "is_superuser": true,
+    "username": "Admin",
+    "first_name": "Admin",
+    "last_name": "",
+    "email": "admin@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-08-29T19:50:19.158Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$NUTyb5SjLepZFPst8eDTcg$/0TDGUHahUvxuylkeq3G9M2DLns6WYgR93unTFqFV8E=",
+    "last_login": "2026-10-24T03:18:54.353Z",
+    "is_superuser": false,
+    "username": "ksadithye",
+    "first_name": "Amal",
+    "last_name": "Reji",
+    "email": "ksadithye@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-08-30T18:57:14.608Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$63X3MsRZalluyt9XXOQWD5$T6NXHjlmPPZ/tT78qlHR0pSOkGScGp49hdbSlAB5COI=",
+    "last_login": "2026-10-24T06:16:20.706Z",
+    "is_superuser": false,
+    "username": "adithye_ks",
+    "first_name": "Adithye",
+    "last_name": "K S",
+    "email": "adithyeks3333@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-08-31T04:49:19.887Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$lcDpBhawIQyB41Oxwk9mYo$vmaYpQQvj8LEFbENvBmG55JoDqn/If4lALuccD0T51Y=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "admin@soundsphere.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-09-09T19:34:22.286Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$gsfGI7UmwMeuSvHpfuEuy3$zC9S1/oG1fTXeV3v1IiMOT/KsgaMDV6rStO+cHLUaqg=",
+    "last_login": "2026-10-24T03:19:18.386Z",
+    "is_superuser": false,
+    "username": "sony",
+    "first_name": "Sony",
+    "last_name": "Audio",
+    "email": "sony@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-10-21T18:02:29.152Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$YJv3PQWqEoyVD1P77aKg2D$OwFH7q/MdxNfvXv9RxSW6Yv30iA1XNsl3/n1z30/RrA=",
+    "last_login": "2026-10-21T18:08:50.702Z",
+    "is_superuser": false,
+    "username": "bose",
+    "first_name": "Bose",
+    "last_name": "Audio",
+    "email": "bose@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-10-21T18:08:49.980Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$FSjd9tp0K6pJXVGb1h3WoY$TlCOrrebyS2INf+1o0tSJcN6eniBv+pUvq6xjLTXJ7A=",
+    "last_login": "2026-10-21T18:52:28.759Z",
+    "is_superuser": false,
+    "username": "apple",
+    "first_name": "Apple",
+    "last_name": "Audio",
+    "email": "apple@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-10-21T18:52:28.220Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$1jP5EkA59udejiMJTbGLIH$L7V4Koc12Yu2GcOSlhCPcm6lRfU1A9gnY3CF5kvTcqI=",
+    "last_login": "2026-10-21T19:14:04.433Z",
+    "is_superuser": false,
+    "username": "jbl",
+    "first_name": "Jbl",
+    "last_name": "Audio",
+    "email": "jbl@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-10-21T19:14:03.380Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$hnb4bQ9wfsrd72EdQhXO1S$/fbwWKa4NPVs00F0MFtebMvrNEPyuq2TjZTtwOHIEck=",
+    "last_login": "2026-10-22T04:41:41.970Z",
+    "is_superuser": false,
+    "username": "testbrand",
+    "first_name": "Test",
+    "last_name": "Seller",
+    "email": "testbrand@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-10-22T02:58:42.100Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$gGRooBcAyEfftZjzY19sdN$yB9Sct9MspaaC7diZVaB4dIshkNhBOUKlDERM87myvI=",
+    "last_login": "2026-10-24T01:24:40.847Z",
+    "is_superuser": false,
+    "username": "testuser",
+    "first_name": "Test",
+    "last_name": "User",
+    "email": "testuser@soundsphere.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-10-24T01:24:39.257Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.userprofile",
+  "pk": 6,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "role": "admin",
+    "phone": null,
+    "bio": null,
+    "created_at": "2026-08-29T19:50:20.324Z",
+    "updated_at": "2026-10-24T07:20:05.742Z"
+  }
+},
+{
+  "model": "accounts.userprofile",
+  "pk": 7,
+  "fields": {
+    "user": [
+      "ksadithye"
+    ],
+    "role": "seller",
+    "phone": null,
+    "bio": null,
+    "created_at": "2026-08-30T18:57:15.768Z",
+    "updated_at": "2026-10-24T03:18:54.361Z"
+  }
+},
+{
+  "model": "accounts.userprofile",
+  "pk": 8,
+  "fields": {
+    "user": [
+      "adithye_ks"
+    ],
+    "role": "customer",
+    "phone": "7907009130",
+    "bio": "",
+    "created_at": "2026-08-31T04:49:20.891Z",
+    "updated_at": "2026-10-24T06:16:20.712Z"
+  }
+},
+{
+  "model": "accounts.userprofile",
+  "pk": 9,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "role": "admin",
+    "phone": null,
+    "bio": null,
+    "created_at": "2026-09-09T19:34:22.288Z",
+    "updated_at": "2026-09-09T20:51:12.087Z"
+  }
+},
+{
+  "model": "accounts.userprofile",
+  "pk": 11,
+  "fields": {
+    "user": [
+      "sony"
+    ],
+    "role": "seller",
+    "phone": null,
+    "bio": null,
+    "created_at": "2026-10-21T18:02:29.680Z",
+    "updated_at": "2026-10-24T03:19:18.395Z"
+  }
+},
+{
+  "model": "accounts.userprofile",
+  "pk": 12,
+  "fields": {
+    "user": [
+      "bose"
+    ],
+    "role": "seller",
+    "phone": null,
+    "bio": null,
+    "created_at": "2026-10-21T18:08:50.672Z",
+    "updated_at": "2026-10-22T02:49:11.423Z"
+  }
+},
+{
+  "model": "accounts.userprofile",
+  "pk": 13,
+  "fields": {
+    "user": [
+      "apple"
+    ],
+    "role": "seller",
+    "phone": null,
+    "bio": null,
+    "created_at": "2026-10-21T18:52:28.729Z",
+    "updated_at": "2026-10-22T02:49:11.430Z"
+  }
+},
+{
+  "model": "accounts.userprofile",
+  "pk": 14,
+  "fields": {
+    "user": [
+      "jbl"
+    ],
+    "role": "seller",
+    "phone": null,
+    "bio": null,
+    "created_at": "2026-10-21T19:14:04.397Z",
+    "updated_at": "2026-10-22T02:49:11.438Z"
+  }
+},
+{
+  "model": "accounts.userprofile",
+  "pk": 15,
+  "fields": {
+    "user": [
+      "testbrand"
+    ],
+    "role": "seller",
+    "phone": null,
+    "bio": null,
+    "created_at": "2026-10-22T02:58:42.589Z",
+    "updated_at": "2026-10-22T04:41:41.975Z"
+  }
+},
+{
+  "model": "accounts.userprofile",
+  "pk": 16,
+  "fields": {
+    "user": [
+      "testuser"
+    ],
+    "role": "customer",
+    "phone": null,
+    "bio": null,
+    "created_at": "2026-10-24T01:24:40.812Z",
+    "updated_at": "2026-10-24T01:24:40.854Z"
+  }
+},
+{
+  "model": "accounts.sellerprofile",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "ksadithye"
+    ],
+    "store_name": "boAt",
+    "tagline": "plug into nirvana",
+    "store_description": "boAt is an Indian consumer audio and wearables brand offering products such as wireless earbuds, headphones, earphones, speakers, and other audio accessories. SoundSphere lists the seller as a verified brand application for demonstration purposes.",
+    "phone": "7907009130",
+    "tax_id": "SS-BOAT-DEMO-001",
+    "location": "Kochi,Kerala",
+    "state": "Kerala",
+    "logo": "seller_logos/ChatGPT_Image_Aug_31_2026_12_25_58_AM.png",
+    "status": "approved",
+    "rejection_reason": null,
+    "reapplication_notes": null,
+    "reapplication_count": 0,
+    "reapplied_at": null,
+    "has_reapplied": false,
+    "created_at": "2026-08-30T18:57:15.788Z",
+    "updated_at": "2026-10-22T04:36:30.601Z"
+  }
+},
+{
+  "model": "accounts.sellerprofile",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "sony"
+    ],
+    "store_name": "Sony",
+    "tagline": "Sound That Moves You",
+    "store_description": "Sony is a well-known electronics brand offering headphones and audio products with advanced sound quality, wireless connectivity and noise cancellation.",
+    "phone": "9876543210",
+    "tax_id": "SS-SONY-KL-001",
+    "location": "Kochi",
+    "state": "Kerala",
+    "logo": "seller_logos/Classic_SONY_Wordmark_on_White.png",
+    "status": "approved",
+    "rejection_reason": null,
+    "reapplication_notes": null,
+    "reapplication_count": 0,
+    "reapplied_at": null,
+    "has_reapplied": false,
+    "created_at": "2026-10-21T18:02:29.695Z",
+    "updated_at": "2026-10-22T04:36:30.601Z"
+  }
+},
+{
+  "model": "accounts.sellerprofile",
+  "pk": 3,
+  "fields": {
+    "user": [
+      "bose"
+    ],
+    "store_name": "Bose",
+    "tagline": "Better Sound Through Research",
+    "store_description": "Bose is an audio brand known for premium headphones, immersive sound, wireless audio technology and noise cancellation.",
+    "phone": "9876543211",
+    "tax_id": "SS-BOSE-KL-002",
+    "location": "hiruvananthapuram",
+    "state": "Kerala",
+    "logo": "seller_logos/Bold_BOSE_Wordmark_on_White.png",
+    "status": "approved",
+    "rejection_reason": null,
+    "reapplication_notes": null,
+    "reapplication_count": 0,
+    "reapplied_at": null,
+    "has_reapplied": false,
+    "created_at": "2026-10-21T18:08:50.685Z",
+    "updated_at": "2026-10-22T04:36:30.601Z"
+  }
+},
+{
+  "model": "accounts.sellerprofile",
+  "pk": 4,
+  "fields": {
+    "user": [
+      "apple"
+    ],
+    "store_name": "Apple",
+    "tagline": "Simply Connected.",
+    "store_description": "Apple offers premium personal audio products designed with a focus on wireless connectivity, comfort, sound quality and integration with its ecosystem.",
+    "phone": "9876543212",
+    "tax_id": "SS-APPLE-KA-003",
+    "location": "Bengaluru",
+    "state": "Karnataka",
+    "logo": "seller_logos/Classic_Black_Apple_Logo.png",
+    "status": "approved",
+    "rejection_reason": null,
+    "reapplication_notes": null,
+    "reapplication_count": 0,
+    "reapplied_at": null,
+    "has_reapplied": false,
+    "created_at": "2026-10-21T18:52:28.742Z",
+    "updated_at": "2026-10-22T04:36:30.601Z"
+  }
+},
+{
+  "model": "accounts.sellerprofile",
+  "pk": 5,
+  "fields": {
+    "user": [
+      "jbl"
+    ],
+    "store_name": "JBL",
+    "tagline": "Pure Bass. Powerful Sound.",
+    "store_description": "JBL is an audio brand offering headphones and wireless audio products focused on powerful sound, bass performance, portability and modern design.",
+    "phone": "9876543213",
+    "tax_id": "SS-JBL-MH-004",
+    "location": "Mumbai",
+    "state": "Maharashtra",
+    "logo": "seller_logos/JBL_Logo_on_Bright_Orange.png",
+    "status": "approved",
+    "rejection_reason": null,
+    "reapplication_notes": null,
+    "reapplication_count": 0,
+    "reapplied_at": null,
+    "has_reapplied": false,
+    "created_at": "2026-10-21T19:14:04.413Z",
+    "updated_at": "2026-10-22T04:36:30.601Z"
+  }
+},
+{
+  "model": "accounts.sellerprofile",
+  "pk": 6,
+  "fields": {
+    "user": [
+      "testbrand"
+    ],
+    "store_name": "Test Audio",
+    "tagline": "Premium Sound",
+    "store_description": "This is a test brand registration with invalid business information for admin rejection testing.",
+    "phone": "9876543210",
+    "tax_id": "INVALID-00000",
+    "location": "Unknown City",
+    "state": "Kerala",
+    "logo": "",
+    "status": "rejected",
+    "rejection_reason": "invaild",
+    "reapplication_notes": null,
+    "reapplication_count": 0,
+    "reapplied_at": null,
+    "has_reapplied": false,
+    "created_at": "2026-10-22T02:58:42.600Z",
+    "updated_at": "2026-10-22T04:36:30.601Z"
+  }
+},
+{
+  "model": "accounts.shippingaddress",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "adithye_ks"
+    ],
+    "full_name": "Adithye K S",
+    "phone_number": "7907009130",
+    "street_address": "Saseendhra Bhavan",
+    "apartment_address": null,
+    "city": "Pala",
+    "state": "Kerala",
+    "postal_code": "686575",
+    "country": "United States",
+    "is_default": true,
+    "created_at": "2026-10-24T02:44:42.501Z"
+  }
+},
+{
+  "model": "accounts.customerfeedback",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "adithye_ks"
+    ],
+    "name": "Adithye",
+    "email": "adithyeks3333@gmail.com",
+    "category": "website",
+    "subject": "Clean and User-Friendly Website",
+    "message": "The website has a clean and modern design, and the navigation is simple and easy to understand. The product information is presented clearly, and the overall shopping experience feels smooth. The interface is also visually appealing and responsive. One suggestion would be to add more filtering and comparison options to make it easier to choose between different products. Overall, I had a positive experience using the website.",
+    "rating": 4,
+    "created_at": "2026-10-24T01:52:30.287Z"
+  }
+},
+{
+  "model": "products.category",
+  "pk": 25,
+  "fields": {
+    "name": "Wireless Headphones",
+    "slug": "wireless-headphones",
+    "description": "Over-ear and on-ear wireless Bluetooth headphones",
+    "image": "",
+    "is_accessory": false,
+    "created_at": "2026-09-09T19:38:08.554Z"
+  }
+},
+{
+  "model": "products.category",
+  "pk": 26,
+  "fields": {
+    "name": "Gaming Headphones",
+    "slug": "gaming-headphones",
+    "description": "Headphones optimized for gaming",
+    "image": "",
+    "is_accessory": false,
+    "created_at": "2026-09-09T19:38:08.561Z"
+  }
+},
+{
+  "model": "products.category",
+  "pk": 27,
+  "fields": {
+    "name": "Noise Cancelling Headphones",
+    "slug": "noise-cancelling-headphones",
+    "description": "Headphones with active noise cancellation",
+    "image": "",
+    "is_accessory": false,
+    "created_at": "2026-09-09T19:38:08.567Z"
+  }
+},
+{
+  "model": "products.category",
+  "pk": 28,
+  "fields": {
+    "name": "Headphones",
+    "slug": "headphones",
+    "description": "Standard wired and wireless headphones",
+    "image": "",
+    "is_accessory": false,
+    "created_at": "2026-09-09T19:38:08.573Z"
+  }
+},
+{
+  "model": "products.category",
+  "pk": 29,
+  "fields": {
+    "name": "Headsets",
+    "slug": "headsets",
+    "description": "Headphones with integrated microphones for communication",
+    "image": "",
+    "is_accessory": false,
+    "created_at": "2026-09-09T19:38:08.580Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 1,
+  "fields": {
+    "name": "Sony INZONE H9",
+    "slug": "sony-inzone-h9",
+    "seller": 2,
+    "category": 26,
+    "price": "29990.00",
+    "discount_price": "26990.00",
+    "description": "Premium wireless gaming headset designed for immersive gaming with 360 Spatial Sound for Gaming, active noise cancellation, ambient sound mode, and a boom microphone for team communication. The headset is designed for comfortable long gaming sessions with a soft headband cushion and synthetic leather ear pads.",
+    "stock": 15,
+    "is_featured": false,
+    "is_active": true,
+    "approval_status": "approved",
+    "rejection_reason": null,
+    "image": "products/a86bb019-68ee-4a35-9aa9-081787232aa1.png",
+    "created_at": "2026-10-23T16:13:54.633Z",
+    "updated_at": "2026-10-24T03:20:04.641Z",
+    "driver_size": "40mm Dynamic Driver",
+    "battery_life": "Up to 32 Hours",
+    "connectivity": "2.4GHz Wireless USB Transceiver + Bluetooth",
+    "noise_cancellation": "Active Noise Cancellation (ANC)",
+    "frequency_response": "5 Hz - 20,000 Hz",
+    "impedance": "32 Ohms",
+    "weight": "Approx. 330 g",
+    "warranty": "1 Year Brand Warranty"
+  }
+},
+{
+  "model": "products.review",
+  "pk": 29,
+  "fields": {
+    "product": 1,
+    "user": [
+      "adithye_ks"
+    ],
+    "rating": 4,
+    "headline": "Impressive Spatial Audio & Comfort, Great for Long Gaming Sessions",
+    "comment": "The 360 Spatial Sound positioning is phenomenal for competitive shooters. Active noise cancellation cuts out background room noise effectively, and the plush earcups stay comfortable during long gaming sessions. Battery life easily lasts multiple days of gameplay. Giving 4 stars only because the companion software could use a slightly cleaner EQ interface.",
+    "created_at": "2026-10-24T01:02:45.079Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 7,
+  "fields": {
+    "user": null,
+    "session_id": "8dffw2ve2zrtfl2o65tuwdhf2z3au6i8",
+    "created_at": "2026-07-23T09:54:06.871Z",
+    "updated_at": "2026-07-23T09:54:06.871Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 8,
+  "fields": {
+    "user": null,
+    "session_id": "ogl7hwlrz1ee3tt834jvpg80thi5w89w",
+    "created_at": "2026-08-26T17:19:56.023Z",
+    "updated_at": "2026-08-26T17:19:56.023Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 10,
+  "fields": {
+    "user": null,
+    "session_id": "3qz3w2qu6shxvkjhpxz89x7sa3q5mlod",
+    "created_at": "2026-08-26T17:20:42.222Z",
+    "updated_at": "2026-08-26T17:20:42.222Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 11,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "session_id": null,
+    "created_at": "2026-08-29T19:50:20.417Z",
+    "updated_at": "2026-08-29T19:50:20.417Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 12,
+  "fields": {
+    "user": null,
+    "session_id": "mh12z0ir0itqx8v9i5cnaqjlgjbglkl5",
+    "created_at": "2026-08-29T19:51:22.146Z",
+    "updated_at": "2026-08-29T19:51:22.146Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 13,
+  "fields": {
+    "user": null,
+    "session_id": "gdwzehb3cl23scr5f9qvqlaqsbbbiudg",
+    "created_at": "2026-08-29T20:12:04.916Z",
+    "updated_at": "2026-08-29T20:12:04.916Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 14,
+  "fields": {
+    "user": null,
+    "session_id": "jsog2nc73laicirbucqaurukjlg755vr",
+    "created_at": "2026-08-30T13:49:32.918Z",
+    "updated_at": "2026-08-30T13:49:32.919Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 15,
+  "fields": {
+    "user": null,
+    "session_id": "o1d4qhdkws5exrlyx64yrcjhxf26zgq6",
+    "created_at": "2026-08-30T13:54:05.566Z",
+    "updated_at": "2026-08-30T13:54:05.566Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 16,
+  "fields": {
+    "user": null,
+    "session_id": "xm9khuiut0amz3elu5cifcoaw7ys34ge",
+    "created_at": "2026-08-30T14:56:12.187Z",
+    "updated_at": "2026-08-30T14:56:12.187Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 17,
+  "fields": {
+    "user": null,
+    "session_id": "ykr9l6q8274adlosiyx6hcdpqkmqg49x",
+    "created_at": "2026-08-30T15:39:19.941Z",
+    "updated_at": "2026-08-30T15:39:19.941Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 18,
+  "fields": {
+    "user": null,
+    "session_id": "1sxb493xcntjdjs4ggkiowm8a1nmu3lv",
+    "created_at": "2026-08-30T15:43:24.479Z",
+    "updated_at": "2026-08-30T15:43:24.479Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 19,
+  "fields": {
+    "user": null,
+    "session_id": "60k0j0mfre6cj7xng5sg4m3npj3s38yi",
+    "created_at": "2026-08-30T16:02:27.118Z",
+    "updated_at": "2026-08-30T16:02:27.118Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 20,
+  "fields": {
+    "user": null,
+    "session_id": "robanixpriirw9msiqwba29jdo7zgwhn",
+    "created_at": "2026-08-30T16:36:19.781Z",
+    "updated_at": "2026-08-30T16:36:19.782Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 21,
+  "fields": {
+    "user": null,
+    "session_id": "0hxsbli9lfcfsdqxejh6w55mb2zhevqi",
+    "created_at": "2026-08-30T17:15:09.537Z",
+    "updated_at": "2026-08-30T17:15:09.537Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 22,
+  "fields": {
+    "user": null,
+    "session_id": "vpf3ubi8ymmmghll6ci8do65r24lv3k7",
+    "created_at": "2026-08-30T18:39:17.087Z",
+    "updated_at": "2026-08-30T18:39:17.087Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 23,
+  "fields": {
+    "user": [
+      "ksadithye"
+    ],
+    "session_id": null,
+    "created_at": "2026-08-30T18:57:15.852Z",
+    "updated_at": "2026-08-30T18:57:15.852Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 24,
+  "fields": {
+    "user": null,
+    "session_id": "ybz49efnlsdnpxbixnbw2ryjwnsqk5ll",
+    "created_at": "2026-08-30T18:58:45.160Z",
+    "updated_at": "2026-08-30T18:58:45.160Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 25,
+  "fields": {
+    "user": null,
+    "session_id": "6wko06b4wbgxonlnh08zjzhbyx9j78ko",
+    "created_at": "2026-08-30T19:03:28.731Z",
+    "updated_at": "2026-08-30T19:03:28.731Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 26,
+  "fields": {
+    "user": null,
+    "session_id": "nap2677g9msezv1s3eyxlh24hy7lownn",
+    "created_at": "2026-08-30T19:42:16.212Z",
+    "updated_at": "2026-08-30T19:42:16.212Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 27,
+  "fields": {
+    "user": null,
+    "session_id": "zv0fi6znfuyjfiq34es9hh1l75kp19yd",
+    "created_at": "2026-08-30T19:42:28.192Z",
+    "updated_at": "2026-08-30T19:42:28.193Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 28,
+  "fields": {
+    "user": null,
+    "session_id": "o5hv4cydlsu6k44src5m1r9s0vujp3g0",
+    "created_at": "2026-08-30T19:50:03.742Z",
+    "updated_at": "2026-08-30T19:50:03.742Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 29,
+  "fields": {
+    "user": null,
+    "session_id": "eohqwebze1qzoch2h2jr3kjrh5b408np",
+    "created_at": "2026-08-30T19:56:05.089Z",
+    "updated_at": "2026-08-30T19:56:05.089Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 30,
+  "fields": {
+    "user": null,
+    "session_id": "doi2lb5g3rv7kurji56o1mvki9x0iik8",
+    "created_at": "2026-08-31T04:33:50.542Z",
+    "updated_at": "2026-08-31T04:33:50.542Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 31,
+  "fields": {
+    "user": null,
+    "session_id": "lzxpmnuljjatl2gf3w6un6600ovg1zfb",
+    "created_at": "2026-08-31T04:35:11.960Z",
+    "updated_at": "2026-08-31T04:35:11.960Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 32,
+  "fields": {
+    "user": null,
+    "session_id": "lxdh0yap353qabx1fjay00d0ftbt8re9",
+    "created_at": "2026-08-31T04:36:50.996Z",
+    "updated_at": "2026-08-31T04:36:50.996Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 33,
+  "fields": {
+    "user": [
+      "adithye_ks"
+    ],
+    "session_id": null,
+    "created_at": "2026-08-31T04:49:20.961Z",
+    "updated_at": "2026-08-31T04:49:20.961Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 34,
+  "fields": {
+    "user": null,
+    "session_id": "ti6miniz66irrtiz5noodzonyx7lw5xd",
+    "created_at": "2026-08-31T17:34:04.703Z",
+    "updated_at": "2026-08-31T17:34:04.703Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 35,
+  "fields": {
+    "user": null,
+    "session_id": "k2xzy6raslbes06wh08hk5drnavwumvc",
+    "created_at": "2026-08-31T17:40:20.244Z",
+    "updated_at": "2026-08-31T17:40:20.245Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 36,
+  "fields": {
+    "user": null,
+    "session_id": "wen26z6dmaalauvft87cvjlomfe217sz",
+    "created_at": "2026-08-31T17:41:07.947Z",
+    "updated_at": "2026-08-31T17:41:07.947Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 37,
+  "fields": {
+    "user": null,
+    "session_id": "nd12okebmncimsu83anw7v482k162a1e",
+    "created_at": "2026-08-31T17:41:23.146Z",
+    "updated_at": "2026-08-31T17:41:23.146Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 38,
+  "fields": {
+    "user": null,
+    "session_id": "2501x7p38ewi9sx1n0aquh0w2mmke8nh",
+    "created_at": "2026-08-31T17:48:35.734Z",
+    "updated_at": "2026-08-31T17:48:35.734Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 39,
+  "fields": {
+    "user": null,
+    "session_id": "tgmb8ei7homtle6abtsivgxmc7vwn33n",
+    "created_at": "2026-08-31T17:48:35.824Z",
+    "updated_at": "2026-08-31T17:48:35.824Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 40,
+  "fields": {
+    "user": null,
+    "session_id": "i4auxl559watw9yycbn4i0y17avbf2qu",
+    "created_at": "2026-09-01T03:46:42.919Z",
+    "updated_at": "2026-09-01T03:46:42.919Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 41,
+  "fields": {
+    "user": null,
+    "session_id": "54x0h2f4uzjvzv2fkwhbhxs7uu8oh690",
+    "created_at": "2026-09-01T03:47:54.682Z",
+    "updated_at": "2026-09-01T03:47:54.682Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 42,
+  "fields": {
+    "user": null,
+    "session_id": "qj4sd8ynp8bzkqfpla55zauvan4mvxcj",
+    "created_at": "2026-09-01T03:49:43.317Z",
+    "updated_at": "2026-09-01T03:49:43.317Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 43,
+  "fields": {
+    "user": null,
+    "session_id": "16f0sftccm2invtns8k99jju0z9sej49",
+    "created_at": "2026-09-01T03:49:49.773Z",
+    "updated_at": "2026-09-01T03:49:49.773Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 44,
+  "fields": {
+    "user": null,
+    "session_id": "67audt758w676ih1jw6qs8qr2c2g92aj",
+    "created_at": "2026-09-07T07:30:57.459Z",
+    "updated_at": "2026-09-07T07:30:57.459Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 45,
+  "fields": {
+    "user": null,
+    "session_id": "cvkpbz90ttxx112l0d9kc3v6x9qr6m0x",
+    "created_at": "2026-09-07T07:33:16.889Z",
+    "updated_at": "2026-09-07T07:33:16.889Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 46,
+  "fields": {
+    "user": null,
+    "session_id": "jl48y272akwlw4jq3lsynmy8fbi9mn8n",
+    "created_at": "2026-09-08T09:05:01.817Z",
+    "updated_at": "2026-09-08T09:05:01.817Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 47,
+  "fields": {
+    "user": null,
+    "session_id": "qtci8dcocb69u6vgfzwwt3h2pzuesxlw",
+    "created_at": "2026-09-09T19:08:57.197Z",
+    "updated_at": "2026-09-09T19:08:57.197Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 48,
+  "fields": {
+    "user": null,
+    "session_id": "7bmicpjnf6nr7giyo7bvfd9bcs8q9ytx",
+    "created_at": "2026-09-09T19:41:00.283Z",
+    "updated_at": "2026-09-09T19:41:00.283Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 49,
+  "fields": {
+    "user": null,
+    "session_id": "1rbcadivmjqzxvixn90py70de03dqomi",
+    "created_at": "2026-09-09T20:09:42.377Z",
+    "updated_at": "2026-09-09T20:09:42.377Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 50,
+  "fields": {
+    "user": null,
+    "session_id": "0miz2c9ti2bqrp78pb32aqw8rw1nnvuk",
+    "created_at": "2026-09-09T20:09:42.450Z",
+    "updated_at": "2026-09-09T20:09:42.450Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 51,
+  "fields": {
+    "user": null,
+    "session_id": "b1duuxfmbzl3cbg78gug7gm5yit70j9q",
+    "created_at": "2026-09-09T20:10:04.043Z",
+    "updated_at": "2026-09-09T20:10:04.044Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 52,
+  "fields": {
+    "user": null,
+    "session_id": "0yhtmm6gfpipys364zrdobg1d84a96ik",
+    "created_at": "2026-09-09T20:10:04.100Z",
+    "updated_at": "2026-09-09T20:10:04.100Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 53,
+  "fields": {
+    "user": null,
+    "session_id": "udhbht0zh3k60ozkenfgpgcsslut3c1o",
+    "created_at": "2026-09-09T20:11:32.957Z",
+    "updated_at": "2026-09-09T20:11:32.957Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 54,
+  "fields": {
+    "user": null,
+    "session_id": "jq5vphi858gugqyzyjutuyenrjjd1y5a",
+    "created_at": "2026-09-09T20:50:24.125Z",
+    "updated_at": "2026-09-09T20:50:24.125Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 55,
+  "fields": {
+    "user": null,
+    "session_id": "xybmk01ieb1bhdiwy73olwfcc1ybwhpe",
+    "created_at": "2026-09-09T20:53:54.785Z",
+    "updated_at": "2026-09-09T20:53:54.785Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 56,
+  "fields": {
+    "user": null,
+    "session_id": "xwori4psw59a5iqw0qa3xfoqjv7k8azb",
+    "created_at": "2026-09-14T17:41:30.578Z",
+    "updated_at": "2026-09-14T17:41:30.578Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 57,
+  "fields": {
+    "user": null,
+    "session_id": "6imdz39ztbcnkmnnd5gmuek7ulryfe9o",
+    "created_at": "2026-09-14T17:44:38.172Z",
+    "updated_at": "2026-09-14T17:44:38.172Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 58,
+  "fields": {
+    "user": null,
+    "session_id": "gnke7i2eezadcfqvirseqzu4ga9wwtv3",
+    "created_at": "2026-09-14T17:47:49.548Z",
+    "updated_at": "2026-09-14T17:47:49.548Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 59,
+  "fields": {
+    "user": null,
+    "session_id": "2ktwum79oefy25n8zbio5t7k4ep88ha9",
+    "created_at": "2026-09-14T17:53:40.412Z",
+    "updated_at": "2026-09-14T17:53:40.412Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 60,
+  "fields": {
+    "user": null,
+    "session_id": "txl880kv0df2nfqpdfs9prf7qjf7izqq",
+    "created_at": "2026-09-14T17:55:20.723Z",
+    "updated_at": "2026-09-14T17:55:20.723Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 61,
+  "fields": {
+    "user": null,
+    "session_id": "ff971wx9qmw2onb7hv9rdryvdz61achp",
+    "created_at": "2026-09-14T17:57:31.949Z",
+    "updated_at": "2026-09-14T17:57:31.949Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 62,
+  "fields": {
+    "user": null,
+    "session_id": "2mn51ozkqhwqoo200pzq2e3hnl2lv73i",
+    "created_at": "2026-09-14T18:47:14.731Z",
+    "updated_at": "2026-09-14T18:47:14.731Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 63,
+  "fields": {
+    "user": null,
+    "session_id": "8ginsbix6aq8bk9bxc118kgel8b0f0gh",
+    "created_at": "2026-09-14T19:05:42.871Z",
+    "updated_at": "2026-09-14T19:05:42.871Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 64,
+  "fields": {
+    "user": null,
+    "session_id": "s7lz7q48rbc9o7fmdi68ryds5d387g8x",
+    "created_at": "2026-09-14T19:09:34.402Z",
+    "updated_at": "2026-09-14T19:09:34.402Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 65,
+  "fields": {
+    "user": null,
+    "session_id": "35ynq57m4qzbcirdso8xfwsv9jmddz2i",
+    "created_at": "2026-09-14T19:33:56.952Z",
+    "updated_at": "2026-09-14T19:33:56.952Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 66,
+  "fields": {
+    "user": null,
+    "session_id": "w9avxt1mga3fbhnsv08yochhsdtc0jb5",
+    "created_at": "2026-09-15T15:20:45.859Z",
+    "updated_at": "2026-09-15T15:20:45.859Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 67,
+  "fields": {
+    "user": null,
+    "session_id": "v0i1abl6hrsdxmz5qw9jsedf3nb7wyqi",
+    "created_at": "2026-09-15T15:24:54.618Z",
+    "updated_at": "2026-09-15T15:24:54.618Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 68,
+  "fields": {
+    "user": null,
+    "session_id": "9noabqympwexkcp5raetgv9k4vab3q9z",
+    "created_at": "2026-09-15T15:26:25.517Z",
+    "updated_at": "2026-09-15T15:26:25.517Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 69,
+  "fields": {
+    "user": null,
+    "session_id": "5ubzfhyvmhm9iau2tlhw9wkmrd816mq0",
+    "created_at": "2026-09-15T15:26:57.327Z",
+    "updated_at": "2026-09-15T15:26:57.327Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 70,
+  "fields": {
+    "user": null,
+    "session_id": "bnrxc6av33bl3ec76qv3l9vk2mtlnjkp",
+    "created_at": "2026-09-15T15:44:04.384Z",
+    "updated_at": "2026-09-15T15:44:04.384Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 71,
+  "fields": {
+    "user": null,
+    "session_id": "ptw3syqrgnxqgxysqmxkw5vp91f3dqeb",
+    "created_at": "2026-09-15T15:44:23.017Z",
+    "updated_at": "2026-09-15T15:44:23.017Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 72,
+  "fields": {
+    "user": null,
+    "session_id": "66w4kdfpj0t9u0b58gqgaxwvspt50xl3",
+    "created_at": "2026-09-15T15:44:36.084Z",
+    "updated_at": "2026-09-15T15:44:36.084Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 73,
+  "fields": {
+    "user": null,
+    "session_id": "av47y2r94a8bbjx5t02n7aysmg34v7az",
+    "created_at": "2026-09-15T15:45:19.211Z",
+    "updated_at": "2026-09-15T15:45:19.211Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 74,
+  "fields": {
+    "user": null,
+    "session_id": "v30mkiy2tg09gen2o35olh5aluz0xofo",
+    "created_at": "2026-09-16T07:44:27.028Z",
+    "updated_at": "2026-09-16T07:44:27.028Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 75,
+  "fields": {
+    "user": null,
+    "session_id": "figb0fumj4vzjyi6bbs15e9o1ywp14ad",
+    "created_at": "2026-09-17T09:15:01.165Z",
+    "updated_at": "2026-09-17T09:15:01.165Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 76,
+  "fields": {
+    "user": null,
+    "session_id": "4tkihji2qte5tcllhp6swy0sm5ti2xgk",
+    "created_at": "2026-09-17T09:16:49.383Z",
+    "updated_at": "2026-09-17T09:16:49.383Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 77,
+  "fields": {
+    "user": null,
+    "session_id": "5ud75ixbhgi0k8rbexie38vaxge41ic1",
+    "created_at": "2026-09-21T07:55:54.046Z",
+    "updated_at": "2026-09-21T07:55:54.046Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 78,
+  "fields": {
+    "user": null,
+    "session_id": "2z1ds0pfl4e34ncgvrk39hu4o29okhtx",
+    "created_at": "2026-10-05T09:01:01.566Z",
+    "updated_at": "2026-10-05T09:01:01.566Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 79,
+  "fields": {
+    "user": null,
+    "session_id": "07n2d18lade8eud51bjvmoqnzjy2vvdc",
+    "created_at": "2026-10-05T09:01:01.718Z",
+    "updated_at": "2026-10-05T09:01:01.718Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 80,
+  "fields": {
+    "user": null,
+    "session_id": "e6clk5ekkg3tmhx9qq85edtley643h8g",
+    "created_at": "2026-10-14T02:24:32.097Z",
+    "updated_at": "2026-10-14T02:24:32.097Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 81,
+  "fields": {
+    "user": null,
+    "session_id": "psoq7fiork7jwhneb8tqcp0l69vk5gae",
+    "created_at": "2026-10-17T18:44:03.149Z",
+    "updated_at": "2026-10-17T18:44:03.150Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 82,
+  "fields": {
+    "user": null,
+    "session_id": "z5dhh7ghfyylsvdb0r7f81nx25rarahy",
+    "created_at": "2026-10-17T18:45:10.950Z",
+    "updated_at": "2026-10-17T18:45:10.950Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 83,
+  "fields": {
+    "user": null,
+    "session_id": "kx9a1kdbrjmx7o6cbqkwopos4lszlhbr",
+    "created_at": "2026-10-19T08:37:55.249Z",
+    "updated_at": "2026-10-19T08:37:55.249Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 84,
+  "fields": {
+    "user": null,
+    "session_id": "48yg5bcx7xkgsvu0x63g55aysl5nz1l6",
+    "created_at": "2026-10-19T08:53:24.644Z",
+    "updated_at": "2026-10-19T08:53:24.644Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 85,
+  "fields": {
+    "user": null,
+    "session_id": "j6xzn28vz0itkq6b9txqc62t5q0ygrrb",
+    "created_at": "2026-10-19T08:53:52.054Z",
+    "updated_at": "2026-10-19T08:53:52.055Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 86,
+  "fields": {
+    "user": null,
+    "session_id": "x7kreh5nvz92ec7n2rvu1w9zhg74hmvs",
+    "created_at": "2026-10-19T12:15:23.664Z",
+    "updated_at": "2026-10-19T12:15:23.664Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 87,
+  "fields": {
+    "user": null,
+    "session_id": "ppibn0xyskllf9u5pmzfi91qmb4gnr5k",
+    "created_at": "2026-10-19T12:28:03.519Z",
+    "updated_at": "2026-10-19T12:28:03.519Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 88,
+  "fields": {
+    "user": null,
+    "session_id": "m5q096nsxf5lcvish14el5srgk6irusz",
+    "created_at": "2026-10-19T12:37:14.292Z",
+    "updated_at": "2026-10-19T12:37:14.292Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 89,
+  "fields": {
+    "user": null,
+    "session_id": "bzkuinfjsqbpgqbnl6od2d5xe1qjhzi1",
+    "created_at": "2026-10-19T12:37:44.233Z",
+    "updated_at": "2026-10-19T12:37:44.233Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 90,
+  "fields": {
+    "user": null,
+    "session_id": "ll0pevdar3oj2mg82ibphcjadu7mk5zg",
+    "created_at": "2026-10-19T12:38:15.018Z",
+    "updated_at": "2026-10-19T12:38:15.018Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 91,
+  "fields": {
+    "user": null,
+    "session_id": "ven2tfc8hhf04ox2laqskdqukyn6tr35",
+    "created_at": "2026-10-19T12:38:22.988Z",
+    "updated_at": "2026-10-19T12:38:22.988Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 92,
+  "fields": {
+    "user": null,
+    "session_id": "a4aai1pgheictjqr3v4uy2xvzvyofyh3",
+    "created_at": "2026-10-19T12:38:33.390Z",
+    "updated_at": "2026-10-19T12:38:33.390Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 93,
+  "fields": {
+    "user": null,
+    "session_id": "ro4fz13qfktsyd864n8t7ur30orl8ku1",
+    "created_at": "2026-10-19T13:01:24.602Z",
+    "updated_at": "2026-10-19T13:01:24.602Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 94,
+  "fields": {
+    "user": null,
+    "session_id": "ge5qaua9gqa72deoa8xbd7c02g3htvtx",
+    "created_at": "2026-10-19T13:03:30.826Z",
+    "updated_at": "2026-10-19T13:03:30.826Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 95,
+  "fields": {
+    "user": [
+      "sony"
+    ],
+    "session_id": null,
+    "created_at": "2026-10-21T18:02:29.747Z",
+    "updated_at": "2026-10-21T18:02:29.747Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 96,
+  "fields": {
+    "user": null,
+    "session_id": "9vzztwjj40m5w0c376hgrinjwin8igjk",
+    "created_at": "2026-10-21T18:03:04.299Z",
+    "updated_at": "2026-10-21T18:03:04.299Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 97,
+  "fields": {
+    "user": [
+      "bose"
+    ],
+    "session_id": null,
+    "created_at": "2026-10-21T18:08:50.730Z",
+    "updated_at": "2026-10-21T18:08:50.731Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 98,
+  "fields": {
+    "user": null,
+    "session_id": "5m0y1e4qyu4z23smlewlay0yquuzt6p5",
+    "created_at": "2026-10-21T18:09:07.953Z",
+    "updated_at": "2026-10-21T18:09:07.953Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 99,
+  "fields": {
+    "user": [
+      "apple"
+    ],
+    "session_id": null,
+    "created_at": "2026-10-21T18:52:28.791Z",
+    "updated_at": "2026-10-21T18:52:28.791Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 100,
+  "fields": {
+    "user": null,
+    "session_id": "d4kx39vrdj30rqns4ejpwdp7q953v6dv",
+    "created_at": "2026-10-21T18:52:32.424Z",
+    "updated_at": "2026-10-21T18:52:32.425Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 101,
+  "fields": {
+    "user": [
+      "jbl"
+    ],
+    "session_id": null,
+    "created_at": "2026-10-21T19:14:04.472Z",
+    "updated_at": "2026-10-21T19:14:04.472Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 102,
+  "fields": {
+    "user": null,
+    "session_id": "ekum66ws53tpjtkkdh6bdipd8ppe2tdo",
+    "created_at": "2026-10-21T19:14:10.087Z",
+    "updated_at": "2026-10-21T19:14:10.087Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 103,
+  "fields": {
+    "user": null,
+    "session_id": "8haikvus89gufx5ff956ke9dhnq25n6z",
+    "created_at": "2026-10-22T02:54:31.302Z",
+    "updated_at": "2026-10-22T02:54:31.302Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 104,
+  "fields": {
+    "user": [
+      "testbrand"
+    ],
+    "session_id": null,
+    "created_at": "2026-10-22T02:58:42.646Z",
+    "updated_at": "2026-10-22T02:58:42.646Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 105,
+  "fields": {
+    "user": null,
+    "session_id": "6g5bs6guknpl1rvn26lk3ib0vjvvql0w",
+    "created_at": "2026-10-22T02:58:46.947Z",
+    "updated_at": "2026-10-22T02:58:46.947Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 106,
+  "fields": {
+    "user": null,
+    "session_id": "5rxgboua16jcuyv126ss4wtdipmuogxh",
+    "created_at": "2026-10-22T03:02:00.600Z",
+    "updated_at": "2026-10-22T03:02:00.600Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 107,
+  "fields": {
+    "user": null,
+    "session_id": "h8nf94nwbxcj3cvtyuekpo5ogvm8v22f",
+    "created_at": "2026-10-22T03:03:28.661Z",
+    "updated_at": "2026-10-22T03:03:28.661Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 108,
+  "fields": {
+    "user": null,
+    "session_id": "pl9sxohdaxwbjnl54piwuwbh0gwk5vl3",
+    "created_at": "2026-10-22T04:39:59.713Z",
+    "updated_at": "2026-10-22T04:39:59.713Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 109,
+  "fields": {
+    "user": null,
+    "session_id": "6p9cej8ul7ugr6qgcr7v0nei7vgmwu08",
+    "created_at": "2026-10-22T04:40:32.395Z",
+    "updated_at": "2026-10-22T04:40:32.395Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 110,
+  "fields": {
+    "user": null,
+    "session_id": "6omp1byp56x3n8ewg3ack0mlsm06ddee",
+    "created_at": "2026-10-22T04:44:09.021Z",
+    "updated_at": "2026-10-22T04:44:09.021Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 111,
+  "fields": {
+    "user": null,
+    "session_id": "moqxcqnbh1xqr5ydtm6fwze72uhpgoup",
+    "created_at": "2026-10-23T15:36:30.170Z",
+    "updated_at": "2026-10-23T15:36:30.170Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 112,
+  "fields": {
+    "user": null,
+    "session_id": "powi4life7wru3u0zch492kgh1kwop8h",
+    "created_at": "2026-10-23T16:02:38.350Z",
+    "updated_at": "2026-10-23T16:02:38.350Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 113,
+  "fields": {
+    "user": null,
+    "session_id": "c0eiyvgc3sgkaft7qzq1uaw9m2axynsi",
+    "created_at": "2026-10-23T16:02:50.464Z",
+    "updated_at": "2026-10-23T16:02:50.464Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 114,
+  "fields": {
+    "user": null,
+    "session_id": "7ez1pe926mav011m3m8ztxfba10slwk0",
+    "created_at": "2026-10-23T16:14:34.498Z",
+    "updated_at": "2026-10-23T16:14:34.498Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 115,
+  "fields": {
+    "user": null,
+    "session_id": "jxbv0wobccd3qazhwsl0qvy67fy0lo7w",
+    "created_at": "2026-10-23T16:20:02.221Z",
+    "updated_at": "2026-10-23T16:20:02.221Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 116,
+  "fields": {
+    "user": null,
+    "session_id": "wuuvj292p55o7x48shh8zqn41cmmqvao",
+    "created_at": "2026-10-23T16:20:46.323Z",
+    "updated_at": "2026-10-23T16:20:46.323Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 117,
+  "fields": {
+    "user": null,
+    "session_id": "xzxoan4123zh21x3bvnoi88seaz9c76e",
+    "created_at": "2026-10-24T00:31:15.587Z",
+    "updated_at": "2026-10-24T00:31:15.587Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 118,
+  "fields": {
+    "user": null,
+    "session_id": "qqgreth4njxxqlisa525ovsu39zo8kwg",
+    "created_at": "2026-10-24T00:33:13.736Z",
+    "updated_at": "2026-10-24T00:33:13.736Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 119,
+  "fields": {
+    "user": null,
+    "session_id": "jlwdnx7xbvidt3e8z4unvog8dqlvi2j5",
+    "created_at": "2026-10-24T00:37:28.895Z",
+    "updated_at": "2026-10-24T00:37:28.895Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 120,
+  "fields": {
+    "user": null,
+    "session_id": "o6ulktb2xc353u34o2x0hkd6zqx0qinm",
+    "created_at": "2026-10-24T00:38:33.127Z",
+    "updated_at": "2026-10-24T00:38:33.127Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 121,
+  "fields": {
+    "user": null,
+    "session_id": "nuq7bt8lnp706urh8wbnjkjzgpdwi23f",
+    "created_at": "2026-10-24T00:38:33.162Z",
+    "updated_at": "2026-10-24T00:38:33.162Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 122,
+  "fields": {
+    "user": null,
+    "session_id": "m8kprpxaputvgzycih6a37cltud61hrk",
+    "created_at": "2026-10-24T00:43:06.875Z",
+    "updated_at": "2026-10-24T00:43:06.875Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 123,
+  "fields": {
+    "user": null,
+    "session_id": "2m2abfk100w2orv0r7da6qhaefq8497o",
+    "created_at": "2026-10-24T00:43:41.248Z",
+    "updated_at": "2026-10-24T00:43:41.248Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 124,
+  "fields": {
+    "user": null,
+    "session_id": "8jf65fc2llmo9b7m8mut8c9b6cxph0mm",
+    "created_at": "2026-10-24T00:47:24.658Z",
+    "updated_at": "2026-10-24T00:47:24.658Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 125,
+  "fields": {
+    "user": null,
+    "session_id": "1hhmf1anujdcy3q04kmz6zz5kmk4lc1k",
+    "created_at": "2026-10-24T00:58:09.379Z",
+    "updated_at": "2026-10-24T00:58:09.379Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 126,
+  "fields": {
+    "user": null,
+    "session_id": "b5ss8sjvi4bqpdg9gqio6xa7sb6z5dg6",
+    "created_at": "2026-10-24T01:03:28.894Z",
+    "updated_at": "2026-10-24T01:03:28.894Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 127,
+  "fields": {
+    "user": null,
+    "session_id": "u50oim1mpkdvcl9efznpjh1z7rldf97z",
+    "created_at": "2026-10-24T01:04:10.405Z",
+    "updated_at": "2026-10-24T01:04:10.405Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 128,
+  "fields": {
+    "user": null,
+    "session_id": "tp47b1276o8r51cpitqhrg0b4jyzwfb3",
+    "created_at": "2026-10-24T01:13:33.207Z",
+    "updated_at": "2026-10-24T01:13:33.207Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 129,
+  "fields": {
+    "user": null,
+    "session_id": "vx6ndcw4rspuhhzck9wwka7ucu2gbm70",
+    "created_at": "2026-10-24T01:20:33.276Z",
+    "updated_at": "2026-10-24T01:20:33.276Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 130,
+  "fields": {
+    "user": null,
+    "session_id": "zgcymuxlsn1rvs3ig5ymrlx3r8risp3v",
+    "created_at": "2026-10-24T01:24:07.759Z",
+    "updated_at": "2026-10-24T01:24:07.759Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 131,
+  "fields": {
+    "user": [
+      "testuser"
+    ],
+    "session_id": null,
+    "created_at": "2026-10-24T01:24:40.902Z",
+    "updated_at": "2026-10-24T01:24:40.902Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 132,
+  "fields": {
+    "user": null,
+    "session_id": "17b0wfb68uep7fm8t9nzkao9dpjbeg2d",
+    "created_at": "2026-10-24T01:26:08.337Z",
+    "updated_at": "2026-10-24T01:26:08.337Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 133,
+  "fields": {
+    "user": null,
+    "session_id": "aq8dtd994rzjb15nx97sq4bie6efb25h",
+    "created_at": "2026-10-24T01:52:42.023Z",
+    "updated_at": "2026-10-24T01:52:42.023Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 134,
+  "fields": {
+    "user": null,
+    "session_id": "nmlc9yr08x4tqh1r3y4335uounkzwvj7",
+    "created_at": "2026-10-24T01:53:24.544Z",
+    "updated_at": "2026-10-24T01:53:24.544Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 135,
+  "fields": {
+    "user": null,
+    "session_id": "i6xnv7arhrlrpqbnky8lexclb618g5rb",
+    "created_at": "2026-10-24T02:03:55.159Z",
+    "updated_at": "2026-10-24T02:03:55.159Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 136,
+  "fields": {
+    "user": null,
+    "session_id": "tggl7d4xbbqpo7smx7gfaflc1dly9vo4",
+    "created_at": "2026-10-24T02:04:55.568Z",
+    "updated_at": "2026-10-24T02:04:55.568Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 137,
+  "fields": {
+    "user": null,
+    "session_id": "q9m083w728nmdyxoywkvuqz1taedtpnh",
+    "created_at": "2026-10-24T02:08:20.774Z",
+    "updated_at": "2026-10-24T02:08:20.774Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 138,
+  "fields": {
+    "user": null,
+    "session_id": "gf54ye7iv7yiffmjmw3h9en9elossrbx",
+    "created_at": "2026-10-24T02:08:35.450Z",
+    "updated_at": "2026-10-24T02:08:35.450Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 139,
+  "fields": {
+    "user": null,
+    "session_id": "zn46nin2hkltqj5mxefzw81mwavu9nvu",
+    "created_at": "2026-10-24T02:10:28.040Z",
+    "updated_at": "2026-10-24T02:10:28.040Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 140,
+  "fields": {
+    "user": null,
+    "session_id": "vf8rxtc7faik7xml2dmn7bwf9buaf5el",
+    "created_at": "2026-10-24T02:10:32.577Z",
+    "updated_at": "2026-10-24T02:10:32.577Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 141,
+  "fields": {
+    "user": null,
+    "session_id": "8sh2lhh3fumguve71xbi3bq7osannctu",
+    "created_at": "2026-10-24T03:03:57.259Z",
+    "updated_at": "2026-10-24T03:03:57.259Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 142,
+  "fields": {
+    "user": null,
+    "session_id": "np65v65a0vkw80f5y0oh7ksoky2dahqs",
+    "created_at": "2026-10-24T03:04:26.927Z",
+    "updated_at": "2026-10-24T03:04:26.927Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 143,
+  "fields": {
+    "user": null,
+    "session_id": "qou9gs9hzkp2tmuwm4qf8nwfh84sk9f5",
+    "created_at": "2026-10-24T03:13:25.292Z",
+    "updated_at": "2026-10-24T03:13:25.292Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 144,
+  "fields": {
+    "user": null,
+    "session_id": "dco64ny54x46998tdqc6zl4lo2q2u3zi",
+    "created_at": "2026-10-24T03:18:36.416Z",
+    "updated_at": "2026-10-24T03:18:36.416Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 145,
+  "fields": {
+    "user": null,
+    "session_id": "7cz1dto248sm4rggl5ls8fkwu5x3jpgo",
+    "created_at": "2026-10-24T03:19:00.136Z",
+    "updated_at": "2026-10-24T03:19:00.137Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 146,
+  "fields": {
+    "user": null,
+    "session_id": "vcnrm09a154xhgozoc33aej5z03cti9w",
+    "created_at": "2026-10-24T03:20:06.989Z",
+    "updated_at": "2026-10-24T03:20:06.989Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 147,
+  "fields": {
+    "user": null,
+    "session_id": "n47c27gi09vdjy89f1jye140e983bmw6",
+    "created_at": "2026-10-24T05:59:13.892Z",
+    "updated_at": "2026-10-24T05:59:13.892Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 148,
+  "fields": {
+    "user": null,
+    "session_id": "7lfni29ruvn32c0wza6y6pbodbze77kb",
+    "created_at": "2026-10-24T06:16:07.114Z",
+    "updated_at": "2026-10-24T06:16:07.114Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 149,
+  "fields": {
+    "user": null,
+    "session_id": "82jsanxak98mtkyvv015cqc7vjbuxn4s",
+    "created_at": "2026-10-24T06:19:24.288Z",
+    "updated_at": "2026-10-24T06:19:24.288Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 150,
+  "fields": {
+    "user": null,
+    "session_id": "i9hvhjxn4udpo6hbcy3uxnwk1bdv1d79",
+    "created_at": "2026-10-24T07:19:50.381Z",
+    "updated_at": "2026-10-24T07:19:50.381Z"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 151,
+  "fields": {
+    "user": null,
+    "session_id": "qw8dzmvtni948t0bqrmihwnt3lcsgo71",
+    "created_at": "2026-10-24T12:35:45.825Z",
+    "updated_at": "2026-10-24T12:35:45.825Z"
+  }
+},
+{
+  "model": "cart.cartitem",
+  "pk": 12,
+  "fields": {
+    "cart": 23,
+    "product": 1,
+    "quantity": 5,
+    "added_at": "2026-10-24T01:36:00.411Z"
+  }
+},
+{
+  "model": "cart.cartitem",
+  "pk": 15,
+  "fields": {
+    "cart": 33,
+    "product": 1,
+    "quantity": 1,
+    "added_at": "2026-10-24T06:16:47.247Z"
+  }
+},
+{
+  "model": "wishlist.wishlist",
+  "pk": 4,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "created_at": "2026-08-29T19:50:20.427Z"
+  }
+},
+{
+  "model": "wishlist.wishlist",
+  "pk": 5,
+  "fields": {
+    "user": [
+      "ksadithye"
+    ],
+    "created_at": "2026-08-30T18:57:15.862Z"
+  }
+},
+{
+  "model": "wishlist.wishlist",
+  "pk": 6,
+  "fields": {
+    "user": [
+      "adithye_ks"
+    ],
+    "created_at": "2026-08-31T04:49:20.973Z"
+  }
+},
+{
+  "model": "wishlist.wishlist",
+  "pk": 7,
+  "fields": {
+    "user": [
+      "sony"
+    ],
+    "created_at": "2026-10-21T18:02:29.755Z"
+  }
+},
+{
+  "model": "wishlist.wishlist",
+  "pk": 8,
+  "fields": {
+    "user": [
+      "bose"
+    ],
+    "created_at": "2026-10-21T18:08:50.739Z"
+  }
+},
+{
+  "model": "wishlist.wishlist",
+  "pk": 9,
+  "fields": {
+    "user": [
+      "apple"
+    ],
+    "created_at": "2026-10-21T18:52:28.799Z"
+  }
+},
+{
+  "model": "wishlist.wishlist",
+  "pk": 10,
+  "fields": {
+    "user": [
+      "jbl"
+    ],
+    "created_at": "2026-10-21T19:14:04.481Z"
+  }
+},
+{
+  "model": "wishlist.wishlist",
+  "pk": 11,
+  "fields": {
+    "user": [
+      "testbrand"
+    ],
+    "created_at": "2026-10-22T02:58:42.654Z"
+  }
+},
+{
+  "model": "wishlist.wishlist",
+  "pk": 12,
+  "fields": {
+    "user": [
+      "testuser"
+    ],
+    "created_at": "2026-10-24T01:24:40.916Z"
+  }
+},
+{
+  "model": "wishlist.wishlistitem",
+  "pk": 22,
+  "fields": {
+    "wishlist": 5,
+    "product": 1,
+    "added_at": "2026-10-24T01:55:49.392Z"
+  }
+},
+{
+  "model": "orders.order",
+  "pk": "SS-F39A15FD",
+  "fields": {
+    "user": [
+      "adithye_ks"
+    ],
+    "full_name": "Adithye K S",
+    "email": "adithyeks3333@gmail.com",
+    "phone": "7907009130",
+    "street_address": "Saseendhra bhavan",
+    "apartment_address": "",
+    "city": "Pala",
+    "state": "Kerala",
+    "postal_code": "686575",
+    "country": "India",
+    "subtotal": "26990.00",
+    "tax": "809.70",
+    "shipping": "0.00",
+    "discount": "0.00",
+    "total_amount": "27799.70",
+    "status": "Cancelled",
+    "payment_status": "Unpaid",
+    "created_at": "2026-10-24T02:35:02.571Z",
+    "updated_at": "2026-10-24T03:15:48.267Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 1,
+  "fields": {
+    "order": "SS-F39A15FD",
+    "product": 1,
+    "product_name": "Sony INZONE H9",
+    "price": "26990.00",
+    "quantity": 1
+  }
+},
+{
+  "model": "orders.payment",
+  "pk": 1,
+  "fields": {
+    "order": "SS-F39A15FD",
+    "payment_method": "cod",
+    "transaction_id": "TXN-1182A929F9CC",
+    "amount": "27799.70",
+    "status": "Success",
+    "created_at": "2026-10-24T02:35:02.579Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "ksadithye"
+    ],
+    "title": "Seller Application Approved! 🎉",
+    "message": "Congratulations! Your seller store 'boAt' has been approved by SoundSphere Admin. You can now add and manage audio products in your Seller Dashboard.",
+    "notification_type": "seller",
+    "link": "/seller/dashboard/",
+    "is_read": true,
+    "created_at": "2026-08-30T19:02:22.265Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 3,
+  "fields": {
+    "user": [
+      "ksadithye"
+    ],
+    "title": "Product Listing Approved!",
+    "message": "Great news! Your product listing 'boAt Rockerz 550 Over-Ear Wireless Headphones' was approved by Admin and is now live in the store.",
+    "notification_type": "product",
+    "link": "/products/detail/boat-rockerz-550-over-ear-wireless-headphones/",
+    "is_read": false,
+    "created_at": "2026-08-30T19:49:58.381Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 4,
+  "fields": {
+    "user": [
+      "ksadithye"
+    ],
+    "title": "Order Placed Successfully",
+    "message": "Your SoundSphere order #SS-ED9EA178 has been placed successfully!",
+    "notification_type": "order",
+    "link": "/orders/detail/SS-ED9EA178/",
+    "is_read": false,
+    "created_at": "2026-09-01T03:45:55.720Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 5,
+  "fields": {
+    "user": [
+      "ksadithye"
+    ],
+    "title": "Order #SS-ED9EA178 Status Update",
+    "message": "Your order #SS-ED9EA178 status has been updated to 'Cancelled'.",
+    "notification_type": "order",
+    "link": "/orders/detail/SS-ED9EA178/",
+    "is_read": false,
+    "created_at": "2026-09-01T03:47:49.875Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 6,
+  "fields": {
+    "user": [
+      "ksadithye"
+    ],
+    "title": "Order #SS-ED9EA178 Status Update",
+    "message": "Your order #SS-ED9EA178 status has been updated to 'Cancelled'.",
+    "notification_type": "order",
+    "link": "/orders/detail/SS-ED9EA178/",
+    "is_read": false,
+    "created_at": "2026-09-01T03:47:52.709Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 7,
+  "fields": {
+    "user": [
+      "sony"
+    ],
+    "title": "Seller Application Approved! 🎉",
+    "message": "Congratulations! Your seller store 'Sony' has been approved by SoundSphere Admin. You can now add and manage audio products in your Seller Dashboard.",
+    "notification_type": "seller",
+    "link": "/seller/dashboard/",
+    "is_read": false,
+    "created_at": "2026-10-22T02:48:24.042Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 8,
+  "fields": {
+    "user": [
+      "bose"
+    ],
+    "title": "Seller Application Approved! 🎉",
+    "message": "Congratulations! Your seller store 'Bose' has been approved by SoundSphere Admin. You can now add and manage audio products in your Seller Dashboard.",
+    "notification_type": "seller",
+    "link": "/seller/dashboard/",
+    "is_read": false,
+    "created_at": "2026-10-22T02:48:30.763Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 9,
+  "fields": {
+    "user": [
+      "apple"
+    ],
+    "title": "Seller Application Approved! 🎉",
+    "message": "Congratulations! Your seller store 'Apple' has been approved by SoundSphere Admin. You can now add and manage audio products in your Seller Dashboard.",
+    "notification_type": "seller",
+    "link": "/seller/dashboard/",
+    "is_read": false,
+    "created_at": "2026-10-22T02:48:34.800Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 10,
+  "fields": {
+    "user": [
+      "jbl"
+    ],
+    "title": "Seller Application Approved! 🎉",
+    "message": "Congratulations! Your seller store 'JBL' has been approved by SoundSphere Admin. You can now add and manage audio products in your Seller Dashboard.",
+    "notification_type": "seller",
+    "link": "/seller/dashboard/",
+    "is_read": false,
+    "created_at": "2026-10-22T02:48:38.589Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 11,
+  "fields": {
+    "user": [
+      "testbrand"
+    ],
+    "title": "Seller Application Notice",
+    "message": "Your seller application for 'Test Audio' was not approved. Reason: invaild",
+    "notification_type": "seller",
+    "link": "/sellers/dashboard/",
+    "is_read": false,
+    "created_at": "2026-10-22T03:00:22.584Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 12,
+  "fields": {
+    "user": [
+      "adithye_ks"
+    ],
+    "title": "Order Placed Successfully",
+    "message": "Your SoundSphere order #SS-F39A15FD has been placed successfully!",
+    "notification_type": "order",
+    "link": "/orders/detail/SS-F39A15FD/",
+    "is_read": false,
+    "created_at": "2026-10-24T02:35:02.581Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 13,
+  "fields": {
+    "user": [
+      "adithye_ks"
+    ],
+    "title": "Order #SS-F39A15FD Cancelled",
+    "message": "Your order #SS-F39A15FD has been cancelled successfully. No payment was collected (Cash on Delivery).",
+    "notification_type": "order",
+    "link": "/orders/detail/SS-F39A15FD/",
+    "is_read": false,
+    "created_at": "2026-10-24T03:15:48.276Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 14,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "title": "Seller Application Under Review 📋",
+    "message": "Brand Test Audio (testbrand) submitted application for approval.",
+    "notification_type": "seller",
+    "link": "/admin-panel/sellers/moderation/",
+    "is_read": false,
+    "created_at": "2026-10-24T08:52:32.524Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 15,
+  "fields": {
+    "user": [
+      "Admin"
+    ],
+    "title": "New Order #SS-F39A15FD 🛒",
+    "message": "Customer placed an order for Sony WH-1000XM5 (.00).",
+    "notification_type": "order",
+    "link": "/admin-panel/orders/",
+    "is_read": false,
+    "created_at": "2026-10-24T08:52:32.530Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 16,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "title": "Seller Application Under Review 📋",
+    "message": "Brand Test Audio (testbrand) submitted application for approval.",
+    "notification_type": "seller",
+    "link": "/admin-panel/sellers/moderation/",
+    "is_read": false,
+    "created_at": "2026-10-24T08:52:52.626Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 17,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "title": "New Order #SS-F39A15FD 🛒",
+    "message": "Customer placed an order for Sony WH-1000XM5 (.00).",
+    "notification_type": "order",
+    "link": "/admin-panel/orders/",
+    "is_read": false,
+    "created_at": "2026-10-24T08:52:52.633Z"
+  }
+}
+]
